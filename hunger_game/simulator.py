@@ -4,15 +4,19 @@ This module provides match simulator class:
 """
 
 
+from __future__ import annotations
+
 import asyncio
 import random
-from typing import List, Tuple, Callable
+from typing import List, Tuple, Callable, TYPE_CHECKING
 
 from hunger_game.brawler import BrawlerAction
 from hunger_game.game_mode import Collectable, GameModeDynamic
 from hunger_game.match import MatchState
-from hunger_game.observer import MatchObserver
 from hunger_game.player import Player
+
+if TYPE_CHECKING:
+    from hunger_game.observer import MatchObserver
 
 
 __all__ = (

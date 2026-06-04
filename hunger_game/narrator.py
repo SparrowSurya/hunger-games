@@ -5,14 +5,18 @@ This module provides the match event narrator class:
 """
 
 
+from __future__ import annotations
+
 import abc
-from typing import Dict, List, Tuple, Any, Callable, override
+from typing import Dict, List, Tuple, Any, Callable, override, TYPE_CHECKING
 
 from hunger_game.match import MatchEvent
 from hunger_game.observer import MatchObserver
 from hunger_game.player import Player
 from hunger_game.game_mode import Collectable
-from hunger_game.simulator import MatchSimulator
+
+if TYPE_CHECKING:
+    from hunger_game.simulator import MatchSimulator
 
 
 __all__ = (

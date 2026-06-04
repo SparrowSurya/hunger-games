@@ -6,11 +6,13 @@ This module provide match observer class:
 
 from __future__ import annotations
 import abc
-from typing import List, Tuple
+from typing import List, Tuple, TYPE_CHECKING
 
 from hunger_game.game_mode import Collectable
 from hunger_game.player import Player
-from hunger_game.simulator import MatchSimulator
+
+if TYPE_CHECKING:
+    from hunger_game.simulator import MatchSimulator
 
 
 __all__ = (
