@@ -1,0 +1,9 @@
+[project]
+name = "hunger-games"
+version = "0.1.0"
+description = "Brawl stars based zero player narration based gameplay"
+readme = "README.md"
+requires-python = ">=3.14"
+dependencies = []
+
+[project.scripts]
