@@ -1,3 +1,17 @@
+"""
+Hunger Game Simulation Package.
+
+This package provides a zero-player simulation engine inspired by battle royale 
+mechanics. It includes modules for managing brawlers, game modes, match state, 
+and a simulator that narrates events through an observer-based narration system.
+
+Main Components:
+- `simulator`: Core engine for running match moments.
+- `narrator`: Event-based narration logic.
+- `player`: Player state and brawler information management.
+- `game_mode`: Definitions for different rulesets and environments.
+"""
+
 # ruff: noqa: F403, F405
 
 from hunger_game.brawler import *

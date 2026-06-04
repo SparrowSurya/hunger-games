@@ -7,3 +7,12 @@ requires-python = ">=3.14"
 dependencies = []
 
 [project.scripts]
+start = "main:main"
+
+[tool.setuptools]
+packages = ["hunger_game"]
+py-modules = ["main"]
+
+[tool.uv]
+package = true
+dev-dependencies = ["ruff"]
