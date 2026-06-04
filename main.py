@@ -136,19 +136,19 @@ players: List[Player] = [
 ]
 
 
-text_narrators: Dict[MatchEvent, TextNarrator] = {
-    MatchEvent.MATCH_BEGIN: MatchBeginEventTextNarrator(),
-    MatchEvent.MATCH_END: MatchEndEventTextNarrator(),
-    MatchEvent.MOMENT_BEGIN: MomentBeginEventTextNarrator(),
-    MatchEvent.ATTACK: AttackEventTextNarrator(),
-    MatchEvent.BUSH_CAMP: BushCampEventTextNarrator(),
-    MatchEvent.HEALING: HealEventTextNarrator(),
-    MatchEvent.TEAMUP: TeamUpEventTextNarrator(),
-    MatchEvent.COLLECT: CollectEventTextNarrator(),
-    MatchEvent.HIDING: StayHiddenEventTextNarrator(),
-    MatchEvent.BETRAY: BetrayEventTextNarrator(),
-    MatchEvent.POSION_GAS: PoisonGasEventTextNarrator(),
-}
+narrations = Narration(
+    match_begin=MatchBeginEventTextNarrator(),
+    match_end=MatchEndEventTextNarrator(),
+    moment_begin=MomentBeginEventTextNarrator(),
+    attack=AttackEventTextNarrator(),
+    bush_camp=BushCampEventTextNarrator(),
+    healing=HealEventTextNarrator(),
+    teamup=TeamUpEventTextNarrator(),
+    collect=CollectEventTextNarrator(),
+    hiding=StayHiddenEventTextNarrator(),
+    betray=BetrayEventTextNarrator(),
+    poison_gas=PoisonGasEventTextNarrator(),
+)
 
 
 def main():
@@ -161,7 +161,7 @@ def main():
         [GameModeDynamic.POISON_GAS],
     )
     state = MatchState(environment, players, [])
-    sim = MatchSimulator(lambda x: MatchNarrator(x, text_narrators, print), state) # type: ignore
+    sim = MatchSimulator(lambda x: MatchNarrator(x, narrations, print), state)
     asyncio.run(sim.run())
 
 

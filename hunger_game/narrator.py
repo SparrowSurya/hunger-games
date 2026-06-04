@@ -1,6 +1,7 @@
 """
 This module provides the match event narrator class:
 * `EventNarrator`
+* `Narration`
 * `MatchNarrator`
 """
 
@@ -8,9 +9,9 @@ This module provides the match event narrator class:
 from __future__ import annotations
 
 import abc
-from typing import Dict, List, Tuple, Any, Callable, override, TYPE_CHECKING
+from dataclasses import dataclass
+from typing import List, Tuple, Any, Callable, override, TYPE_CHECKING
 
-from hunger_game.match import MatchEvent
 from hunger_game.observer import MatchObserver
 from hunger_game.player import Player
 from hunger_game.game_mode import Collectable
@@ -22,6 +23,7 @@ if TYPE_CHECKING:
 __all__ = (
     "EventNarrator",
     "MatchNarrator",
+    "Narration",
 )
 
 
@@ -29,8 +31,25 @@ class EventNarrator[T](abc.ABC):
     """Single event narrator."""
 
     @abc.abstractmethod
-    def narrate(self, **kwargs: Dict[str, Any]) -> T:
+    def narrate(self, *args: Any, **kwargs: Any) -> T:
         """Narrates the event."""
+
+
+@dataclass(repr=False)
+class Narration[T]:
+    """Collection of narrations for match events."""
+
+    match_begin: EventNarrator[T]
+    match_end: EventNarrator[T]
+    moment_begin: EventNarrator[T]
+    attack: EventNarrator[T]
+    bush_camp: EventNarrator[T]
+    healing: EventNarrator[T]
+    teamup: EventNarrator[T]
+    collect: EventNarrator[T]
+    hiding: EventNarrator[T]
+    betray: EventNarrator[T]
+    poison_gas: EventNarrator[T]
 
 
 class MatchNarrator[T](MatchObserver):
@@ -40,37 +59,31 @@ class MatchNarrator[T](MatchObserver):
     """
 
     write: Callable[[T], None]
-    narrations: Dict[MatchEvent, EventNarrator[T]]
+    narrations: Narration[T]
 
     def __init__(
         self,
         sim: MatchSimulator,
-        narrations: Dict[MatchEvent, EventNarrator[T]],
+        narrations: Narration[T],
         writer: Callable[[T], None],
     ):
         MatchObserver.__init__(self, sim)
         self.narrations = narrations
         self.write = writer
 
-    def narrator(self, event: MatchEvent) -> EventNarrator[T]:
-        return self.narrations[event]
-
     @override
     def match_begin(self):
-        narrator = self.narrator(MatchEvent.MATCH_BEGIN)
-        result = narrator.narrate(state=self.sim.state) # type: ignore
+        result = self.narrations.match_begin.narrate(self.sim.state)
         self.write(result)
 
     @override
     def match_end(self, winner: Player | None):
-        narrator = self.narrator(MatchEvent.MATCH_END)
-        result = narrator.narrate(state=self.sim.state, winner=winner) # type: ignore
+        result = self.narrations.match_end.narrate(self.sim.state, winner)
         self.write(result)
 
     @override
     def match_moment_begin(self, moment: int):
-        narrator = self.narrator(MatchEvent.MOMENT_BEGIN)
-        result = narrator.narrate(moment=moment) # type: ignore
+        result = self.narrations.moment_begin.narrate(moment)
         self.write(result)
 
     @override
@@ -79,48 +92,40 @@ class MatchNarrator[T](MatchObserver):
 
     @override
     def attack(self, attacker: Player, target: Player, damage: int, collect: Tuple[Collectable, int] | None):
-        narrator = self.narrator(MatchEvent.ATTACK)
-        result = narrator.narrate(attacker=attacker, target=target, damage=damage, collect=collect) # type: ignore
+        result = self.narrations.attack.narrate(attacker, target, damage, collect)
         self.write(result)
 
     @override
     def bush_camp(self, camper: Player):
-        narrator = self.narrator(MatchEvent.BUSH_CAMP)
-        result = narrator.narrate(camper=camper) # type: ignore
+        result = self.narrations.bush_camp.narrate(camper)
         self.write(result)
 
     @override
     def heal(self, healed: Player, healer: Player | None):
-        narrator = self.narrator(MatchEvent.HEALING)
-        result = narrator.narrate(healed=healed, healer=healer) # type: ignore
+        result = self.narrations.healing.narrate(healed, healer)
         self.write(result)
 
     @override
     def teamup(self, source: Player, target: Player, teamed: bool):
-        narrator = self.narrator(MatchEvent.TEAMUP)
-        result = narrator.narrate(source=source, target=target, teamed=teamed) # type: ignore
+        result = self.narrations.teamup.narrate(source, target, teamed)
         self.write(result)
 
     @override
     def collect(self, collector: Player, item: Collectable):
-        narrator = self.narrator(MatchEvent.COLLECT)
-        result = narrator.narrate(collector=collector, item=item) # type: ignore
+        result = self.narrations.collect.narrate(collector, item)
         self.write(result)
 
     @override
     def stay_hidden(self, hider: Player):
-        narrator = self.narrator(MatchEvent.HIDING)
-        result = narrator.narrate(hider=hider) # type: ignore
+        result = self.narrations.hiding.narrate(hider)
         self.write(result)
 
     @override
     def betray(self, betrayer: Player, betrayed: Player, damage: int):
-        narrator = self.narrator(MatchEvent.BETRAY)
-        result = narrator.narrate(betrayer=betrayer, betrayed=betrayed, damage=damage) # type: ignore
+        result = self.narrations.betray.narrate(betrayer, betrayed, damage)
         self.write(result)
 
     @override
     def poison_gas_closing(self, damaged: List[Tuple[Player, int]]):
-        narrator = self.narrator(MatchEvent.POSION_GAS)
-        result = narrator.narrate(damaged=damaged) # type: ignore
+        result = self.narrations.poison_gas.narrate(damaged)
         self.write(result)

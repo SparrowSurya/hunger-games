@@ -46,7 +46,7 @@ class MatchBeginEventTextNarrator(TextNarrator):
     """Narrates match start event."""
 
     @override
-    def narrate(self, state: MatchState) -> str: # type: ignore
+    def narrate(self, state: MatchState) -> str:
         border = "=" * 80
         heading = f"🌵 {state.environment.mode.name.upper().replace('_', ' ')} 🌵"
         participants = "\n".join((
@@ -68,7 +68,7 @@ class MatchEndEventTextNarrator(TextNarrator):
     """Narrates match end event."""
 
     @override
-    def narrate(self, state: MatchState, winner: Player | None) -> str: # type: ignore
+    def narrate(self, state: MatchState, winner: Player | None) -> str:
         border = "=" * 80
         heading = "🏆 MATCH ENDED 🏆"
         players = reversed((
@@ -93,7 +93,7 @@ class MomentBeginEventTextNarrator(TextNarrator):
     """Narrates the beginning of a moment."""
 
     @override
-    def narrate(self, moment: int) -> str: # type: ignore
+    def narrate(self, moment: int) -> str:
         return f"\n--- MOMENT {moment} ---"
 
 
@@ -101,7 +101,7 @@ class AttackEventTextNarrator(TextNarrator):
     """Narrates an attack."""
 
     @override
-    def narrate(self, attacker: Player, target: Player, damage: int, collect: Tuple[Collectable, int] | None) -> str: # type: ignore
+    def narrate(self, attacker: Player, target: Player, damage: int, collect: Tuple[Collectable, int] | None) -> str:
         msg = f"• {attacker.name} ({attacker.info.brawler!s}) attacks {target.name} ({target.info.brawler!s}) for {damage} damage."
         if not target.state.alive:
             msg += f" 💀 {target.name} eliminated!"
@@ -114,7 +114,7 @@ class BushCampEventTextNarrator(TextNarrator):
     """Narrates a player bush camping."""
 
     @override
-    def narrate(self, camper: Player) -> str: # type: ignore
+    def narrate(self, camper: Player) -> str:
         return f"• {camper.name} slips into a bush."
 
 
@@ -122,7 +122,7 @@ class HealEventTextNarrator(TextNarrator):
     """Narrates a healing event."""
 
     @override
-    def narrate(self, healed: Player, healer: Player | None) -> str: # type: ignore
+    def narrate(self, healed: Player, healer: Player | None) -> str:
         if healer:
             return f"• {healer.name} heals {healed.name}."
         return f"• {healed.name} regenerates some health."
@@ -132,7 +132,7 @@ class TeamUpEventTextNarrator(TextNarrator):
     """Narrates a teamup event."""
 
     @override
-    def narrate(self, source: Player, target: Player, teamed: bool) -> str: # type: ignore
+    def narrate(self, source: Player, target: Player, teamed: bool) -> str:
         if teamed:
             return f"• {source.name} spins at {target.name}, and they form an alliance!"
         return f"• {source.name} spins at {target.name}, but they are ignored."
@@ -142,7 +142,7 @@ class CollectEventTextNarrator(TextNarrator):
     """Narrates a collection event."""
 
     @override
-    def narrate(self, collector: Player, item: Collectable) -> str: # type: ignore
+    def narrate(self, collector: Player, item: Collectable) -> str:
         return f"• {collector.name} collects a {item.name.lower()}."
 
 
@@ -150,7 +150,7 @@ class StayHiddenEventTextNarrator(TextNarrator):
     """Narrates a player staying hidden."""
 
     @override
-    def narrate(self, hider: Player) -> str: # type: ignore
+    def narrate(self, hider: Player) -> str:
         return f"• {hider.name} remains hidden in the shadows."
 
 
@@ -158,7 +158,7 @@ class BetrayEventTextNarrator(TextNarrator):
     """Narrates a betrayal."""
 
     @override
-    def narrate(self, betrayer: Player, betrayed: Player, damage: int) -> str: # type: ignore
+    def narrate(self, betrayer: Player, betrayed: Player, damage: int) -> str:
         msg = f"• BETRAYAL! {betrayer.name} turns on {betrayed.name} for {damage} damage!"
         if not betrayed.state.alive:
             msg += f" 💀 {betrayed.name} eliminated!"
@@ -169,7 +169,7 @@ class PoisonGasEventTextNarrator(TextNarrator):
     """Narrates poison gas closing in."""
 
     @override
-    def narrate(self, damaged: List[Tuple[Player, int]]) -> str: # type: ignore
+    def narrate(self, damaged: List[Tuple[Player, int]]) -> str:
         lines = ["\n💨 THE POISON GAS IS CLOSING IN!"]
         for player, damage in damaged:
             line = f"  - {player.name} takes {damage} damage."
