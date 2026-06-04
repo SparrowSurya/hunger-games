@@ -129,6 +129,8 @@ class MatchSimulator:
                     if random.random() < 0.2:
                         p.state.hp -= dmg
                         damaged.append((p, dmg))
+                        if not p.state.alive:
+                            self.state.eliminations.append((GameModeDynamic.POISON_GAS, p))
                 if damaged:
                     self.observer.poison_gas_closing(damaged)
 

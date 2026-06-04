@@ -71,13 +71,14 @@ class MatchEndEventTextNarrator(TextNarrator):
     def narrate(self, state: MatchState, winner: Player | None) -> str:
         border = "=" * 80
         heading = "🏆 MATCH ENDED 🏆"
-        players = reversed((
-            *(x[1] for x in state.eliminations),
-            (winner if winner is not None else state.eliminations[-1][0])
-        ))
+
+        ranked_players = [x[1] for x in state.eliminations]
+        if winner is not None:
+            ranked_players.append(winner)
+
         ranks = "\n".join((
             f"#{i:<2} {player.name.capitalize()}"
-            for i, player in enumerate(players, start=1)
+            for i, player in enumerate(reversed(ranked_players), start=1)
         ))
 
         return "\n".join([

@@ -10,7 +10,7 @@ from dataclasses import dataclass, field
 from enum import StrEnum, auto
 from typing import List, Tuple
 
-from hunger_game.game_mode import GameModeEnv
+from hunger_game.game_mode import GameModeEnv, GameModeDynamic
 from hunger_game.player import Player
 
 
@@ -44,7 +44,7 @@ class MatchState:
 
     environment: GameModeEnv
     players: List[Player]
-    eliminations: List[Tuple[Player, Player]] = field(default=list) # type: ignore
+    eliminations: List[Tuple[Player | GameModeDynamic, Player]] = field(default_factory=list) # type: ignore
 
 
 @dataclass(repr=False)
