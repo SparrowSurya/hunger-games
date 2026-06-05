@@ -1,0 +1,189 @@
+[
+    {
+        "brawler": "SHELLY",
+        "nature": "DAMAGE_DEALER",
+        "attack": "SPREAD",
+        "actions": {
+            "NOTHING": 10,
+            "ATTACK": 60,
+            "BUSH_CAMP": 70,
+            "HEAL": 40,
+            "TEAM_UP": 20,
+            "COLLECT": 50,
+            "STAY_HIDDEN": 60,
+            "BETRAY": 40
+        },
+        "damage": 45,
+        "hitpoints": 140
+    },
+    {
+        "brawler": "NITA",
+        "nature": "DAMAGE_DEALER",
+        "attack": "PIERCING",
+        "actions": {
+            "NOTHING": 15,
+            "ATTACK": 55,
+            "BUSH_CAMP": 30,
+            "HEAL": 50,
+            "TEAM_UP": 30,
+            "COLLECT": 60,
+            "STAY_HIDDEN": 20,
+            "BETRAY": 20
+        },
+        "damage": 35,
+        "hitpoints": 130
+    },
+    {
+        "brawler": "COLT",
+        "nature": "SNIPER",
+        "attack": "PROJECTILE",
+        "actions": {
+            "NOTHING": 5,
+            "ATTACK": 80,
+            "BUSH_CAMP": 10,
+            "HEAL": 30,
+            "TEAM_UP": 10,
+            "COLLECT": 50,
+            "STAY_HIDDEN": 10,
+            "BETRAY": 30
+        },
+        "damage": 42,
+        "hitpoints": 90
+    },
+    {
+        "brawler": "BULL",
+        "nature": "TANK",
+        "attack": "SPREAD",
+        "actions": {
+            "NOTHING": 10,
+            "ATTACK": 50,
+            "BUSH_CAMP": 90,
+            "HEAL": 40,
+            "TEAM_UP": 10,
+            "COLLECT": 40,
+            "STAY_HIDDEN": 80,
+            "BETRAY": 50
+        },
+        "damage": 55,
+        "hitpoints": 200
+    },
+    {
+        "brawler": "JESSIE",
+        "nature": "CONTROLLER",
+        "attack": "PIERCING",
+        "actions": {
+            "NOTHING": 15,
+            "ATTACK": 50,
+            "BUSH_CAMP": 20,
+            "HEAL": 40,
+            "TEAM_UP": 40,
+            "COLLECT": 70,
+            "STAY_HIDDEN": 10,
+            "BETRAY": 10
+        },
+        "damage": 32,
+        "hitpoints": 100
+    },
+    {
+        "brawler": "BROCK",
+        "nature": "SNIPER",
+        "attack": "PROJECTILE",
+        "actions": {
+            "NOTHING": 10,
+            "ATTACK": 75,
+            "BUSH_CAMP": 15,
+            "HEAL": 30,
+            "TEAM_UP": 10,
+            "COLLECT": 50,
+            "STAY_HIDDEN": 15,
+            "BETRAY": 20
+        },
+        "damage": 40,
+        "hitpoints": 80
+    },
+    {
+        "brawler": "DYNAMIKE",
+        "nature": "ARTILLERY",
+        "attack": "THROWABLE",
+        "actions": {
+            "NOTHING": 10,
+            "ATTACK": 70,
+            "BUSH_CAMP": 20,
+            "HEAL": 30,
+            "TEAM_UP": 60,
+            "COLLECT": 40,
+            "STAY_HIDDEN": 40,
+            "BETRAY": 50
+        },
+        "damage": 45,
+        "hitpoints": 80
+    },
+    {
+        "brawler": "TICK",
+        "nature": "ARTILLERY",
+        "attack": "THROWABLE",
+        "actions": {
+            "NOTHING": 20,
+            "ATTACK": 80,
+            "BUSH_CAMP": 40,
+            "HEAL": 20,
+            "TEAM_UP": 50,
+            "COLLECT": 30,
+            "STAY_HIDDEN": 50,
+            "BETRAY": 10
+        },
+        "damage": 35,
+        "hitpoints": 70
+    },
+    {
+        "brawler": "EMZ",
+        "nature": "CONTROLLER",
+        "attack": "SPREAD",
+        "actions": {
+            "NOTHING": 10,
+            "ATTACK": 65,
+            "BUSH_CAMP": 20,
+            "HEAL": 40,
+            "TEAM_UP": 20,
+            "COLLECT": 60,
+            "STAY_HIDDEN": 10,
+            "BETRAY": 20
+        },
+        "damage": 38,
+        "hitpoints": 110
+    },
+    {
+        "brawler": "BO",
+        "nature": "CONTROLLER",
+        "attack": "SPREAD",
+        "actions": {
+            "NOTHING": 15,
+            "ATTACK": 60,
+            "BUSH_CAMP": 50,
+            "HEAL": 40,
+            "TEAM_UP": 30,
+            "COLLECT": 50,
+            "STAY_HIDDEN": 40,
+            "BETRAY": 20
+        },
+        "damage": 40,
+        "hitpoints": 120
+    },
+    {
+        "brawler": "EIGHT_BIT",
+        "nature": "DAMAGE_DEALER",
+        "attack": "PROJECTILE",
+        "actions": {
+            "NOTHING": 5,
+            "ATTACK": 70,
+            "BUSH_CAMP": 10,
+            "HEAL": 30,
+            "TEAM_UP": 10,
+            "COLLECT": 80,
+            "STAY_HIDDEN": 5,
+            "BETRAY": 10
+        },
+        "damage": 50,
+        "hitpoints": 150
+    }
+]

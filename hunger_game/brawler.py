@@ -165,7 +165,7 @@ class Brawler(StrEnum):
 
     @override
     def __str__(self) -> str:
-        return self.name.lower().replace('eight_', '8-').replace('_', ' ').capitalize()
+        return self.name.lower().replace('eight_', '8-').capitalize()
 
 
 @dataclass(repr=False)
@@ -174,9 +174,10 @@ class BrawlerInfo:
 
     brawler: Brawler
     nature: BrawlerNature
+    attack: BrawlerAttack
     actions: Dict[BrawlerAction, float]
     damage: int
-    hitpoionts: int
+    hitpoints: int
 
 
 

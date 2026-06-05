@@ -42,6 +42,7 @@ __all__ = (
 class TextNarrator(EventNarrator[str]):
     """Text based event narrator."""
 
+
 class MatchBeginEventTextNarrator(TextNarrator):
     """Narrates match start event."""
 

@@ -91,7 +91,7 @@ class MatchSimulator:
             elif action == BrawlerAction.HEAL:
                 player.state.hidden = False
                 heal_amt = random.randint(10, 25)
-                player.state.hp = min(player.info.hitpoionts, player.state.hp + heal_amt)
+                player.state.hp = min(player.info.hitpoints, player.state.hp + heal_amt)
                 self.observer.heal(player, None)
             elif action == BrawlerAction.TEAM_UP:
                 targets = [p for p in self._get_alive_players() if p != player]
