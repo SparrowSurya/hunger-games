@@ -5,7 +5,6 @@ This module provides the match event narrator class:
 * `MatchNarrator`
 """
 
-
 from __future__ import annotations
 
 import abc

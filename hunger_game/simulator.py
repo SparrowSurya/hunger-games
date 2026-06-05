@@ -3,7 +3,6 @@ This module provides match simulator class:
 * `MatchSimulator`
 """
 
-
 from __future__ import annotations
 
 import asyncio
@@ -20,9 +19,7 @@ if TYPE_CHECKING:
     from hunger_game.observer import MatchObserver
 
 
-__all__ = (
-    "MatchSimulator",
-)
+__all__ = ("MatchSimulator",)
 
 
 class MatchSimulator:
@@ -63,7 +60,9 @@ class MatchSimulator:
         ratio = alive_count / total_players
 
         # Determine Match Phase
-        is_mid = self.config.end_game_threshold < ratio <= self.config.mid_game_threshold
+        is_mid = (
+            self.config.end_game_threshold < ratio <= self.config.mid_game_threshold
+        )
         is_late = ratio <= self.config.end_game_threshold
 
         # Apply Trait Modifiers
@@ -113,7 +112,9 @@ class MatchSimulator:
                 if targets:
                     target = random.choice(targets)
                     var = self.config.damage_variance
-                    damage = random.randint(player.info.damage - var, player.info.damage + var)
+                    damage = random.randint(
+                        player.info.damage - var, player.info.damage + var
+                    )
                     target.state.hp -= damage
                     if not target.state.alive:
                         self.state.eliminations.append((player, target))
@@ -128,21 +129,29 @@ class MatchSimulator:
 
         # Poison Gas Logic
         if GameModeDynamic.POISON_GAS in self.state.environment.dynamics:
-            is_escalated = self.gas_iterations >= self.config.gas_escalation_after_iterations
+            is_escalated = (
+                self.gas_iterations >= self.config.gas_escalation_after_iterations
+            )
             frequency = 1 if is_escalated else self.config.gas_initial_frequency
-            
+
             if self.moment % frequency == 0:
                 self.gas_iterations += 1
                 damaged: List[Tuple[Player, int]] = []
-                hit_chance = self.config.gas_escalated_hit_chance if is_escalated else self.config.gas_hit_chance
-                
+                hit_chance = (
+                    self.config.gas_escalated_hit_chance
+                    if is_escalated
+                    else self.config.gas_hit_chance
+                )
+
                 for p in self._get_alive_players():
                     if random.random() < hit_chance:
                         p.state.hp -= self.config.gas_damage
                         damaged.append((p, self.config.gas_damage))
                         if not p.state.alive:
-                            self.state.eliminations.append((GameModeDynamic.POISON_GAS, p))
-                
+                            self.state.eliminations.append(
+                                (GameModeDynamic.POISON_GAS, p)
+                            )
+
                 self.observer.poison_gas_closing(damaged)
 
         self.observer.match_moment_end(len(self._get_alive_players()))

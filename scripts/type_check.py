@@ -13,7 +13,9 @@ def run_type_check():
         # pyright returns non-zero if errors are found
         sys.exit(e.returncode)
     except FileNotFoundError:
-        print("Error: 'pyright' command not found. Please run 'uv sync' or install pyright.")
+        print(
+            "Error: 'pyright' command not found. Please run 'uv sync' or install pyright."
+        )
         sys.exit(1)
 
 

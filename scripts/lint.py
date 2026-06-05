@@ -1,6 +1,7 @@
 import subprocess
 import sys
 
+
 def run_lint():
     """Runs ruff check on the package."""
     try:
@@ -10,6 +11,7 @@ def run_lint():
     except FileNotFoundError:
         print("Error: 'ruff' command not found. Please install it.")
         sys.exit(1)
+
 
 if __name__ == "__main__":
     run_lint()

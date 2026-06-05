@@ -6,7 +6,14 @@ import json
 import random
 from typing import Dict, List, Tuple, Any, Callable, overload
 
-from hunger_game.brawler import Brawler, BrawlerInfo, BrawlerAction, BrawlerNature, BrawlerState, BrawlerAttack
+from hunger_game.brawler import (
+    Brawler,
+    BrawlerInfo,
+    BrawlerAction,
+    BrawlerNature,
+    BrawlerState,
+    BrawlerAttack,
+)
 from hunger_game.player import Player, PlayerTrait
 
 
@@ -24,13 +31,15 @@ __all__ = (
 def load_json_file(path: str) -> Any:
     """Loads the json file as raw data."""
 
+
 @overload
 def load_json_file[T](path: str, parser: Callable[[Any], T]) -> T:
     """Loads the json file and provides parsed input."""
 
+
 def load_json_file[T](path: str, parser: Callable[[Any], T] | None = None) -> T | Any:
     """Loads json file and parses the file if parser is provided."""
-    with open(path, 'r') as f:
+    with open(path, "r") as f:
         result = json.load(f)
 
     if parser:
@@ -45,7 +54,9 @@ def parse_brawler_data(data: List[Dict[str, Any]]) -> Dict[Brawler, BrawlerInfo]
         raw_actions = list(item["actions"].items())
         normalized_actions = {
             BrawlerAction[k]: w
-            for k, w in normalise_weights(raw_actions, lambda x: x[1], lambda x, w: (x[0], w))
+            for k, w in normalise_weights(
+                raw_actions, lambda x: x[1], lambda x, w: (x[0], w)
+            )
         }
 
         brawler_key = Brawler[item["brawler"]]
@@ -69,6 +80,7 @@ def new_players(names: List[str], brawlers: Dict[Brawler, BrawlerInfo]) -> List[
         Player(str(i), name, brawlers[keys[i]], BrawlerState(), random_traits())
         for i, name in enumerate(names)
     ]
+
 
 def random_traits() -> List[Tuple[PlayerTrait, float]]:
     """Provides random traits."""
@@ -94,6 +106,7 @@ def normalise_weights_mut[T](
     total = sum(getter(item) for item in items)
     for item in items:
         setter(item, getter(item) / total)
+
 
 def normalise_weights[T](
     items: List[T],

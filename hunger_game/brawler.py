@@ -9,7 +9,6 @@ This module provides brawler related classes:
 * `BrawlerState`
 """
 
-
 from __future__ import annotations
 from dataclasses import dataclass
 from enum import StrEnum, auto
@@ -81,7 +80,7 @@ class Brawler(StrEnum):
 
     @override
     def __str__(self) -> str:
-        return self.name.lower().replace('eight_', '8-').capitalize()
+        return self.name.lower().replace("eight_", "8-").capitalize()
 
 
 @dataclass(repr=False)
@@ -96,7 +95,6 @@ class BrawlerInfo:
     hitpoints: int
 
 
-
 @dataclass(repr=False)
 class BrawlerState:
     """State of the brawler in the match."""
@@ -105,4 +103,5 @@ class BrawlerState:
     engagement: BrawlerEngagement = BrawlerEngagement.EXPOSED
 
     @property
-    def alive(self) -> bool: return self.hp > 0
+    def alive(self) -> bool:
+        return self.hp > 0

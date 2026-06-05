@@ -18,18 +18,21 @@ def main():
     )
 
     brawlers = load_json_file(BRAWLER_DATA_FP, parse_brawler_data)
-    players = new_players([
-        "Alice Johnson",
-        "Benjamin Carter",
-        "Charlotte Davis",
-        "Daniel Martinez",
-        "Emma Wilson",
-        "Felix Anderson",
-        "Grace Thompson",
-        "Henry Moore",
-        "Isabella Taylor",
-        "James Harris"
-    ], brawlers)
+    players = new_players(
+        [
+            "Alice Johnson",
+            "Benjamin Carter",
+            "Charlotte Davis",
+            "Daniel Martinez",
+            "Emma Wilson",
+            "Felix Anderson",
+            "Grace Thompson",
+            "Henry Moore",
+            "Isabella Taylor",
+            "James Harris",
+        ],
+        brawlers,
+    )
 
     environment = GameModeEnv(
         GameMode.SOLO_SHOWDOWN,

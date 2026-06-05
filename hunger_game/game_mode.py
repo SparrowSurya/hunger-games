@@ -8,7 +8,6 @@ This modules provides game mode related classes:
 * `Collectable`
 """
 
-
 from __future__ import annotations
 from dataclasses import dataclass, field
 from enum import StrEnum, auto
@@ -57,7 +56,7 @@ class GameModeEnv:
 
     mode: GameMode
     config: GameModeConfig
-    dynamics: List[GameModeDynamic] = field(default=list) # type: ignore
+    dynamics: List[GameModeDynamic] = field(default=list)  # type: ignore
 
 
 class Collectable(StrEnum):

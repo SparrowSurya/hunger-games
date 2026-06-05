@@ -3,7 +3,6 @@ This module provide match observer class:
 * `MatchObserver`
 """
 
-
 from __future__ import annotations
 import abc
 from typing import List, Tuple, TYPE_CHECKING
@@ -14,9 +13,7 @@ if TYPE_CHECKING:
     from hunger_game.simulator import MatchSimulator
 
 
-__all__ = (
-    "MatchObserver",
-)
+__all__ = ("MatchObserver",)
 
 
 class MatchObserver(abc.ABC):

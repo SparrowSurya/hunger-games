@@ -2,7 +2,6 @@
 This modules containts the necessary constants.
 """
 
-
 import pathlib
 
 

@@ -5,7 +5,6 @@ This module provide the match classes:
 * `MatchConfig`
 """
 
-
 from dataclasses import dataclass, field
 from enum import StrEnum, auto
 from typing import List, Tuple
@@ -39,7 +38,7 @@ class MatchState:
 
     environment: GameModeEnv
     players: List[Player]
-    eliminations: List[Tuple[Player | GameModeDynamic, Player]] = field(default_factory=list)
+    eliminations: List[Tuple[Player | GameModeDynamic, Player]] = field(default=list)  # type: ignore
 
 
 @dataclass(repr=False)

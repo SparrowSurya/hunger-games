@@ -10,7 +10,6 @@ This module provide text based match event narrator classes:
 * `PoisonGasEventTextNarrator`
 """
 
-
 from typing import List, Tuple, override
 
 from hunger_game.match import MatchState
@@ -41,19 +40,20 @@ class MatchBeginEventTextNarrator(TextNarrator):
     def narrate(self, state: MatchState) -> str:
         border = "=" * 80
         heading = f"🌵 {state.environment.mode.name.upper().replace('_', ' ')} 🌵"
-        participants = "\n".join((
-            f"{p.name.capitalize()} as {p.info.brawler!s}"
-            for p in state.players
-        ))
+        participants = "\n".join(
+            (f"{p.name.capitalize()} as {p.info.brawler!s}" for p in state.players)
+        )
 
-        return "\n".join([
-            border,
-            f"{heading:^80}",
-            border,
-            "",
-            "Participants:",
-            participants,
-        ])
+        return "\n".join(
+            [
+                border,
+                f"{heading:^80}",
+                border,
+                "",
+                "Participants:",
+                participants,
+            ]
+        )
 
 
 class MatchEndEventTextNarrator(TextNarrator):
@@ -68,18 +68,22 @@ class MatchEndEventTextNarrator(TextNarrator):
         if winner is not None:
             ranked_players.append(winner)
 
-        ranks = "\n".join((
-            f"#{i:<2} {player.name.capitalize()}"
-            for i, player in enumerate(reversed(ranked_players), start=1)
-        ))
+        ranks = "\n".join(
+            (
+                f"#{i:<2} {player.name.capitalize()}"
+                for i, player in enumerate(reversed(ranked_players), start=1)
+            )
+        )
 
-        return "\n".join([
-            border,
-            f"{heading:^80}",
-            border,
-            "",
-            ranks,
-        ])
+        return "\n".join(
+            [
+                border,
+                f"{heading:^80}",
+                border,
+                "",
+                ranks,
+            ]
+        )
 
 
 class MomentBeginEventTextNarrator(TextNarrator):

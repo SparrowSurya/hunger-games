@@ -8,9 +8,12 @@ dependencies = []
 
 [project.scripts]
 start = "main:main"
+lint = "scripts.lint:run_lint"
+format = "scripts.format:run_format"
+type-check = "scripts.type_check:run_type_check"
 
 [tool.setuptools]
-packages = ["hunger_game"]
+packages = ["hunger_game", "scripts"]
 py-modules = ["main"]
 
 [tool.uv]
