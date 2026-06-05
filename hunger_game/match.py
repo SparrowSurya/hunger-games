@@ -29,12 +29,7 @@ class MatchEvent(StrEnum):
     MOMENT_BEGIN = auto()
     MOMENT_END = auto()
     ATTACK = auto()
-    BUSH_CAMP = auto()
     HEALING = auto()
-    TEAMUP = auto()
-    COLLECT = auto()
-    HIDING = auto()
-    BETRAY = auto()
     POSION_GAS = auto()
 
 
@@ -44,12 +39,25 @@ class MatchState:
 
     environment: GameModeEnv
     players: List[Player]
-    eliminations: List[Tuple[Player | GameModeDynamic, Player]] = field(default_factory=list) # type: ignore
+    eliminations: List[Tuple[Player | GameModeDynamic, Player]] = field(default_factory=list)
 
 
 @dataclass(repr=False)
 class MatchConfig:
-    """Describes the decision bais of the match."""
+    """Describes the decision bias and pacing of the match."""
 
-    # p_teamup: float
-    # p_betray: float
+    # Combat
+    damage_variance: int = 5
+    heal_min: int = 10
+    heal_max: int = 25
+
+    # Poison Gas Config
+    gas_initial_frequency: int = 2
+    gas_escalation_after_iterations: int = 5
+    gas_hit_chance: float = 0.2
+    gas_escalated_hit_chance: float = 1.0
+    gas_damage: int = 15
+
+    # Match Phase thresholds (% of players remaining)
+    mid_game_threshold: float = 0.7
+    end_game_threshold: float = 0.3

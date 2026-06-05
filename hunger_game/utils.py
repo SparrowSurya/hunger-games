@@ -21,8 +21,8 @@ __all__ = (
 
 
 @overload
-def load_json_file(path: str, *args: Any, **kwargs: Any) -> Any:
-    """Loads the json file a raw data."""
+def load_json_file(path: str) -> Any:
+    """Loads the json file as raw data."""
 
 @overload
 def load_json_file[T](path: str, parser: Callable[[Any], T]) -> T:
@@ -77,7 +77,8 @@ def random_traits() -> List[Tuple[PlayerTrait, float]]:
 
     output: List[Tuple[PlayerTrait, float]] = []
 
-    for i in range(random.randint(2, 3)):
+    # Pick between 1 and the max number of traits available
+    for i in range(random.randint(1, len(traits))):
         trait = traits[i]
         output.append((trait, random.randint(1, 10)))
 

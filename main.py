@@ -11,13 +11,9 @@ def main():
         match_begin=MatchBeginEventTextNarrator(),
         match_end=MatchEndEventTextNarrator(),
         moment_begin=MomentBeginEventTextNarrator(),
+        moment_end=MomentEndEventTextNarrator(),
         attack=AttackEventTextNarrator(),
-        bush_camp=BushCampEventTextNarrator(),
         healing=HealEventTextNarrator(),
-        teamup=TeamUpEventTextNarrator(),
-        collect=CollectEventTextNarrator(),
-        hiding=StayHiddenEventTextNarrator(),
-        betray=BetrayEventTextNarrator(),
         poison_gas=PoisonGasEventTextNarrator(),
     )
 
@@ -41,7 +37,8 @@ def main():
         [GameModeDynamic.POISON_GAS],
     )
     state = MatchState(environment, players, [])
-    sim = MatchSimulator(lambda x: MatchNarrator(x, narrations, print), state)
+    config = MatchConfig()
+    sim = MatchSimulator(lambda x: MatchNarrator(x, narrations, print), state, config)
     asyncio.run(sim.run())
 
 

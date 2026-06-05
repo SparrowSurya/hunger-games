@@ -14,7 +14,6 @@ from typing import List, Tuple, Any, Callable, override, TYPE_CHECKING
 
 from hunger_game.observer import MatchObserver
 from hunger_game.player import Player
-from hunger_game.game_mode import Collectable
 
 if TYPE_CHECKING:
     from hunger_game.simulator import MatchSimulator
@@ -42,13 +41,9 @@ class Narration[T]:
     match_begin: EventNarrator[T]
     match_end: EventNarrator[T]
     moment_begin: EventNarrator[T]
+    moment_end: EventNarrator[T]
     attack: EventNarrator[T]
-    bush_camp: EventNarrator[T]
     healing: EventNarrator[T]
-    teamup: EventNarrator[T]
-    collect: EventNarrator[T]
-    hiding: EventNarrator[T]
-    betray: EventNarrator[T]
     poison_gas: EventNarrator[T]
 
 
@@ -87,42 +82,18 @@ class MatchNarrator[T](MatchObserver):
         self.write(result)
 
     @override
-    def nothing(self, moment: int):
-        pass
-
-    @override
-    def attack(self, attacker: Player, target: Player, damage: int, collect: Tuple[Collectable, int] | None):
-        result = self.narrations.attack.narrate(attacker, target, damage, collect)
+    def match_moment_end(self, alive_count: int):
+        result = self.narrations.moment_end.narrate(alive_count)
         self.write(result)
 
     @override
-    def bush_camp(self, camper: Player):
-        result = self.narrations.bush_camp.narrate(camper)
+    def attack(self, attacker: Player, target: Player, damage: int):
+        result = self.narrations.attack.narrate(attacker, target, damage)
         self.write(result)
 
     @override
     def heal(self, healed: Player, healer: Player | None):
         result = self.narrations.healing.narrate(healed, healer)
-        self.write(result)
-
-    @override
-    def teamup(self, source: Player, target: Player, teamed: bool):
-        result = self.narrations.teamup.narrate(source, target, teamed)
-        self.write(result)
-
-    @override
-    def collect(self, collector: Player, item: Collectable):
-        result = self.narrations.collect.narrate(collector, item)
-        self.write(result)
-
-    @override
-    def stay_hidden(self, hider: Player):
-        result = self.narrations.hiding.narrate(hider)
-        self.write(result)
-
-    @override
-    def betray(self, betrayer: Player, betrayed: Player, damage: int):
-        result = self.narrations.betray.narrate(betrayer, betrayed, damage)
         self.write(result)
 
     @override

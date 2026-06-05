@@ -8,12 +8,13 @@ from __future__ import annotations
 
 import asyncio
 import random
-from typing import List, Tuple, Callable, TYPE_CHECKING
+from typing import List, Tuple, Callable, Dict, TYPE_CHECKING
 
-from hunger_game.brawler import BrawlerAction
-from hunger_game.game_mode import Collectable, GameModeDynamic
-from hunger_game.match import MatchState
-from hunger_game.player import Player
+from hunger_game.brawler import BrawlerAction, BrawlerEngagement
+from hunger_game.game_mode import GameModeDynamic
+from hunger_game.match import MatchState, MatchConfig
+from hunger_game.player import Player, PlayerTrait
+from hunger_game.utils import normalise_weights
 
 if TYPE_CHECKING:
     from hunger_game.observer import MatchObserver
@@ -27,27 +28,61 @@ __all__ = (
 class MatchSimulator:
     """Simulates the match.
 
-    This controles the overall events happening and decisions taken each moments. It also
+    This controls the overall events happening and decisions taken each moments. It also
     manages the moments and passing it to the observer.
     """
 
     observer: MatchObserver
     state: MatchState
+    config: MatchConfig
     moment: int
+    gas_iterations: int
     _finished: bool
 
     def __init__(
         self,
         observer_factory: Callable[[MatchSimulator], MatchObserver],
         state: MatchState,
+        config: MatchConfig,
     ):
         self.observer = observer_factory(self)
         self.state = state
+        self.config = config
         self.moment = 1
+        self.gas_iterations = 0
         self._finished = False
 
     def _get_alive_players(self) -> List[Player]:
         return [p for p in self.state.players if p.state.alive]
+
+    def _get_action_weights(self, player: Player) -> Dict[BrawlerAction, float]:
+        """Calculates dynamic action weights based on traits and match state."""
+        weights = player.info.actions.copy()
+        alive_count = len(self._get_alive_players())
+        total_players = len(self.state.players)
+        ratio = alive_count / total_players
+
+        # Determine Match Phase
+        is_mid = self.config.end_game_threshold < ratio <= self.config.mid_game_threshold
+        is_late = ratio <= self.config.end_game_threshold
+
+        # Apply Trait Modifiers
+        for trait, intensity in player.traits:
+            if trait == PlayerTrait.AGGRESSIVE:
+                weights[BrawlerAction.ATTACK] += intensity * 0.2
+            elif trait == PlayerTrait.CAUTIOUS:
+                weights[BrawlerAction.HEAL] += intensity * 0.2
+
+        # Apply Match Phase Bias
+        if is_mid:
+            weights[BrawlerAction.ATTACK] *= 1.3
+        elif is_late:
+            weights[BrawlerAction.ATTACK] *= 2.0
+
+        # Final normalization
+        items = list(weights.items())
+        normalized = normalise_weights(items, lambda x: x[1], lambda x, w: (x[0], w))
+        return dict(normalized)
 
     async def run_moment(self):
         """Executes a single moment in the match."""
@@ -66,74 +101,51 @@ class MatchSimulator:
             if len(self._get_alive_players()) <= 1:
                 break
 
-            action_types = list(player.info.actions.keys())
-            weights = list(player.info.actions.values())
+            # Use dynamic weights based on traits and match phase
+            weights_dict = self._get_action_weights(player)
+            action_types = list(weights_dict.keys())
+            weights = list(weights_dict.values())
             action = random.choices(action_types, weights=weights)[0]
 
-            if action == BrawlerAction.NOTHING:
-                pass
-            elif action == BrawlerAction.ATTACK:
+            if action == BrawlerAction.ATTACK:
+                player.state.engagement = BrawlerEngagement.EXPOSED
                 targets = [p for p in self._get_alive_players() if p != player]
                 if targets:
                     target = random.choice(targets)
-                    damage = random.randint(player.info.damage - 5, player.info.damage + 5)
+                    var = self.config.damage_variance
+                    damage = random.randint(player.info.damage - var, player.info.damage + var)
                     target.state.hp -= damage
-                    collect = None
                     if not target.state.alive:
                         self.state.eliminations.append((player, target))
-                        cubes = (target.state.cubes // 2) + 1
-                        player.state.cubes += cubes
-                        collect = (Collectable.CUBE, cubes)
-                    self.observer.attack(player, target, damage, collect)
-            elif action == BrawlerAction.BUSH_CAMP:
-                player.state.hidden = True
-                self.observer.bush_camp(player)
+                    self.observer.attack(player, target, damage)
             elif action == BrawlerAction.HEAL:
-                player.state.hidden = False
-                heal_amt = random.randint(10, 25)
+                player.state.engagement = BrawlerEngagement.HEALING
+                heal_amt = random.randint(self.config.heal_min, self.config.heal_max)
                 player.state.hp = min(player.info.hitpoints, player.state.hp + heal_amt)
                 self.observer.heal(player, None)
-            elif action == BrawlerAction.TEAM_UP:
-                targets = [p for p in self._get_alive_players() if p != player]
-                if targets:
-                    target = random.choice(targets)
-                    success = random.random() < 0.3
-                    self.observer.teamup(player, target, success)
-            elif action == BrawlerAction.COLLECT:
-                player.state.hidden = False
-                player.state.cubes += 1
-                self.observer.collect(player, Collectable.CUBE)
-            elif action == BrawlerAction.STAY_HIDDEN:
-                if player.state.hidden:
-                    self.observer.stay_hidden(player)
-                else:
-                    player.state.hidden = True
-                    self.observer.bush_camp(player)
-            elif action == BrawlerAction.BETRAY:
-                targets = [p for p in self._get_alive_players() if p != player]
-                if targets:
-                    target = random.choice(targets)
-                    damage = player.info.damage + 10
-                    target.state.hp -= damage
-                    if not target.state.alive:
-                        self.state.eliminations.append((player, target))
-                    self.observer.betray(player, target, damage)
 
             await asyncio.sleep(0.1)
 
+        # Poison Gas Logic
         if GameModeDynamic.POISON_GAS in self.state.environment.dynamics:
-            if self.moment % 3 == 0:
+            is_escalated = self.gas_iterations >= self.config.gas_escalation_after_iterations
+            frequency = 1 if is_escalated else self.config.gas_initial_frequency
+            
+            if self.moment % frequency == 0:
+                self.gas_iterations += 1
                 damaged: List[Tuple[Player, int]] = []
-                dmg = 15
+                hit_chance = self.config.gas_escalated_hit_chance if is_escalated else self.config.gas_hit_chance
+                
                 for p in self._get_alive_players():
-                    if random.random() < 0.2:
-                        p.state.hp -= dmg
-                        damaged.append((p, dmg))
+                    if random.random() < hit_chance:
+                        p.state.hp -= self.config.gas_damage
+                        damaged.append((p, self.config.gas_damage))
                         if not p.state.alive:
                             self.state.eliminations.append((GameModeDynamic.POISON_GAS, p))
-                if damaged:
-                    self.observer.poison_gas_closing(damaged)
+                
+                self.observer.poison_gas_closing(damaged)
 
+        self.observer.match_moment_end(len(self._get_alive_players()))
         self.moment += 1
 
     async def run(self):

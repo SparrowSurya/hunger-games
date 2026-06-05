@@ -15,4 +15,4 @@ py-modules = ["main"]
 
 [tool.uv]
 package = true
-dev-dependencies = ["ruff"]
+dev-dependencies = ["ruff", "pyright"]
