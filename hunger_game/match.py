@@ -33,7 +33,7 @@ class MatchEvent(StrEnum):
     MOMENT_END = auto()
     ATTACK = auto()
     HEALING = auto()
-    POSION_GAS = auto()
+    POISON_GAS = auto()
 
 
 class EncounterState(StrEnum):
@@ -49,8 +49,13 @@ class Encounter:
     """Represents a localized skirmish or situation in the match."""
 
     participants: List[Player]
+    """The list of players currently involved in this specific encounter."""
+
     state: EncounterState
+    """The current nature of the encounter (e.g., ISOLATED, DUEL, MELEE)."""
+
     age: int = 0
+    """How many moments this encounter has persisted."""
 
 
 @dataclass(repr=False)
@@ -58,28 +63,31 @@ class MatchState:
     """Describes one narrative match among brawlers."""
 
     environment: GameModeEnv
+    """The game mode and environmental dynamics for this match."""
+
     players: List[Player]
-    eliminations: List[Tuple[Player | GameModeDynamic, Player]] = field(  # pyright: ignore[reportUnknownVariableType]
+    """All players participating in the match."""
+
+    eliminations: List[Tuple[Player | GameModeDynamic, Player]] = field(
         default_factory=list
     )
-    encounters: List[Encounter] = field(default_factory=list)  # pyright: ignore[reportUnknownVariableType]
+    """Record of who eliminated whom, used for final rankings."""
+
+    encounters: List[Encounter] = field(default_factory=list)
+    """The list of active localized skirmishes on the map."""
 
 
 @dataclass(repr=False)
 class MatchConfig:
     """Describes the general match engine parameters."""
 
-    damage_variance: int = 5
-    heal_min: int = 10
-    heal_max: int = 25
-
-    # Match Phase thresholds (% of players remaining)
-    mid_game_threshold: float = 0.7
-    end_game_threshold: float = 0.3
-
     # Narration specifics
     intro_frequency: float = 0.15
+    """Probability (0-1) that a brawler action will include a mood-based intro."""
 
     # Interaction settings
     encounter_merge_chance: float = 0.3
+    """Probability that two isolated players will find each other and start a duel."""
+
     third_party_chance: float = 0.1
+    """Probability that an isolated player will join an existing skirmish."""

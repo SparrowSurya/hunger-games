@@ -12,6 +12,7 @@ from hunger_game.game_mode import (
     GameModeObjective,
     GameModeDynamic,
     GameModeConfig,
+    PoisonGasConfig,
 )
 from hunger_game.player import Player, PlayerTrait
 
@@ -75,11 +76,16 @@ def parse_mode_data(data: Dict[str, Any]) -> Dict[str, GameModeEnv]:
     """Parses game mode info from json data."""
     modes: Dict[str, GameModeEnv] = {}
     for name, details in data.items():
+        config_data = details["config"].copy()
+        gas_config = None
+        if "gas" in config_data:
+            gas_config = PoisonGasConfig(**config_data.pop("gas"))
+
         modes[name] = GameModeEnv(
             name=name,
             objective=GameModeObjective[details["objective"]],
             dynamics=[GameModeDynamic[d] for d in details["dynamics"]],
-            config=GameModeConfig(**details["config"]),
+            config=GameModeConfig(gas=gas_config, **config_data),
         )
     return modes
 

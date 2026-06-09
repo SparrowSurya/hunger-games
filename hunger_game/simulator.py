@@ -7,7 +7,7 @@ from __future__ import annotations
 
 import asyncio
 import random
-from typing import List, Tuple, Callable, Dict, TYPE_CHECKING
+from typing import List, Callable, Dict, TYPE_CHECKING
 
 from hunger_game.brawler import BrawlerAction
 from hunger_game.game_mode import GameModeDynamic
@@ -35,6 +35,8 @@ class MatchSimulator:
     moment: int
     gas_iterations: int
     _finished: bool
+    gas_announced: bool = False
+    """Whether the full gas coverage has been announced."""
 
     def __init__(
         self,
@@ -48,6 +50,7 @@ class MatchSimulator:
         self.moment = 1
         self.gas_iterations = 0
         self._finished = False
+        self.gas_announced = False
 
         # Initial setup: Put all players in ISOLATED encounters
         if not self.state.encounters:
@@ -158,6 +161,78 @@ class MatchSimulator:
                     self.state.encounters.remove(iso_enc)
                     isolated.remove(iso_enc)
 
+    def _calculate_gas_damage(self) -> int:
+        """Calculates current poison gas damage based on escalation."""
+        gas_config = self.state.environment.config.gas
+        if not gas_config:
+            return 0
+
+        if self.moment < gas_config.full_coverage_at:
+            return gas_config.base_damage
+
+        # Escalation after full coverage
+        extra_moments = self.moment - gas_config.full_coverage_at
+        damage = float(gas_config.base_damage)
+        for _ in range(extra_moments):
+            damage *= 1 + gas_config.scaling_factor
+
+        return int(damage)
+
+    def _apply_poison_gas(
+        self, player: Player, action: BrawlerAction, encounter: Encounter
+    ):
+        """Calculates and applies poison gas damage contextually."""
+        gas_config = self.state.environment.config.gas
+        if (
+            not gas_config
+            or not player.state.alive
+            or self.moment <= gas_config.safe_until
+        ):
+            return
+
+        damage = self._calculate_gas_damage()
+        hit = False
+        context = "random"
+        silent = False
+
+        # Phase 1: Full Coverage
+        if self.moment >= gas_config.full_coverage_at:
+            hit = True
+            context = "coverage"
+            silent = True  # Suppress turn-by-turn narration in full coverage
+
+            if not self.gas_announced:
+                self.observer.poison_gas_coverage()
+                self.gas_announced = True
+        # Phase 2: Creeping Gas
+        else:
+            # Lazy Check
+            if (
+                action in [BrawlerAction.CAMP]
+                or encounter.state == EncounterState.ISOLATED
+            ):
+                if random.random() < gas_config.lazy_hit_chance:
+                    hit = True
+                    context = "lazy"
+            # Cornered Check
+            elif (
+                player.state.hp / player.info.hitpoints
+                < gas_config.cornered_hp_threshold
+            ):
+                if random.random() < gas_config.cornered_hit_chance:
+                    hit = True
+                    context = "cornered"
+            # Random Check
+            elif random.random() < gas_config.random_hit_chance:
+                hit = True
+                context = "random"
+
+        if hit:
+            player.state.hp -= damage
+            if not player.state.alive:
+                self.state.eliminations.append((GameModeDynamic.POISON_GAS, player))
+            self.observer.poison_damage(player, damage, context, silent=silent)
+
     async def run_moment(self):
         """Executes a single moment by processing localized encounters."""
         if len(self._get_alive_players()) <= 1:
@@ -165,13 +240,13 @@ class MatchSimulator:
             return
 
         self.observer.match_moment_begin(self.moment)
+        alive_at_start = self._get_alive_players()
 
         # Phase 1: Spatial Management
         self._cleanup_encounters()
         self._matchmaker()
 
         # Phase 2: Action Resolution
-        # We shuffle encounters and participants to ensure fairness
         shuffled_encounters = self.state.encounters.copy()
         random.shuffle(shuffled_encounters)
 
@@ -185,7 +260,6 @@ class MatchSimulator:
                 if not player.state.alive:
                     continue
 
-                # Player might have won the match during this loop
                 if len(self._get_alive_players()) <= 1:
                     break
 
@@ -193,14 +267,15 @@ class MatchSimulator:
                 action_types = list(weights_dict.keys())
                 weights = list(weights_dict.values())
 
-                # If no weights (e.g. isolated and full HP), they just wander (do nothing)
                 if not any(weights):
+                    # Even if wandering, they might take gas damage
+                    self._apply_poison_gas(player, BrawlerAction.CAMP, encounter)
                     continue
 
                 action = random.choices(action_types, weights=weights)[0]
+                player.state.last_action = action
 
                 if action == BrawlerAction.ATTACK:
-                    # Targets can only be other participants in the same encounter
                     potential_targets = [
                         p
                         for p in encounter.participants
@@ -217,6 +292,9 @@ class MatchSimulator:
                             self.state.eliminations.append((player, target))
                         self.observer.attack(player, target, damage)
 
+                        # Check if target is cornered into gas
+                        self._apply_poison_gas(target, BrawlerAction.ATTACK, encounter)
+
                 elif action == BrawlerAction.HEAL:
                     heal_amt = random.randint(gm_config.heal_min, gm_config.heal_max)
                     player.state.hp = min(
@@ -224,39 +302,17 @@ class MatchSimulator:
                     )
                     self.observer.heal(player, None)
 
+                # Actor might take gas damage regardless of action
+                self._apply_poison_gas(player, action, encounter)
+
                 await asyncio.sleep(0.05)
 
             encounter.age += 1
 
-        # Poison Gas Logic (Independent of localized encounters)
-        if GameModeDynamic.POISON_GAS in self.state.environment.dynamics:
-            gm_config = self.state.environment.config
-            is_escalated = (
-                self.gas_iterations >= gm_config.gas_escalation_after_iterations
-            )
-            frequency = 1 if is_escalated else gm_config.gas_initial_frequency
+        alive_at_end = self._get_alive_players()
+        eliminated_this_moment = [p for p in alive_at_start if p not in alive_at_end]
 
-            if self.moment % frequency == 0:
-                self.gas_iterations += 1
-                damaged: List[Tuple[Player, int]] = []
-                hit_chance = (
-                    gm_config.gas_escalated_hit_chance
-                    if is_escalated
-                    else gm_config.gas_hit_chance
-                )
-
-                for p in self._get_alive_players():
-                    if random.random() < hit_chance:
-                        p.state.hp -= gm_config.gas_damage
-                        damaged.append((p, gm_config.gas_damage))
-                        if not p.state.alive:
-                            self.state.eliminations.append(
-                                (GameModeDynamic.POISON_GAS, p)
-                            )
-
-                self.observer.poison_gas_closing(damaged)
-
-        self.observer.match_moment_end(len(self._get_alive_players()))
+        self.observer.match_moment_end(len(alive_at_end), eliminated_this_moment)
         self.moment += 1
 
     async def run(self):

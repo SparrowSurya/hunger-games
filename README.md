@@ -11,7 +11,7 @@ The Hunger Games project simulates a high-stakes match among various Brawlers. E
 -   **Observer-Based Architecture**: The core simulation logic is completely decoupled from the output. A `MatchObserver` monitors the simulator, allowing different types of narrators (text-based, data logs, etc.) to be plugged in seamlessly.
 -   **Data-Driven Brawlers**: All Brawler statistics, action weights, and mechanism definitions are loaded from external configuration files, making it easy to balance and expand the roster.
 -   **Dynamic AI Weighting**: Players don't act randomly. Their actions are driven by a weighted decision engine that adapts based on their individual traits (Aggressive, Cautious) and the current phase of the match.
--   **Environmental Pacing**: Matches feature a "Poison Gas" mechanic that escalates in intensity, increasing damage and frequency to force an exciting and timely climax.
+-   **Integrated Poison Gas**: Environmental pacing is handled through an integrated poison gas system. Brawlers who are hiding ("lazy") or trapped in combat ("cornered") are contextually damaged as the match progresses, eventually escalating to full map coverage and exponential damage to force a climax.
 -   **Strictly Typed Engine**: Built with modern Python features, including generics and deferred type evaluation, ensured by static analysis tools like Pyright.
 
 ## Getting Started

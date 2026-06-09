@@ -249,6 +249,37 @@
                 "."
             ]
         }
-    }
+    },
+    "eliminations": {
+        "SINGLE": [
+            "{0} has been eliminated. Ouch!",
+            "{0} didn't stand a chance.",
+            "{0} is heading back to the lobby.",
+            "{0} bit the dust.",
+            "{0} is out of the game! Next!"
+        ],
+        "DOUBLE": [
+            "{0} and {1} have been eliminated. Double trouble!",
+            "It's a two-for-one special! {0} and {1} are gone.",
+            "{0} and {1} are both out! This is getting intense.",
+            "A double elimination! {0} and {1} couldn't hang on.",
+            "{0} and {1} have both left the chat."
+        ],
+        "TRIPLE_PLUS": [
+            "Total carnage! {0}, and {1} have all been eliminated.",
+            "A massive clear-out! {0}, and {1} are out of here.",
+            "{0}, and {1} are gone in a flash! What a moment!",
+            "The list is getting shorter: {0}, and {1} are all eliminated.",
+            "R.I.P to {0}, and {1}. Better luck next time!"
+        ]
+    },
+    "gas_coverage": [
+        "THE POISON GAS HAS COMPLETELY COVERED THE MAP! Nowhere is safe now!",
+        "THE TOXIC FOG HAS SETTLED EVERYWHERE! The final countdown begins!",
+        "THE GREEN MIST HAS ENGULFED THE ENTIRE ARENA! Every breath is a struggle!",
+        "THE MAP IS FULLY CHOKED BY GAS! The end is near for everyone!",
+        "THE POISON GAS HAS WON THE MAP CONTROL! Stay alive as long as you can!",
+        "NO MORE SAFE ZONES! The gas has covered every inch of the battlefield!"
+    ]
 }
 

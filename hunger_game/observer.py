@@ -5,7 +5,7 @@ This module provide match observer class:
 
 from __future__ import annotations
 import abc
-from typing import List, Tuple, TYPE_CHECKING
+from typing import TYPE_CHECKING
 
 from hunger_game.player import Player
 
@@ -49,11 +49,12 @@ class MatchObserver(abc.ABC):
         """
 
     @abc.abstractmethod
-    def match_moment_end(self, alive_count: int):
+    def match_moment_end(self, alive_count: int, eliminated: list[Player]):
         """Match moment ending.
 
         :Args:
         * alive_count - number of players still alive.
+        * eliminated - players eliminated during this moment.
         """
 
     @abc.abstractmethod
@@ -102,9 +103,18 @@ class MatchObserver(abc.ABC):
         """
 
     @abc.abstractmethod
-    def poison_gas_closing(self, damaged: List[Tuple[Player, int]]):
-        """Poison gas closing in.
+    def poison_damage(
+        self, player: Player, damage: int, context: str, silent: bool = False
+    ):
+        """Player takes damage from poison gas.
 
         :Args:
-        * damaged - players damaged by poison with the damage taken.
+        * player - player taking damage.
+        * damage - damage dealt.
+        * context - context of the damage (e.g., 'lazy', 'cornered', 'coverage').
+        * silent - whether to suppress narration.
         """
+
+    @abc.abstractmethod
+    def poison_gas_coverage(self):
+        """The poison gas has fully covered the map."""

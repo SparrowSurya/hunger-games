@@ -13,7 +13,7 @@ This module provide text based match event narrator classes:
 * `PoisonGasEventTextNarrator`
 """
 
-from typing import List, Tuple, override
+from typing import override
 
 from hunger_game.match import MatchState
 from hunger_game.narrator import EventNarrator
@@ -33,6 +33,7 @@ __all__ = (
     "CampEventTextNarrator",
     "AmbushEventTextNarrator",
     "PoisonGasEventTextNarrator",
+    "PoisonGasCoverageEventTextNarrator",
 )
 
 
@@ -102,11 +103,20 @@ class MomentBeginEventTextNarrator(TextNarrator):
 
 
 class MomentEndEventTextNarrator(TextNarrator):
-    """Narrates the end of a moment."""
+    """Narrates the end of a moment with eliminations."""
+
+    def __init__(self, engine: NarrationEngine[str]):
+        self.engine = engine
 
     @override
-    def narrate(self, alive_count: int) -> str:
-        return f"\n[Status: {alive_count} players remain alive]"
+    def narrate(self, alive_count: int, eliminated: list[Player]) -> str:
+        lines: list[str] = []
+        if eliminated:
+            sentence = self.engine.narrate_eliminations(eliminated)
+            lines.append(f"\n[Eliminations: {sentence}]")
+
+        lines.append(f"\n[Status: {alive_count} brawlers remain alive]")
+        return "".join(lines)
 
 
 class AttackEventTextNarrator(TextNarrator):
@@ -165,14 +175,22 @@ class AmbushEventTextNarrator(TextNarrator):
 
 
 class PoisonGasEventTextNarrator(TextNarrator):
-    """Narrates poison gas closing in."""
+    """Narrates poison gas damage using the narration engine."""
+
+    def __init__(self, engine: NarrationEngine[str]):
+        self.engine = engine
 
     @override
-    def narrate(self, damaged: List[Tuple[Player, int]]) -> str:
-        lines = ["\nTHE POISON GAS IS CLOSING IN!"]
-        for player, damage in damaged:
-            line = f"  - {player.info.name} takes {damage} damage."
-            if not player.state.alive:
-                line += " [Eliminated]"
-            lines.append(line)
-        return "\n".join(lines)
+    def narrate(self, player: Player, damage: int, context: str) -> str:
+        return self.engine.narrate_poison(player, damage, context)
+
+
+class PoisonGasCoverageEventTextNarrator(TextNarrator):
+    """Narrates poison gas covering the map using the narration engine."""
+
+    def __init__(self, engine: NarrationEngine[str]):
+        self.engine = engine
+
+    @override
+    def narrate(self) -> str:
+        return self.engine.narrate_gas_coverage()

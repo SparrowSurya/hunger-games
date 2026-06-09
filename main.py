@@ -22,13 +22,14 @@ def main():
         match_begin=MatchBeginEventTextNarrator(),
         match_end=MatchEndEventTextNarrator(),
         moment_begin=MomentBeginEventTextNarrator(),
-        moment_end=MomentEndEventTextNarrator(),
+        moment_end=MomentEndEventTextNarrator(engine),
         attack=AttackEventTextNarrator(engine),
         healing=HealEventTextNarrator(engine),
         loot=LootEventTextNarrator(engine),
         camp=CampEventTextNarrator(engine),
         ambush=AmbushEventTextNarrator(engine),
-        poison_gas=PoisonGasEventTextNarrator(),
+        poison_gas=PoisonGasEventTextNarrator(engine),
+        gas_coverage=PoisonGasCoverageEventTextNarrator(engine),
     )
 
     # Setup Match

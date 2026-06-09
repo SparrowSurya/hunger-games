@@ -9,11 +9,16 @@
             "heal_max": 25,
             "mid_game_threshold": 0.7,
             "end_game_threshold": 0.3,
-            "gas_initial_frequency": 2,
-            "gas_escalation_after_iterations": 5,
-            "gas_hit_chance": 0.2,
-            "gas_escalated_hit_chance": 1.0,
-            "gas_damage": 15
+            "gas": {
+                "safe_until": 3,
+                "full_coverage_at": 12,
+                "base_damage": 20,
+                "scaling_factor": 0.25,
+                "random_hit_chance": 0.01,
+                "lazy_hit_chance": 0.10,
+                "cornered_hp_threshold": 0.35,
+                "cornered_hit_chance": 0.05
+            }
         }
     }
 }

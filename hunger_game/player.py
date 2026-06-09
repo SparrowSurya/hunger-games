@@ -40,10 +40,19 @@ class Player:
     """Player information and its brawler's state.."""
 
     id: str
+    """A unique identifier for the player instance."""
+
     name: str
+    """The display name of the human or AI player."""
+
     info: BrawlerInfo
+    """The static brawler type and stats (from JSON)."""
+
     state: BrawlerState
+    """The current dynamic state of the brawler (HP, last action, etc.)."""
+
     traits: List[Tuple[PlayerTrait, float]]
+    """Behavioral traits and their intensities that drive decision weights."""
 
     def __post_init__(self):
         self.state.hp = self.info.hitpoints

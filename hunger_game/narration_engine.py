@@ -80,6 +80,18 @@ class NarrationEngine[T](abc.ABC):
     def narrate_ambush(self, attacker: Player, target: Player, damage: int) -> T:
         """Narrates an ambush."""
 
+    @abc.abstractmethod
+    def narrate_poison(self, player: Player, damage: int, context: str) -> T:
+        """Narrates poison gas damage."""
+
+    @abc.abstractmethod
+    def narrate_eliminations(self, players: list[Player]) -> T:
+        """Narrates multiple eliminations at once."""
+
+    @abc.abstractmethod
+    def narrate_gas_coverage(self) -> T:
+        """Narrates the event when gas fully covers the map."""
+
 
 class TextNarrationEngine(NarrationEngine[str]):
     """Text based narration engine class."""
@@ -196,6 +208,67 @@ class TextNarrationEngine(NarrationEngine[str]):
 
         outro = self._get_outro(BrawlerAction.AMBUSH, magnitude)
         return self._assemble(intro, attacker.info.name, verb, target.info.name, outro)
+
+    def narrate_poison(self, player: Player, damage: int, context: str) -> str:
+        """Narrates poison damage based on context without numeric values."""
+        hp_ratio = player.state.hp / player.info.hitpoints
+
+        if context == "coverage":
+            msg = "The map is fully engulfed! "
+        elif context == "lazy":
+            msg = f"{player.info.name} is caught in the creeping gas! "
+        elif context == "cornered":
+            msg = f"{player.info.name} is forced into the gas! "
+        else:
+            msg = f"{player.info.name} chokes on the gas! "
+
+        if not player.state.alive:
+            intensity = random.choice(
+                [
+                    "It's too much—they collapse into the smog.",
+                    "The toxic fumes overwhelm them, ending their match.",
+                    "They vanish into the green haze, never to return.",
+                    "The gas delivers a final, lethal blow.",
+                ]
+            )
+        elif hp_ratio < 0.2:
+            intensity = "They are barely clinging to life!"
+        elif hp_ratio < 0.5:
+            intensity = "They are severely weakened."
+        else:
+            intensity = "They struggle to breathe but push on."
+
+        return f">> {msg}{intensity}"
+
+    def narrate_eliminations(self, players: list[Player]) -> str:
+        """Narrates eliminations using templates from data."""
+        names = [p.info.name for p in players]
+        count = len(names)
+
+        if count == 1:
+            category = "SINGLE"
+        elif count == 2:
+            category = "DOUBLE"
+        else:
+            category = "TRIPLE_PLUS"
+
+        templates = self.data.get("eliminations", {}).get(category, ["{0} eliminated."])
+        template = random.choice(templates)
+
+        if count == 1:
+            return template.format(names[0])
+        elif count == 2:
+            return template.format(names[0], names[1])
+        else:
+            # For 3+, the template expects names formatted as a list
+            # We'll format the first few and the last one to fit "{0}, and {1}"
+            others = ", ".join(names[:-1])
+            return template.format(others, names[-1])
+
+    def narrate_gas_coverage(self) -> str:
+        """Narrates gas coverage using templates from data."""
+        templates = self.data.get("gas_coverage", ["THE GAS HAS COVERED THE MAP!"])
+        return random.choice(templates)
 
     def _assemble(
         self, intro: str, subject: str, verb: str, object: str | None, outro: str

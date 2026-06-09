@@ -9,7 +9,7 @@ from __future__ import annotations
 
 import abc
 from dataclasses import dataclass
-from typing import List, Tuple, Any, Callable, override, TYPE_CHECKING
+from typing import Any, Callable, override, TYPE_CHECKING
 
 from hunger_game.observer import MatchObserver
 from hunger_game.player import Player
@@ -47,6 +47,7 @@ class Narration[T]:
     camp: EventNarrator[T]
     ambush: EventNarrator[T]
     poison_gas: EventNarrator[T]
+    gas_coverage: EventNarrator[T]
 
 
 class MatchNarrator[T](MatchObserver):
@@ -84,36 +85,45 @@ class MatchNarrator[T](MatchObserver):
         self.write(result)
 
     @override
-    def match_moment_end(self, alive_count: int):
-        result = self.narrations.moment_end.narrate(alive_count)
+    def match_moment_end(self, alive_count: int, eliminated: list[Player]):
+        result = self.narrations.moment_end.narrate(alive_count, eliminated)
         self.write(result)
 
     @override
     def attack(self, attacker: Player, target: Player, damage: int):
         result = self.narrations.attack.narrate(attacker, target, damage)
-        self.write(result)
+        self.write(f"* {result}")  # type: ignore
 
     @override
     def heal(self, healed: Player, healer: Player | None):
         result = self.narrations.healing.narrate(healed, healer)
-        self.write(result)
+        self.write(f"* {result}")  # type: ignore
 
     @override
     def loot(self, player: Player):
         result = self.narrations.loot.narrate(player)
-        self.write(result)
+        self.write(f"* {result}")  # type: ignore
 
     @override
     def camp(self, player: Player):
         result = self.narrations.camp.narrate(player)
-        self.write(result)
+        self.write(f"* {result}")  # type: ignore
 
     @override
     def ambush(self, attacker: Player, target: Player, damage: int):
         result = self.narrations.ambush.narrate(attacker, target, damage)
-        self.write(result)
+        self.write(f"* {result}")  # type: ignore
 
     @override
-    def poison_gas_closing(self, damaged: List[Tuple[Player, int]]):
-        result = self.narrations.poison_gas.narrate(damaged)
-        self.write(result)
+    def poison_damage(
+        self, player: Player, damage: int, context: str, silent: bool = False
+    ):
+        if silent:
+            return
+        result = self.narrations.poison_gas.narrate(player, damage, context)
+        self.write(f"  {result}")  # type: ignore
+
+    @override
+    def poison_gas_coverage(self):
+        result = self.narrations.gas_coverage.narrate()
+        self.write(f"\n{result}")  # type: ignore
