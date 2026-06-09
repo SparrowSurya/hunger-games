@@ -17,6 +17,7 @@ Main Components:
 from hunger_game.brawler import *
 from hunger_game.constants import *
 from hunger_game.game_mode import *
+from hunger_game.events import *
 from hunger_game.match import *
 from hunger_game.player import *
 from hunger_game.narrator import *

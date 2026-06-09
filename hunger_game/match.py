@@ -16,24 +16,11 @@ from hunger_game.player import Player
 
 
 __all__ = (
-    "MatchEvent",
     "MatchState",
     "MatchConfig",
     "EncounterState",
     "Encounter",
 )
-
-
-class MatchEvent(StrEnum):
-    """Describes an event in the match."""
-
-    MATCH_BEGIN = auto()
-    MATCH_END = auto()
-    MOMENT_BEGIN = auto()
-    MOMENT_END = auto()
-    ATTACK = auto()
-    HEALING = auto()
-    POISON_GAS = auto()
 
 
 class EncounterState(StrEnum):

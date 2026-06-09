@@ -280,6 +280,14 @@
         "THE MAP IS FULLY CHOKED BY GAS! The end is near for everyone!",
         "THE POISON GAS HAS WON THE MAP CONTROL! Stay alive as long as you can!",
         "NO MORE SAFE ZONES! The gas has covered every inch of the battlefield!"
+    ],
+    "gas_start": [
+        "A faint green mist begins to creep in from the edges of the arena...",
+        "The smell of toxins fills the air. The poison gas is starting to close in!",
+        "Warning: Poison gas detected! The perimeter is no longer safe.",
+        "The arena is shrinking! The first clouds of poison gas are visible.",
+        "The creeping death has arrived. Poison gas is now entering the map!",
+        "Watch the edges! The poison gas is beginning its slow advance."
     ]
 }
 

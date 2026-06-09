@@ -29,6 +29,7 @@ def main():
         camp=CampEventTextNarrator(engine),
         ambush=AmbushEventTextNarrator(engine),
         poison_gas=PoisonGasEventTextNarrator(engine),
+        gas_start=PoisonGasStartEventTextNarrator(engine),
         gas_coverage=PoisonGasCoverageEventTextNarrator(engine),
     )
 

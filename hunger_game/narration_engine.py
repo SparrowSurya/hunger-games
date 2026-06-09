@@ -89,6 +89,10 @@ class NarrationEngine[T](abc.ABC):
         """Narrates multiple eliminations at once."""
 
     @abc.abstractmethod
+    def narrate_gas_start(self) -> T:
+        """Narrates the event when gas starts covering the map."""
+
+    @abc.abstractmethod
     def narrate_gas_coverage(self) -> T:
         """Narrates the event when gas fully covers the map."""
 
@@ -287,3 +291,8 @@ class TextNarrationEngine(NarrationEngine[str]):
             sentence += f"{spacer}{outro}"
 
         return sentence
+
+    def narrate_gas_start(self) -> str:
+        """Narrates the start of poison gas using templates from data."""
+        templates = self.data.get("gas_start", ["POISON GAS IS ENTERING THE ARENA!"])
+        return random.choice(templates)

@@ -117,7 +117,7 @@ def random_traits() -> List[Tuple[PlayerTrait, float]]:
     # Pick between 1 and the max number of traits available
     for i in range(random.randint(1, len(traits))):
         trait = traits[i]
-        output.append((trait, random.randint(1, 10)))
+        output.append((trait, random.randint(6, 10)))
 
     return normalise_weights(output, lambda x: x[1], lambda x, w: (x[0], w))
 

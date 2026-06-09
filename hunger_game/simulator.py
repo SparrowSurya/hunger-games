@@ -11,7 +11,23 @@ from typing import List, Callable, Dict, TYPE_CHECKING
 
 from hunger_game.brawler import BrawlerAction
 from hunger_game.game_mode import GameModeDynamic
-from hunger_game.match import MatchState, MatchConfig, Encounter, EncounterState
+from hunger_game.events import (
+    MatchBeginEvent,
+    MatchEndEvent,
+    MomentBeginEvent,
+    MomentEndEvent,
+    AttackEvent,
+    HealEvent,
+    PoisonDamageEvent,
+    PoisonGasStartEvent,
+    PoisonGasCoverageEvent,
+)
+from hunger_game.match import (
+    MatchState,
+    MatchConfig,
+    Encounter,
+    EncounterState,
+)
 from hunger_game.player import Player, PlayerTrait
 from hunger_game.utils import normalise_weights
 
@@ -35,8 +51,6 @@ class MatchSimulator:
     moment: int
     gas_iterations: int
     _finished: bool
-    gas_announced: bool = False
-    """Whether the full gas coverage has been announced."""
 
     def __init__(
         self,
@@ -50,7 +64,6 @@ class MatchSimulator:
         self.moment = 1
         self.gas_iterations = 0
         self._finished = False
-        self.gas_announced = False
 
         # Initial setup: Put all players in ISOLATED encounters
         if not self.state.encounters:
@@ -200,10 +213,6 @@ class MatchSimulator:
             hit = True
             context = "coverage"
             silent = True  # Suppress turn-by-turn narration in full coverage
-
-            if not self.gas_announced:
-                self.observer.poison_gas_coverage()
-                self.gas_announced = True
         # Phase 2: Creeping Gas
         else:
             # Lazy Check
@@ -231,7 +240,9 @@ class MatchSimulator:
             player.state.hp -= damage
             if not player.state.alive:
                 self.state.eliminations.append((GameModeDynamic.POISON_GAS, player))
-            self.observer.poison_damage(player, damage, context, silent=silent)
+            self.observer.on_poison_damage(
+                PoisonDamageEvent(player, damage, context, silent=silent)
+            )
 
     async def run_moment(self):
         """Executes a single moment by processing localized encounters."""
@@ -239,7 +250,7 @@ class MatchSimulator:
             self._finished = True
             return
 
-        self.observer.match_moment_begin(self.moment)
+        self.observer.on_match_moment_begin(MomentBeginEvent(self.moment))
         alive_at_start = self._get_alive_players()
 
         # Phase 1: Spatial Management
@@ -290,7 +301,7 @@ class MatchSimulator:
                         target.state.hp -= damage
                         if not target.state.alive:
                             self.state.eliminations.append((player, target))
-                        self.observer.attack(player, target, damage)
+                        self.observer.on_attack(AttackEvent(player, target, damage))
 
                         # Check if target is cornered into gas
                         self._apply_poison_gas(target, BrawlerAction.ATTACK, encounter)
@@ -300,7 +311,7 @@ class MatchSimulator:
                     player.state.hp = min(
                         player.info.hitpoints, player.state.hp + heal_amt
                     )
-                    self.observer.heal(player, None)
+                    self.observer.on_heal(HealEvent(player, None))
 
                 # Actor might take gas damage regardless of action
                 self._apply_poison_gas(player, action, encounter)
@@ -312,14 +323,25 @@ class MatchSimulator:
         alive_at_end = self._get_alive_players()
         eliminated_this_moment = [p for p in alive_at_start if p not in alive_at_end]
 
-        self.observer.match_moment_end(len(alive_at_end), eliminated_this_moment)
+        self.observer.on_match_moment_end(
+            MomentEndEvent(len(alive_at_end), eliminated_this_moment)
+        )
+
+        # Trigger gas announcements for the upcoming moment
+        gas_config = self.state.environment.config.gas
+        if gas_config:
+            if self.moment == gas_config.safe_until:
+                self.observer.on_poison_gas_start(PoisonGasStartEvent())
+            elif self.moment == gas_config.full_coverage_at - 1:
+                self.observer.on_poison_gas_coverage(PoisonGasCoverageEvent())
+
         self.moment += 1
 
     async def run(self):
         """Executes a complete match."""
-        self.observer.match_begin()
+        self.observer.on_match_begin(MatchBeginEvent(self.state))
         while not self._finished and len(self._get_alive_players()) > 1:
             await self.run_moment()
 
         winner = self._get_alive_players()[0] if self._get_alive_players() else None
-        self.observer.match_end(winner)
+        self.observer.on_match_end(MatchEndEvent(self.state, winner))
