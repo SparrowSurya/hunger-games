@@ -43,6 +43,9 @@ class Narration[T]:
     moment_end: EventNarrator[T]
     attack: EventNarrator[T]
     healing: EventNarrator[T]
+    loot: EventNarrator[T]
+    camp: EventNarrator[T]
+    ambush: EventNarrator[T]
     poison_gas: EventNarrator[T]
 
 
@@ -93,6 +96,21 @@ class MatchNarrator[T](MatchObserver):
     @override
     def heal(self, healed: Player, healer: Player | None):
         result = self.narrations.healing.narrate(healed, healer)
+        self.write(result)
+
+    @override
+    def loot(self, player: Player):
+        result = self.narrations.loot.narrate(player)
+        self.write(result)
+
+    @override
+    def camp(self, player: Player):
+        result = self.narrations.camp.narrate(player)
+        self.write(result)
+
+    @override
+    def ambush(self, attacker: Player, target: Player, damage: int):
+        result = self.narrations.ambush.narrate(attacker, target, damage)
         self.write(result)
 
     @override

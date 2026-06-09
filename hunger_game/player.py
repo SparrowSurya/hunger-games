@@ -25,6 +25,15 @@ class PlayerTrait(StrEnum):
     CAUTIOUS = auto()
     """Survival-focused. Prioritizes healing when damaged."""
 
+    COLLECTOR = auto()
+    """Loot-focused. Prioritizes finding and collecting cubes."""
+
+    CAMPER = auto()
+    """Passive survivalist. Prefers to stay hidden to avoid conflict."""
+
+    AMBUSER = auto()
+    """Tactical hunter. Prefers hiding specifically to launch surprise attacks."""
+
 
 @dataclass(repr=False)
 class Player:

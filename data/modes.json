@@ -1,0 +1,19 @@
+{
+    "SOLO_SHOWDOWN": {
+        "objective": "LAST_PLAYER_STANDING",
+        "dynamics": ["POISON_GAS"],
+        "config": {
+            "max_players": 10,
+            "damage_variance": 5,
+            "heal_min": 10,
+            "heal_max": 25,
+            "mid_game_threshold": 0.7,
+            "end_game_threshold": 0.3,
+            "gas_initial_frequency": 2,
+            "gas_escalation_after_iterations": 5,
+            "gas_hit_chance": 0.2,
+            "gas_escalated_hit_chance": 1.0,
+            "gas_damage": 15
+        }
+    }
+}

@@ -6,13 +6,12 @@ import json
 import random
 from typing import Dict, List, Tuple, Any, Callable, overload
 
-from hunger_game.brawler import (
-    Brawler,
-    BrawlerInfo,
-    BrawlerAction,
-    BrawlerNature,
-    BrawlerState,
-    BrawlerAttack,
+from hunger_game.brawler import BrawlerInfo, BrawlerAction, BrawlerState
+from hunger_game.game_mode import (
+    GameModeEnv,
+    GameModeObjective,
+    GameModeDynamic,
+    GameModeConfig,
 )
 from hunger_game.player import Player, PlayerTrait
 
@@ -20,6 +19,7 @@ from hunger_game.player import Player, PlayerTrait
 __all__ = (
     "load_json_file",
     "parse_brawler_data",
+    "parse_mode_data",
     "new_players",
     "random_traits",
     "normalise_weights_mut",
@@ -47,10 +47,11 @@ def load_json_file[T](path: str, parser: Callable[[Any], T] | None = None) -> T 
     return result
 
 
-def parse_brawler_data(data: List[Dict[str, Any]]) -> Dict[Brawler, BrawlerInfo]:
+def parse_brawler_data(data: Dict[str, Any]) -> Dict[str, BrawlerInfo]:
     """Parses brawler info from json data."""
-    brawlers: Dict[Brawler, BrawlerInfo] = {}
-    for item in data:
+    brawlers: Dict[str, BrawlerInfo] = {}
+    for item in data["brawlers"]:
+        # Use normalise_weights for the action probabilities
         raw_actions = list(item["actions"].items())
         normalized_actions = {
             BrawlerAction[k]: w
@@ -59,11 +60,10 @@ def parse_brawler_data(data: List[Dict[str, Any]]) -> Dict[Brawler, BrawlerInfo]
             )
         }
 
-        brawler_key = Brawler[item["brawler"]]
-        brawlers[brawler_key] = BrawlerInfo(
-            brawler=brawler_key,
-            nature=BrawlerNature[item["nature"]],
-            attack=BrawlerAttack[item["attack"]],
+        name = item["brawler"]
+        brawlers[name] = BrawlerInfo(
+            name=name,
+            nature=item["nature"],
             actions=normalized_actions,
             damage=item["damage"],
             hitpoints=item["hitpoints"],
@@ -71,13 +71,32 @@ def parse_brawler_data(data: List[Dict[str, Any]]) -> Dict[Brawler, BrawlerInfo]
     return brawlers
 
 
-def new_players(names: List[str], brawlers: Dict[Brawler, BrawlerInfo]) -> List[Player]:
+def parse_mode_data(data: Dict[str, Any]) -> Dict[str, GameModeEnv]:
+    """Parses game mode info from json data."""
+    modes: Dict[str, GameModeEnv] = {}
+    for name, details in data.items():
+        modes[name] = GameModeEnv(
+            name=name,
+            objective=GameModeObjective[details["objective"]],
+            dynamics=[GameModeDynamic[d] for d in details["dynamics"]],
+            config=GameModeConfig(**details["config"]),
+        )
+    return modes
+
+
+def new_players(names: List[str], brawlers: Dict[str, BrawlerInfo]) -> List[Player]:
     """Populates players with random brawlers."""
-    keys = list(brawlers.keys())
-    random.shuffle(keys)
+    brawler_names = list(brawlers.keys())
+    random.shuffle(brawler_names)
 
     return [
-        Player(str(i), name, brawlers[keys[i]], BrawlerState(), random_traits())
+        Player(
+            str(i),
+            name,
+            brawlers[brawler_names[i % len(brawler_names)]],
+            BrawlerState(),
+            random_traits(),
+        )
         for i, name in enumerate(names)
     ]
 
@@ -105,7 +124,7 @@ def normalise_weights_mut[T](
     """Normalises the weights of mutable item."""
     total = sum(getter(item) for item in items)
     for item in items:
-        setter(item, getter(item) / total)
+        setter(item, getter(item) / total if total > 0 else 0)
 
 
 def normalise_weights[T](
@@ -115,4 +134,4 @@ def normalise_weights[T](
 ) -> List[T]:
     """Normalises the weights of immutable item."""
     total = sum(getter(item) for item in items)
-    return [setter(item, getter(item) / total) for item in items]
+    return [setter(item, getter(item) / total if total > 0 else 0) for item in items]

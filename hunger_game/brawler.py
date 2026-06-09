@@ -1,10 +1,6 @@
 """
 This module provides brawler related classes:
-* `BrawlerNature`
 * `BrawlerAction`
-* `BrawlerAttack`
-* `BrawlerEngagement`
-* `Brawler`
 * `BrawlerInfo`
 * `BrawlerState`
 """
@@ -12,31 +8,14 @@ This module provides brawler related classes:
 from __future__ import annotations
 from dataclasses import dataclass
 from enum import StrEnum, auto
-from typing import Dict, override
+from typing import Dict
 
 
 __all__ = (
-    "BrawlerNature",
     "BrawlerAction",
-    "BrawlerAttack",
-    "BrawlerEngagement",
-    "Brawler",
     "BrawlerInfo",
     "BrawlerState",
 )
-
-
-class BrawlerNature(StrEnum):
-    """Describes the nature of brawlers in the game."""
-
-    DAMAGE_DEALER = auto()
-    SNIPER = auto()
-    TANK = auto()
-    ASSASSIN = auto()
-    CONTROLLER = auto()
-    ARTILLERY = auto()
-    SUPPORT = auto()
-    ANTI_TANK = auto()
 
 
 class BrawlerAction(StrEnum):
@@ -44,52 +23,17 @@ class BrawlerAction(StrEnum):
 
     ATTACK = auto()
     HEAL = auto()
-
-
-class BrawlerAttack(StrEnum):
-    """Describes the attack delivery mechanism in game."""
-
-    PROJECTILE = auto()
-    SPREAD = auto()
-    MELEE = auto()
-    THROWABLE = auto()
-    PIERCING = auto()
-
-
-class BrawlerEngagement(StrEnum):
-    """Describes the engagement/mood of the brawler."""
-
-    EXPOSED = auto()
-    HEALING = auto()
-
-
-class Brawler(StrEnum):
-    """Playable bralwers in the game."""
-
-    SHELLY = auto()
-    NITA = auto()
-    COLT = auto()
-    BULL = auto()
-    JESSIE = auto()
-    BROCK = auto()
-    DYNAMIKE = auto()
-    TICK = auto()
-    EMZ = auto()
-    BO = auto()
-    EIGHT_BIT = auto()
-
-    @override
-    def __str__(self) -> str:
-        return self.name.lower().replace("eight_", "8-").capitalize()
+    LOOT = auto()
+    CAMP = auto()
+    AMBUSH = auto()
 
 
 @dataclass(repr=False)
 class BrawlerInfo:
-    """Static information about a brawler."""
+    """Static information about a brawler loaded from data."""
 
-    brawler: Brawler
-    nature: BrawlerNature
-    attack: BrawlerAttack
+    name: str
+    nature: str
     actions: Dict[BrawlerAction, float]
     damage: int
     hitpoints: int
@@ -97,10 +41,10 @@ class BrawlerInfo:
 
 @dataclass(repr=False)
 class BrawlerState:
-    """State of the brawler in the match."""
+    """Dynamic state of the brawler during a match."""
 
     hp: int = 0
-    engagement: BrawlerEngagement = BrawlerEngagement.EXPOSED
+    last_action: BrawlerAction | None = None
 
     @property
     def alive(self) -> bool:

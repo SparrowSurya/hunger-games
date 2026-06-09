@@ -1,0 +1,254 @@
+{
+    "intros": {
+        "AGGRESSIVE": [
+            "The relentless",
+            "Sensing blood,",
+            "With total aggression,",
+            "Pressing the advantage,",
+            "Unstoppable,",
+            "Driven by fury,",
+            "Without a hint of mercy,",
+            "Looking for a fight,"
+        ],
+        "CAUTIOUS": [
+            "A patient",
+            "Carefully,",
+            "Methodically,",
+            "Taking no chances,",
+            "Staying focused,",
+            "Watching the perimeter,",
+            "Moving with precision,",
+            "Calculated and calm,"
+        ],
+        "DESPERATE": [
+            "Clinging to life,",
+            "A battered",
+            "Cornered and hurt,",
+            "Dying to survive,",
+            "In a final effort,",
+            "Fighting through the pain,",
+            "At their absolute limit,",
+            "Pushed to the brink,"
+        ],
+        "NEUTRAL": [
+            "A focused",
+            "Without hesitating,",
+            "Briefly,",
+            "Steadily,",
+            "In a flash,",
+            "Moving forward,",
+            "With purpose,",
+            "Surveying the field,"
+        ],
+        "SNEAKY": [
+            "Leaping from the shadows,",
+            "From the bushes,",
+            "With a surprise strike,",
+            "Without warning,",
+            "Out of nowhere,",
+            "Hidden from sight,",
+            "Breaking cover,",
+            "Striking from the dark,"
+        ]
+    },
+    "verbs": {
+        "ATTACK": {
+            "SNIPER": [
+                "takes a precise shot at",
+                "snipes",
+                "picks off",
+                "tags",
+                "lines up a shot on",
+                "pings"
+            ],
+            "TANK": [
+                "charges at",
+                "gets up close and blasts",
+                "rams into",
+                "pummels",
+                "steamrolls",
+                "crushes"
+            ],
+            "ARTILLERY": [
+                "lobs explosives at",
+                "rains fire down on",
+                "tosses bombs towards",
+                "bombards",
+                "shells",
+                "rains destruction upon"
+            ],
+            "ASSASSIN": [
+                "dashes towards",
+                "lunges at",
+                "strikes swiftly at",
+                "pounces on",
+                "backstabs"
+            ],
+            "DAMAGE_DEALER": [
+                "unloads on",
+                "shreds through",
+                "sprays bullets at",
+                "blasts away at",
+                "clobbers"
+            ],
+            "CONTROLLER": [
+                "pins down",
+                "restricts the movement of",
+                "zones out",
+                "traps",
+                "harrasses"
+            ],
+            "SUPPORT": [
+                "keeps distance and fires at",
+                "provides covering fire against",
+                "assists with a strike on",
+                "distracts"
+            ],
+            "ANTI_TANK": [
+                "melts through the defenses of",
+                "punishes",
+                "breaks through the armor of",
+                "counters"
+            ],
+            "DEFAULT": [
+                "attacks",
+                "strikes",
+                "unleashes on",
+                "hits",
+                "targets",
+                "assaults",
+                "engages",
+                "confronts"
+            ]
+        },
+        "HEAL": {
+            "DEFAULT": [
+                "regenerates some health",
+                "mends their wounds",
+                "takes a moment to recover",
+                "patches themselves up",
+                "recovers quickly",
+                "breathes for a second",
+                "finds a moment of respite",
+                "stabilizes their condition"
+            ]
+        },
+        "LOOT": {
+            "DEFAULT": [
+                "searches the area for cubes",
+                "scavenges for supplies",
+                "secures a power cube",
+                "finds some loot",
+                "augments their power",
+                "gathers resources",
+                "picks up some gear",
+                "collects a trophy"
+            ]
+        },
+        "CAMP": {
+            "DEFAULT": [
+                "slips into a bush",
+                "hides in the foliage",
+                "takes cover in the grass",
+                "vanishes from sight",
+                "waits in silence",
+                "crouches in the shadows",
+                "remains perfectly still",
+                "blends into the environment"
+            ]
+        },
+        "AMBUSH": {
+            "DEFAULT": [
+                "springs a trap on",
+                "ambushes",
+                "catches {target} off-guard",
+                "strikes from concealment at",
+                "surprises",
+                "unveils a deadly trap for"
+            ]
+        }
+    },
+    "outros": {
+        "ATTACK": {
+            "MINOR": [
+                "for a tiny bit of health.",
+                "barely leaving a scratch.",
+                "testing their reflexes.",
+                "causing minor annoyance.",
+                "grazing them.",
+                "as they shrug it off.",
+                "failing to do much damage.",
+                "but it's just a flesh wound."
+            ],
+            "MAJOR": [
+                ", taking a massive chunk of health!",
+                ", shredding their defenses!",
+                ", dealing significant damage!",
+                ", blowing them away!",
+                ", leaving them reeling!",
+                ", nearly knocking them out!",
+                ", forcing them to retreat!",
+                ", landing a devastating hit!"
+            ],
+            "ELIMINATION": [
+                ", wiping them off the map!",
+                ", sending them back to the lobby!",
+                ", securing the elimination!",
+                ", ending their match!",
+                ", delivering the final blow!",
+                ", confirming the kill!",
+                ", terminating their run!",
+                ", and they are out!"
+            ]
+        },
+        "AMBUSH": {
+            "ELIMINATION": [
+                ", completely destroying them!",
+                ", securing a lethal takedown!",
+                ", ending their game instantly!",
+                ", making short work of them!",
+                ", they never saw it coming!"
+            ],
+            "DEFAULT": [
+                ", dealing massive surprise damage!",
+                ", catching them totally unprepared!",
+                ", leaving them stunned!",
+                ", rattling them completely!",
+                ", gaining the upper hand!"
+            ]
+        },
+        "HEAL": {
+            "DEFAULT": [
+                "to stay in the fight.",
+                "as the battle continues.",
+                "to regain composure.",
+                "while they have the chance.",
+                "feeling refreshed.",
+                "refusing to go down easily.",
+                "preparing for the next round.",
+                ""
+            ]
+        },
+        "LOOT": {
+            "DEFAULT": [
+                "while no one is looking.",
+                "to gain an edge.",
+                "to prepare for the next fight.",
+                "feeling stronger already.",
+                "every bit counts.",
+                "."
+            ]
+        },
+        "CAMP": {
+            "DEFAULT": [
+                "to set up an ambush.",
+                "to avoid detection.",
+                "and holds their breath.",
+                "patiently waiting for a victim.",
+                "hoping no one noticed.",
+                "."
+            ]
+        }
+    }
+}
+

@@ -76,6 +76,32 @@ class MatchObserver(abc.ABC):
         """
 
     @abc.abstractmethod
+    def loot(self, player: Player):
+        """Player collecting loot/cubes.
+
+        :Args:
+        * player - player collecting loot.
+        """
+
+    @abc.abstractmethod
+    def camp(self, player: Player):
+        """Player slipping into a bush.
+
+        :Args:
+        * player - player camping.
+        """
+
+    @abc.abstractmethod
+    def ambush(self, attacker: Player, target: Player, damage: int):
+        """Player launching an attack from a bush.
+
+        :Args:
+        * attacker - player attacking.
+        * target - player taking damage.
+        * damage - damage dealt.
+        """
+
+    @abc.abstractmethod
     def poison_gas_closing(self, damaged: List[Tuple[Player, int]]):
         """Poison gas closing in.
 

@@ -3,21 +3,35 @@
 import asyncio
 
 from hunger_game import *
+from hunger_game.narration_engine import TextNarrationEngine
 
 
 def main():
     """Entry point of the simulation."""
+    # Load Content
+    brawlers = load_json_file(BRAWLER_DATA_FP, parse_brawler_data)
+    modes = load_json_file(MODES_DATA_FP, parse_mode_data)
+    narration_data = load_json_file(NARRATION_DATA_FP)
+
+    config = MatchConfig()
+
+    # Initialize Narration Engine
+    engine = TextNarrationEngine(narration_data, config)
+
     narrations = Narration(
         match_begin=MatchBeginEventTextNarrator(),
         match_end=MatchEndEventTextNarrator(),
         moment_begin=MomentBeginEventTextNarrator(),
         moment_end=MomentEndEventTextNarrator(),
-        attack=AttackEventTextNarrator(),
-        healing=HealEventTextNarrator(),
+        attack=AttackEventTextNarrator(engine),
+        healing=HealEventTextNarrator(engine),
+        loot=LootEventTextNarrator(engine),
+        camp=CampEventTextNarrator(engine),
+        ambush=AmbushEventTextNarrator(engine),
         poison_gas=PoisonGasEventTextNarrator(),
     )
 
-    brawlers = load_json_file(BRAWLER_DATA_FP, parse_brawler_data)
+    # Setup Match
     players = new_players(
         [
             "Alice Johnson",
@@ -34,14 +48,14 @@ def main():
         brawlers,
     )
 
-    environment = GameModeEnv(
-        GameMode.SOLO_SHOWDOWN,
-        GameModeConfig(10, GameModeObjective.LAST_PLAYER_STANDING),
-        [GameModeDynamic.POISON_GAS],
-    )
+    # Select Mode from Registry
+    environment = modes["SOLO_SHOWDOWN"]
+
     state = MatchState(environment, players, [])
-    config = MatchConfig()
+
+    # Instantiate MatchSimulator
     sim = MatchSimulator(lambda x: MatchNarrator(x, narrations, print), state, config)
+
     asyncio.run(sim.run())
 
 

@@ -9,9 +9,9 @@ import asyncio
 import random
 from typing import List, Tuple, Callable, Dict, TYPE_CHECKING
 
-from hunger_game.brawler import BrawlerAction, BrawlerEngagement
+from hunger_game.brawler import BrawlerAction
 from hunger_game.game_mode import GameModeDynamic
-from hunger_game.match import MatchState, MatchConfig
+from hunger_game.match import MatchState, MatchConfig, Encounter, EncounterState
 from hunger_game.player import Player, PlayerTrait
 from hunger_game.utils import normalise_weights
 
@@ -23,10 +23,10 @@ __all__ = ("MatchSimulator",)
 
 
 class MatchSimulator:
-    """Simulates the match.
+    """Simulates the match using a stateful encounter system.
 
-    This controls the overall events happening and decisions taken each moments. It also
-    manages the moments and passing it to the observer.
+    This controls localized skirmishes and interactions between players,
+    simulating realistic spatial dynamics and engagement morphing.
     """
 
     observer: MatchObserver
@@ -49,21 +49,30 @@ class MatchSimulator:
         self.gas_iterations = 0
         self._finished = False
 
+        # Initial setup: Put all players in ISOLATED encounters
+        if not self.state.encounters:
+            for player in self.state.players:
+                self.state.encounters.append(
+                    Encounter(participants=[player], state=EncounterState.ISOLATED)
+                )
+
     def _get_alive_players(self) -> List[Player]:
         return [p for p in self.state.players if p.state.alive]
 
-    def _get_action_weights(self, player: Player) -> Dict[BrawlerAction, float]:
-        """Calculates dynamic action weights based on traits and match state."""
+    def _get_action_weights(
+        self, player: Player, encounter: Encounter
+    ) -> Dict[BrawlerAction, float]:
+        """Calculates dynamic action weights based on traits, phase, and encounter context."""
         weights = player.info.actions.copy()
         alive_count = len(self._get_alive_players())
         total_players = len(self.state.players)
         ratio = alive_count / total_players
 
-        # Determine Match Phase
-        is_mid = (
-            self.config.end_game_threshold < ratio <= self.config.mid_game_threshold
-        )
-        is_late = ratio <= self.config.end_game_threshold
+        gm_config = self.state.environment.config
+
+        # Match Phase
+        is_mid = gm_config.end_game_threshold < ratio <= gm_config.mid_game_threshold
+        is_late = ratio <= gm_config.end_game_threshold
 
         # Apply Trait Modifiers
         for trait, intensity in player.traits:
@@ -78,75 +87,168 @@ class MatchSimulator:
         elif is_late:
             weights[BrawlerAction.ATTACK] *= 2.0
 
+        # ENCOUNTER CONTEXT MODIFIERS
+        if encounter.state == EncounterState.ISOLATED:
+            # Cannot attack if alone
+            weights[BrawlerAction.ATTACK] = 0
+            # Higher chance to heal if damaged and alone
+            if player.state.hp < player.info.hitpoints:
+                weights[BrawlerAction.HEAL] *= 2.0
+
+        # Prevent healing at full health
+        if player.state.hp >= player.info.hitpoints:
+            weights[BrawlerAction.HEAL] = 0
+
         # Final normalization
         items = list(weights.items())
         normalized = normalise_weights(items, lambda x: x[1], lambda x, w: (x[0], w))
         return dict(normalized)
 
+    def _cleanup_encounters(self):
+        """Removes dead players and dissolves/morphs empty or thin encounters."""
+        for enc in self.state.encounters:
+            enc.participants = [p for p in enc.participants if p.state.alive]
+
+        # Filter out empty encounters
+        self.state.encounters = [
+            enc for enc in self.state.encounters if enc.participants
+        ]
+
+        # Morph thin encounters
+        for enc in self.state.encounters:
+            count = len(enc.participants)
+            if count == 1:
+                enc.state = EncounterState.ISOLATED
+            elif count == 2:
+                enc.state = EncounterState.DUEL
+            else:
+                enc.state = EncounterState.MELEE
+
+    def _matchmaker(self):
+        """Merges isolated players or adds them to existing skirmishes."""
+        isolated = [
+            enc for enc in self.state.encounters if enc.state == EncounterState.ISOLATED
+        ]
+        random.shuffle(isolated)
+
+        # 1. Merge Isolated into Duels
+        while len(isolated) >= 2:
+            if random.random() < self.config.encounter_merge_chance:
+                enc1 = isolated.pop()
+                enc2 = isolated.pop()
+                enc1.participants.extend(enc2.participants)
+                enc1.state = EncounterState.DUEL
+                self.state.encounters.remove(enc2)
+            else:
+                # Still isolated this turn
+                isolated.pop()
+
+        # 2. Third-Partying: Remaining Isolated might join existing DUELs
+        skirmishes = [
+            enc
+            for enc in self.state.encounters
+            if enc.state in [EncounterState.DUEL, EncounterState.MELEE]
+        ]
+        if isolated and skirmishes:
+            for iso_enc in isolated[:]:
+                if random.random() < self.config.third_party_chance:
+                    target_skirmish = random.choice(skirmishes)
+                    target_skirmish.participants.extend(iso_enc.participants)
+                    target_skirmish.state = EncounterState.MELEE
+                    self.state.encounters.remove(iso_enc)
+                    isolated.remove(iso_enc)
+
     async def run_moment(self):
-        """Executes a single moment in the match."""
-        alive = self._get_alive_players()
-        if len(alive) <= 1:
+        """Executes a single moment by processing localized encounters."""
+        if len(self._get_alive_players()) <= 1:
             self._finished = True
             return
 
         self.observer.match_moment_begin(self.moment)
-        random.shuffle(alive)
 
-        for player in alive:
-            if not player.state.alive:
-                continue
+        # Phase 1: Spatial Management
+        self._cleanup_encounters()
+        self._matchmaker()
 
-            if len(self._get_alive_players()) <= 1:
-                break
+        # Phase 2: Action Resolution
+        # We shuffle encounters and participants to ensure fairness
+        shuffled_encounters = self.state.encounters.copy()
+        random.shuffle(shuffled_encounters)
 
-            # Use dynamic weights based on traits and match phase
-            weights_dict = self._get_action_weights(player)
-            action_types = list(weights_dict.keys())
-            weights = list(weights_dict.values())
-            action = random.choices(action_types, weights=weights)[0]
+        gm_config = self.state.environment.config
 
-            if action == BrawlerAction.ATTACK:
-                player.state.engagement = BrawlerEngagement.EXPOSED
-                targets = [p for p in self._get_alive_players() if p != player]
-                if targets:
-                    target = random.choice(targets)
-                    var = self.config.damage_variance
-                    damage = random.randint(
-                        player.info.damage - var, player.info.damage + var
+        for encounter in shuffled_encounters:
+            participants = encounter.participants.copy()
+            random.shuffle(participants)
+
+            for player in participants:
+                if not player.state.alive:
+                    continue
+
+                # Player might have won the match during this loop
+                if len(self._get_alive_players()) <= 1:
+                    break
+
+                weights_dict = self._get_action_weights(player, encounter)
+                action_types = list(weights_dict.keys())
+                weights = list(weights_dict.values())
+
+                # If no weights (e.g. isolated and full HP), they just wander (do nothing)
+                if not any(weights):
+                    continue
+
+                action = random.choices(action_types, weights=weights)[0]
+
+                if action == BrawlerAction.ATTACK:
+                    # Targets can only be other participants in the same encounter
+                    potential_targets = [
+                        p
+                        for p in encounter.participants
+                        if p != player and p.state.alive
+                    ]
+                    if potential_targets:
+                        target = random.choice(potential_targets)
+                        var = gm_config.damage_variance
+                        damage = random.randint(
+                            player.info.damage - var, player.info.damage + var
+                        )
+                        target.state.hp -= damage
+                        if not target.state.alive:
+                            self.state.eliminations.append((player, target))
+                        self.observer.attack(player, target, damage)
+
+                elif action == BrawlerAction.HEAL:
+                    heal_amt = random.randint(gm_config.heal_min, gm_config.heal_max)
+                    player.state.hp = min(
+                        player.info.hitpoints, player.state.hp + heal_amt
                     )
-                    target.state.hp -= damage
-                    if not target.state.alive:
-                        self.state.eliminations.append((player, target))
-                    self.observer.attack(player, target, damage)
-            elif action == BrawlerAction.HEAL:
-                player.state.engagement = BrawlerEngagement.HEALING
-                heal_amt = random.randint(self.config.heal_min, self.config.heal_max)
-                player.state.hp = min(player.info.hitpoints, player.state.hp + heal_amt)
-                self.observer.heal(player, None)
+                    self.observer.heal(player, None)
 
-            await asyncio.sleep(0.1)
+                await asyncio.sleep(0.05)
 
-        # Poison Gas Logic
+            encounter.age += 1
+
+        # Poison Gas Logic (Independent of localized encounters)
         if GameModeDynamic.POISON_GAS in self.state.environment.dynamics:
+            gm_config = self.state.environment.config
             is_escalated = (
-                self.gas_iterations >= self.config.gas_escalation_after_iterations
+                self.gas_iterations >= gm_config.gas_escalation_after_iterations
             )
-            frequency = 1 if is_escalated else self.config.gas_initial_frequency
+            frequency = 1 if is_escalated else gm_config.gas_initial_frequency
 
             if self.moment % frequency == 0:
                 self.gas_iterations += 1
                 damaged: List[Tuple[Player, int]] = []
                 hit_chance = (
-                    self.config.gas_escalated_hit_chance
+                    gm_config.gas_escalated_hit_chance
                     if is_escalated
-                    else self.config.gas_hit_chance
+                    else gm_config.gas_hit_chance
                 )
 
                 for p in self._get_alive_players():
                     if random.random() < hit_chance:
-                        p.state.hp -= self.config.gas_damage
-                        damaged.append((p, self.config.gas_damage))
+                        p.state.hp -= gm_config.gas_damage
+                        damaged.append((p, gm_config.gas_damage))
                         if not p.state.alive:
                             self.state.eliminations.append(
                                 (GameModeDynamic.POISON_GAS, p)

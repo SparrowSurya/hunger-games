@@ -1,66 +1,58 @@
 """
 This modules provides game mode related classes:
-* `GameMode`
 * `GameModeObjective`
 * `GameModeConfig`
 * `GameModeDynamic`
 * `GameModeEnv`
-* `Collectable`
 """
 
 from __future__ import annotations
-from dataclasses import dataclass, field
+from dataclasses import dataclass
 from enum import StrEnum, auto
-from typing import List
 
 
 __all__ = (
-    "GameMode",
     "GameModeObjective",
     "GameModeConfig",
     "GameModeDynamic",
     "GameModeEnv",
-    "Collectable",
 )
 
 
-class GameMode(StrEnum):
-    """Game mode in the game."""
-
-    SOLO_SHOWDOWN = auto()
-
-
 class GameModeObjective(StrEnum):
-    """Objective of the game mode."""
+    """Represents the objective of a game mode."""
 
     LAST_PLAYER_STANDING = auto()
 
 
-@dataclass(repr=False)
-class GameModeConfig:
-    """Game mode configuration."""
-
-    players: int
-    objective: GameModeObjective
-
-
 class GameModeDynamic(StrEnum):
-    """Game mode dynamic components."""
+    """Represents a dynamic event in a game mode."""
 
     POISON_GAS = auto()
 
 
 @dataclass(repr=False)
+class GameModeConfig:
+    """Configuration for a game mode, loaded from data."""
+
+    max_players: int
+    damage_variance: int
+    heal_min: int
+    heal_max: int
+    mid_game_threshold: float
+    end_game_threshold: float
+    gas_initial_frequency: int
+    gas_escalation_after_iterations: int
+    gas_hit_chance: float
+    gas_escalated_hit_chance: float
+    gas_damage: int
+
+
+@dataclass(repr=False)
 class GameModeEnv:
-    """Game mode environment."""
+    """Environment for a game mode."""
 
-    mode: GameMode
+    name: str
+    objective: GameModeObjective
+    dynamics: list[GameModeDynamic]
     config: GameModeConfig
-    dynamics: List[GameModeDynamic] = field(default=list)  # type: ignore
-
-
-class Collectable(StrEnum):
-    """Represents a collectable item in game mode."""
-
-    CUBE = auto()
-    GEM = auto()
