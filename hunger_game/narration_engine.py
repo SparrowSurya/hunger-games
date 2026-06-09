@@ -284,7 +284,11 @@ class TextNarrationEngine(NarrationEngine[str]):
             sentence = f"{subject.capitalize()} {verb}"
 
         if object:
-            sentence += f" {object}"
+            if "{target}" in verb:
+                # Support mid-verb object placement (e.g., "catches {target} off-guard")
+                sentence = sentence.replace("{target}", object)
+            else:
+                sentence += f" {object}"
 
         if outro:
             spacer = "" if outro.startswith(",") or outro.startswith(".") else " "

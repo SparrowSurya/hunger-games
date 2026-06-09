@@ -18,6 +18,9 @@ from hunger_game.events import (
     MomentEndEvent,
     AttackEvent,
     HealEvent,
+    LootEvent,
+    CampEvent,
+    AmbushEvent,
     PoisonDamageEvent,
     PoisonGasStartEvent,
     PoisonGasCoverageEvent,
@@ -102,6 +105,10 @@ class MatchSimulator:
             weights[BrawlerAction.ATTACK] *= 1.3
         elif is_late:
             weights[BrawlerAction.ATTACK] *= 2.0
+            weights[BrawlerAction.LOOT] *= 0.1
+        else:
+            # Early game: Boost looting
+            weights[BrawlerAction.LOOT] *= 2.0
 
         # ENCOUNTER CONTEXT MODIFIERS
         if encounter.state == EncounterState.ISOLATED:
@@ -312,6 +319,32 @@ class MatchSimulator:
                         player.info.hitpoints, player.state.hp + heal_amt
                     )
                     self.observer.on_heal(HealEvent(player, None))
+
+                elif action == BrawlerAction.LOOT:
+                    if random.random() < 0.5:  # 50% chance to find a cube
+                        self.observer.on_loot(LootEvent(player))
+
+                elif action == BrawlerAction.CAMP:
+                    self.observer.on_camp(CampEvent(player))
+
+                elif action == BrawlerAction.AMBUSH:
+                    potential_targets = [
+                        p
+                        for p in encounter.participants
+                        if p != player and p.state.alive
+                    ]
+                    if potential_targets:
+                        target = random.choice(potential_targets)
+                        var = gm_config.damage_variance
+                        damage = random.randint(
+                            player.info.damage - var, player.info.damage + var
+                        )
+                        target.state.hp -= damage
+                        if not target.state.alive:
+                            self.state.eliminations.append((player, target))
+                        self.observer.on_ambush(AmbushEvent(player, target, damage))
+
+                        self._apply_poison_gas(target, BrawlerAction.AMBUSH, encounter)
 
                 # Actor might take gas damage regardless of action
                 self._apply_poison_gas(player, action, encounter)
