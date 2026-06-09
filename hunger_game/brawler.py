@@ -6,7 +6,7 @@ This module provides brawler related classes:
 """
 
 from __future__ import annotations
-from dataclasses import dataclass
+from dataclasses import dataclass, field
 from enum import StrEnum, auto
 from typing import Dict
 
@@ -38,9 +38,6 @@ class BrawlerInfo:
     nature: str
     """The brawler's class/nature (e.g., SNIPER, TANK) used for verb selection."""
 
-    actions: Dict[BrawlerAction, float]
-    """Base weights for each possible action type."""
-
     damage: int
     """Base attack damage value."""
 
@@ -54,6 +51,9 @@ class BrawlerState:
 
     hp: int = 0
     """Current health points."""
+
+    action_weights: Dict[BrawlerAction, float] = field(default_factory=dict)
+    """Dynamic weights for each possible action type."""
 
     last_action: BrawlerAction | None = None
     """The most recent action performed, used for mood and logic context."""

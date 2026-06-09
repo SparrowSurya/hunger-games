@@ -13,273 +13,126 @@
         {
             "brawler": "Shelly",
             "nature": "DAMAGE_DEALER",
-            "actions": {
-                "ATTACK": 50,
-                "HEAL": 15,
-                "LOOT": 15,
-                "CAMP": 10,
-                "AMBUSH": 10
-            },
             "damage": 45,
             "hitpoints": 140
         },
         {
             "brawler": "Nita",
             "nature": "DAMAGE_DEALER",
-            "actions": {
-                "ATTACK": 40,
-                "HEAL": 20,
-                "LOOT": 20,
-                "CAMP": 15,
-                "AMBUSH": 5
-            },
             "damage": 35,
             "hitpoints": 130
         },
         {
             "brawler": "Colt",
             "nature": "SNIPER",
-            "actions": {
-                "ATTACK": 60,
-                "HEAL": 10,
-                "LOOT": 25,
-                "CAMP": 5,
-                "AMBUSH": 0
-            },
             "damage": 42,
             "hitpoints": 90
         },
         {
             "brawler": "Bull",
             "nature": "TANK",
-            "actions": {
-                "ATTACK": 40,
-                "HEAL": 15,
-                "LOOT": 10,
-                "CAMP": 20,
-                "AMBUSH": 15
-            },
             "damage": 55,
             "hitpoints": 200
         },
         {
             "brawler": "Jessie",
             "nature": "CONTROLLER",
-            "actions": {
-                "ATTACK": 40,
-                "HEAL": 15,
-                "LOOT": 30,
-                "CAMP": 10,
-                "AMBUSH": 5
-            },
             "damage": 32,
             "hitpoints": 100
         },
         {
             "brawler": "Brock",
             "nature": "SNIPER",
-            "actions": {
-                "ATTACK": 60,
-                "HEAL": 10,
-                "LOOT": 20,
-                "CAMP": 10,
-                "AMBUSH": 0
-            },
             "damage": 40,
             "hitpoints": 80
         },
         {
             "brawler": "Dynamike",
             "nature": "ARTILLERY",
-            "actions": {
-                "ATTACK": 50,
-                "HEAL": 10,
-                "LOOT": 25,
-                "CAMP": 10,
-                "AMBUSH": 5
-            },
             "damage": 45,
             "hitpoints": 80
         },
         {
             "brawler": "Tick",
             "nature": "ARTILLERY",
-            "actions": {
-                "ATTACK": 60,
-                "HEAL": 5,
-                "LOOT": 15,
-                "CAMP": 15,
-                "AMBUSH": 5
-            },
             "damage": 35,
             "hitpoints": 70
         },
         {
             "brawler": "Emz",
             "nature": "CONTROLLER",
-            "actions": {
-                "ATTACK": 55,
-                "HEAL": 15,
-                "LOOT": 20,
-                "CAMP": 5,
-                "AMBUSH": 5
-            },
             "damage": 38,
             "hitpoints": 110
         },
         {
             "brawler": "Bo",
             "nature": "CONTROLLER",
-            "actions": {
-                "ATTACK": 45,
-                "HEAL": 15,
-                "LOOT": 20,
-                "CAMP": 10,
-                "AMBUSH": 10
-            },
             "damage": 40,
             "hitpoints": 120
         },
         {
             "brawler": "8-Bit",
             "nature": "DAMAGE_DEALER",
-            "actions": {
-                "ATTACK": 65,
-                "HEAL": 10,
-                "LOOT": 20,
-                "CAMP": 5,
-                "AMBUSH": 0
-            },
             "damage": 50,
             "hitpoints": 150
         },
         {
             "brawler": "El Primo",
             "nature": "TANK",
-            "actions": {
-                "ATTACK": 45,
-                "HEAL": 15,
-                "LOOT": 10,
-                "CAMP": 10,
-                "AMBUSH": 20
-            },
             "damage": 48,
             "hitpoints": 210
         },
         {
             "brawler": "Poco",
             "nature": "SUPPORT",
-            "actions": {
-                "ATTACK": 30,
-                "HEAL": 35,
-                "LOOT": 25,
-                "CAMP": 10,
-                "AMBUSH": 0
-            },
             "damage": 28,
             "hitpoints": 130
         },
         {
             "brawler": "Barley",
             "nature": "ARTILLERY",
-            "actions": {
-                "ATTACK": 55,
-                "HEAL": 10,
-                "LOOT": 20,
-                "CAMP": 10,
-                "AMBUSH": 5
-            },
             "damage": 38,
             "hitpoints": 85
         },
         {
             "brawler": "Rosa",
             "nature": "TANK",
-            "actions": {
-                "ATTACK": 40,
-                "HEAL": 20,
-                "LOOT": 15,
-                "CAMP": 15,
-                "AMBUSH": 10
-            },
             "damage": 42,
             "hitpoints": 190
         },
         {
             "brawler": "Piper",
             "nature": "SNIPER",
-            "actions": {
-                "ATTACK": 70,
-                "HEAL": 10,
-                "LOOT": 15,
-                "CAMP": 5,
-                "AMBUSH": 0
-            },
             "damage": 55,
             "hitpoints": 75
         },
         {
             "brawler": "Mortis",
             "nature": "ASSASSIN",
-            "actions": {
-                "ATTACK": 45,
-                "HEAL": 10,
-                "LOOT": 10,
-                "CAMP": 5,
-                "AMBUSH": 30
-            },
             "damage": 44,
             "hitpoints": 125
         },
         {
             "brawler": "Crow",
             "nature": "ASSASSIN",
-            "actions": {
-                "ATTACK": 55,
-                "HEAL": 10,
-                "LOOT": 20,
-                "CAMP": 10,
-                "AMBUSH": 5
-            },
             "damage": 32,
             "hitpoints": 80
         },
         {
             "brawler": "Spike",
             "nature": "DAMAGE_DEALER",
-            "actions": {
-                "ATTACK": 60,
-                "HEAL": 10,
-                "LOOT": 20,
-                "CAMP": 10,
-                "AMBUSH": 0
-            },
             "damage": 52,
             "hitpoints": 70
         },
         {
             "brawler": "Leon",
             "nature": "ASSASSIN",
-            "actions": {
-                "ATTACK": 40,
-                "HEAL": 10,
-                "LOOT": 15,
-                "CAMP": 15,
-                "AMBUSH": 20
-            },
             "damage": 46,
             "hitpoints": 110
         },
         {
             "brawler": "Sandy",
             "nature": "CONTROLLER",
-            "actions": {
-                "ATTACK": 40,
-                "HEAL": 15,
-                "LOOT": 20,
-                "CAMP": 20,
-                "AMBUSH": 5
-            },
             "damage": 35,
             "hitpoints": 120
         }

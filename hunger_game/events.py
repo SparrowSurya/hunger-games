@@ -138,6 +138,7 @@ class PoisonDamageEvent(MatchEventModel):
 @dataclass
 class PoisonGasStartEvent(MatchEventModel):
     """Event triggered when the poison gas begins to enter the arena."""
+
     pass
 
 

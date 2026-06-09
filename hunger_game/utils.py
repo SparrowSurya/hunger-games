@@ -52,20 +52,10 @@ def parse_brawler_data(data: Dict[str, Any]) -> Dict[str, BrawlerInfo]:
     """Parses brawler info from json data."""
     brawlers: Dict[str, BrawlerInfo] = {}
     for item in data["brawlers"]:
-        # Use normalise_weights for the action probabilities
-        raw_actions = list(item["actions"].items())
-        normalized_actions = {
-            BrawlerAction[k]: w
-            for k, w in normalise_weights(
-                raw_actions, lambda x: x[1], lambda x, w: (x[0], w)
-            )
-        }
-
         name = item["brawler"]
         brawlers[name] = BrawlerInfo(
             name=name,
             nature=item["nature"],
-            actions=normalized_actions,
             damage=item["damage"],
             hitpoints=item["hitpoints"],
         )
@@ -100,11 +90,29 @@ def new_players(names: List[str], brawlers: Dict[str, BrawlerInfo]) -> List[Play
             str(i),
             name,
             brawlers[brawler_names[i % len(brawler_names)]],
-            BrawlerState(),
+            BrawlerState(action_weights=random_action_weights()),
             random_traits(),
         )
         for i, name in enumerate(names)
     ]
+
+
+def random_action_weights() -> Dict[BrawlerAction, float]:
+    """Provides random action weights with a few high and rest low distribution."""
+    actions = list(BrawlerAction)
+    random.shuffle(actions)
+
+    # Pick 1 or 2 actions to be high weight
+    high_count = random.randint(1, 2)
+    weights: Dict[BrawlerAction, float] = {}
+
+    for i, action in enumerate(actions):
+        if i < high_count:
+            weights[action] = float(random.randint(60, 100))
+        else:
+            weights[action] = float(random.randint(5, 20))
+
+    return weights
 
 
 def random_traits() -> List[Tuple[PlayerTrait, float]]:

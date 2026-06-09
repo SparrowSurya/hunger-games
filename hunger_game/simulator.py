@@ -82,7 +82,7 @@ class MatchSimulator:
         self, player: Player, encounter: Encounter
     ) -> Dict[BrawlerAction, float]:
         """Calculates dynamic action weights based on traits, phase, and encounter context."""
-        weights = player.info.actions.copy()
+        weights = player.state.action_weights.copy()
         alive_count = len(self._get_alive_players())
         total_players = len(self.state.players)
         ratio = alive_count / total_players

@@ -63,9 +63,22 @@ class MatchBeginEventTextNarrator(TextNarrator[MatchBeginEvent]):
     def narrate(self, event: MatchBeginEvent) -> str:
         border = "=" * 80
         heading = "SOLO SHOWDOWN"
-        participants = "\n".join(
-            (f"{p.info.name} ({p.name.capitalize()})" for p in event.state.players)
-        )
+
+        participant_lines = []
+        for p in event.state.players:
+            # Format Traits
+            traits_str = ", ".join(f"{t[0].name}({t[1]:.1f})" for t in p.traits)
+
+            # Format Weights (sorted by value descending for clarity)
+            sorted_weights = sorted(
+                p.state.action_weights.items(), key=lambda x: x[1], reverse=True
+            )
+            weights_str = ", ".join(f"{k.name}:{v:.0f}" for k, v in sorted_weights)
+
+            participant_lines.append(f"{p.info.name} ({p.name.capitalize()})")
+            participant_lines.append(f"  Traits: {traits_str}")
+            participant_lines.append(f"  Nature: {weights_str}")
+            participant_lines.append("")
 
         return "\n".join(
             [
@@ -74,7 +87,7 @@ class MatchBeginEventTextNarrator(TextNarrator[MatchBeginEvent]):
                 border,
                 "",
                 "Participants:",
-                participants,
+                "\n".join(participant_lines),
             ]
         )
 
@@ -209,6 +222,7 @@ class PoisonGasCoverageEventTextNarrator(TextNarrator[PoisonGasCoverageEvent]):
     @override
     def narrate(self, event: PoisonGasCoverageEvent) -> str:
         return self.engine.narrate_gas_coverage()
+
 
 class PoisonGasStartEventTextNarrator(TextNarrator[PoisonGasStartEvent]):
     """Narrates posion gas started on the map using the narration engine."""

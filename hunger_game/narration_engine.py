@@ -314,6 +314,10 @@ class TextNarrationEngine(NarrationEngine[str]):
             spacer = "" if outro.startswith(",") or outro.startswith(".") else " "
             sentence += f"{spacer}{outro}"
 
+        # Ensure sentence ends with a period if no punctuation is present
+        if not sentence.endswith((".", "!", "?")):
+            sentence += "."
+
         return sentence
 
     def narrate_gas_start(self) -> str:
