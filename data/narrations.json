@@ -119,6 +119,45 @@
                 "assaults",
                 "engages",
                 "confronts"
+            ],
+            "Shelly": [
+                "blasts with her shotgun at",
+                "unleashes a buckshot on",
+                "fires a wide spread at",
+                "shreds with her boomstick"
+            ],
+            "Colt": [
+                "unloads his revolvers on",
+                "sprays a volley of bullets at",
+                "strikes a pose and fires at",
+                "pelted with lead"
+            ],
+            "El Primo": [
+                "unleashes a flurry of punches on",
+                "elbow drops",
+                "delivers a flying strike to",
+                "pummels with his fists"
+            ],
+            "Mortis": [
+                "dashes through the shadows at",
+                "slashes with his shovel at",
+                "unleashes a swarm of bats on",
+                "harvests the soul of"
+            ],
+            "Dynamike": [
+                "tosses a bundle of dynamite at",
+                "throws a 'Big Barrel o' Boom' towards",
+                "lobs explosive sticks at"
+            ],
+            "Nita": [
+                "summons a shockwave towards",
+                "commands her bear to strike",
+                "unleashes a spirit blast at"
+            ],
+            "Bull": [
+                "charges headfirst into",
+                "blasts his double-barrel shotgun at",
+                "steamrolls through"
             ]
         },
         "HEAL": {
@@ -131,6 +170,11 @@
                 "breathes for a second",
                 "finds a moment of respite",
                 "stabilizes their condition"
+            ],
+            "Poco": [
+                "strums a healing chord,",
+                "plays a soothing melody,",
+                "unleashes a musical wave of recovery,"
             ]
         },
         "LOOT": {
@@ -165,6 +209,18 @@
                 "strikes from concealment at",
                 "surprises",
                 "unveils a deadly trap for"
+            ],
+            "Bull": [
+                "bursts from the bushes and blasts",
+                "ambushes with a point-blank shotgun blast to"
+            ],
+            "Leon": [
+                "de-cloaks and throws spinners at",
+                "surprises with a stealthy strike on"
+            ],
+            "Mortis": [
+                "lunges from the dark with his shovel at",
+                "surprises {target} with a swift dash"
             ]
         }
     },

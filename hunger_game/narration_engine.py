@@ -127,18 +127,38 @@ class TextNarrationEngine(NarrationEngine[str]):
 
         return NarrationMood.NEUTRAL
 
-    def _get_verb(self, action: BrawlerAction, nature: str) -> str:
-        """Picks a random verb based on action and brawler nature."""
+    def _get_verb(self, action: BrawlerAction, player: Player) -> str:
+        """Picks a random verb based on action, brawler name, and nature with 50-50 mix."""
         action_verbs = self.data[NarrationComponent.VERBS].get(action.name, {})
 
         default_pool = action_verbs.get(NarrationFallback.DEFAULT, ["acts"])
-        nature_pool = action_verbs.get(nature, [])
+        nature_pool = action_verbs.get(player.info.nature, [])
+        specific_pool = action_verbs.get(player.info.name, [])
 
-        if not nature_pool:
-            return random.choice(default_pool)
+        pools = []
+        weights = []
 
-        pools = [default_pool, nature_pool]
-        weights = [1.5, 1.0]
+        if specific_pool:
+            pools.append(specific_pool)
+            weights.append(50.0)
+
+            if nature_pool:
+                pools.append(nature_pool)
+                weights.append(25.0)
+                pools.append(default_pool)
+                weights.append(25.0)
+            else:
+                pools.append(default_pool)
+                weights.append(50.0)
+        else:
+            if nature_pool:
+                pools.append(nature_pool)
+                weights.append(50.0)
+                pools.append(default_pool)
+                weights.append(50.0)
+            else:
+                pools.append(default_pool)
+                weights.append(100.0)
 
         chosen_pool = random.choices(pools, weights=weights, k=1)[0]
         return random.choice(chosen_pool)
@@ -170,7 +190,7 @@ class TextNarrationEngine(NarrationEngine[str]):
 
     def narrate_attack(self, attacker: Player, target: Player, damage: int) -> str:
         intro = self._get_intro(attacker)
-        verb = self._get_verb(BrawlerAction.ATTACK, attacker.info.nature)
+        verb = self._get_verb(BrawlerAction.ATTACK, attacker)
 
         if not target.state.alive:
             magnitude = NarrationMagnitude.ELIMINATION
@@ -184,26 +204,26 @@ class TextNarrationEngine(NarrationEngine[str]):
 
     def narrate_heal(self, player: Player) -> str:
         intro = self._get_intro(player)
-        verb = self._get_verb(BrawlerAction.HEAL, NarrationFallback.DEFAULT)
+        verb = self._get_verb(BrawlerAction.HEAL, player)
         outro = self._get_outro(BrawlerAction.HEAL, NarrationFallback.DEFAULT)
         return self._assemble(intro, player.info.name, verb, None, outro)
 
     def narrate_loot(self, player: Player) -> str:
         intro = self._get_intro(player)
-        verb = self._get_verb(BrawlerAction.LOOT, NarrationFallback.DEFAULT)
+        verb = self._get_verb(BrawlerAction.LOOT, player)
         outro = self._get_outro(BrawlerAction.LOOT, NarrationFallback.DEFAULT)
         return self._assemble(intro, player.info.name, verb, None, outro)
 
     def narrate_camp(self, player: Player) -> str:
         intro = self._get_intro(player)
-        verb = self._get_verb(BrawlerAction.CAMP, NarrationFallback.DEFAULT)
+        verb = self._get_verb(BrawlerAction.CAMP, player)
         outro = self._get_outro(BrawlerAction.CAMP, NarrationFallback.DEFAULT)
         return self._assemble(intro, player.info.name, verb, None, outro)
 
     def narrate_ambush(self, attacker: Player, target: Player, damage: int) -> str:
         # Ambush logic: force sneaky mood via _get_intro check of last_action
         intro = self._get_intro(attacker)
-        verb = self._get_verb(BrawlerAction.AMBUSH, NarrationFallback.DEFAULT)
+        verb = self._get_verb(BrawlerAction.AMBUSH, attacker)
 
         if not target.state.alive:
             magnitude = NarrationMagnitude.ELIMINATION
