@@ -91,6 +91,13 @@ class GameModeEnv:
     """Environment for a game mode."""
 
     name: str
+    """Name of the game mode."""
+
     objective: GameModeObjective
+    """Objective ofthe game mode."""
+
     dynamics: list[GameModeDynamic]
+    """Dynamic environment factors in game mode."""
+
     config: GameModeConfig
+    """Game mode configurations."""

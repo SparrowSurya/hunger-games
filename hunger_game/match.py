@@ -26,9 +26,14 @@ __all__ = (
 class EncounterState(StrEnum):
     """Defines the state of a localized interaction between players."""
 
-    ISOLATED = auto()  # Wandering alone
-    DUEL = auto()  # 1v1 fight
-    MELEE = auto()  # 3+ player chaotic fight
+    ISOLATED = auto()
+    """Wandering alone."""
+
+    DUEL = auto()
+    """1v1 fight."""
+
+    MELEE = auto()
+    """3+ player chaotic fight."""
 
 
 @dataclass
@@ -71,11 +76,9 @@ class MatchState:
 class MatchConfig:
     """Describes the general match engine parameters."""
 
-    # Narration specifics
     intro_frequency: float = 0.15
     """Probability (0-1) that a brawler action will include a mood-based intro."""
 
-    # Interaction settings
     encounter_merge_chance: float = 0.3
     """Probability that two isolated players will find each other and start a duel."""
 

@@ -3,6 +3,7 @@ This modules provides helper utility functions.
 """
 
 import json
+import pathlib
 import random
 from typing import Dict, List, Tuple, Any, Callable, overload
 
@@ -25,6 +26,7 @@ __all__ = (
     "random_traits",
     "normalise_weights_mut",
     "normalise_weights",
+    "json_file",
 )
 
 
@@ -148,3 +150,11 @@ def normalise_weights[T](
     """Normalises the weights of immutable item."""
     total = sum(getter(item) for item in items)
     return [setter(item, getter(item) / total if total > 0 else 0) for item in items]
+
+
+def json_file(name: str, base: str) -> pathlib.Path:
+    """Provides valid json file if exists."""
+    fp =  pathlib.Path(base) / f"{name}.json"
+    if fp.exists():
+        return fp
+    raise FileNotFoundError(f"File '{fp!s}' does not exists")

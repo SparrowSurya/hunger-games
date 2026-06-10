@@ -2,7 +2,7 @@
 This modules containts the necessary constants.
 """
 
-import pathlib
+from hunger_game.utils import json_file
 
 
 __all__ = (
@@ -12,12 +12,12 @@ __all__ = (
 )
 
 
-DATA_DIR = "data"
+DATA_DIR = "./data"
 
-BRAWLERS_FILE = "brawlers.json"
-MODES_FILE = "modes.json"
-NARRATIONS_FILE = "narrations.json"
+BRAWLERS_FILE = json_file("brawlers", DATA_DIR)
+MODES_FILE = json_file("modes", DATA_DIR)
+NARRATIONS_FILE = json_file("narrations", DATA_DIR)
 
-BRAWLER_DATA_FP = str(pathlib.Path(DATA_DIR, BRAWLERS_FILE))
-MODES_DATA_FP = str(pathlib.Path(DATA_DIR, MODES_FILE))
-NARRATION_DATA_FP = str(pathlib.Path(DATA_DIR, NARRATIONS_FILE))
+BRAWLER_DATA_FP = str(BRAWLERS_FILE)
+MODES_DATA_FP = str(MODES_FILE)
+NARRATION_DATA_FP = str(NARRATIONS_FILE)

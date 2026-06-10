@@ -19,7 +19,7 @@ This module provides the match event models:
 
 from __future__ import annotations
 from dataclasses import dataclass
-from typing import TYPE_CHECKING
+from typing import Literal, TYPE_CHECKING
 
 if TYPE_CHECKING:
     from hunger_game.match import MatchState
@@ -148,7 +148,7 @@ class TeamupEvent(MatchEventModel):
     target: Player
     """The brawler receiving the offer."""
 
-    outcome: str
+    outcome: Literal["ACCEPT", "REJECT", "ATTACK"]
     """The result of the offer ('ACCEPT', 'REJECT', 'ATTACK')."""
 
     damage: int = 0
