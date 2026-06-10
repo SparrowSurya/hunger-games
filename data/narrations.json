@@ -590,10 +590,10 @@
         },
         "BETRAY": {
             "DEFAULT": [
-                "It's the ultimate betrayal!",
-                "They never saw it coming!",
-                "The alliance is broken!",
-                "Treachery!"
+                ". It's the ultimate betrayal!",
+                ". They never saw it coming!",
+                ". The alliance is broken!",
+                ". Treachery!"
             ],
             "ELIMINATION": [
                 "securing a heartless elimination!",

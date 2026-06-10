@@ -112,16 +112,27 @@ class MatchSimulator:
             elif trait == PlayerTrait.AMBUSER:
                 weights[BrawlerAction.AMBUSH] *= 1.0 + (intensity * 4.0)
 
-        # Apply Match Phase Bias
-        if is_mid:
-            weights[BrawlerAction.ATTACK] *= 1.3
-        elif is_late:
-            weights[BrawlerAction.ATTACK] *= 2.0
-            weights[BrawlerAction.LOOT] *= 0.1
+        # Apply Match Phase Bias (Data-driven)
+        if gm_config.phases:
+            if is_mid:
+                phase = gm_config.phases.mid
+            elif is_late:
+                phase = gm_config.phases.late
+            else:
+                phase = gm_config.phases.early
+            
+            weights[BrawlerAction.ATTACK] *= phase.attack_multiplier
+            weights[BrawlerAction.LOOT] *= phase.loot_multiplier
         else:
-            # Early game: Boost looting and slight boost to aggression
-            weights[BrawlerAction.LOOT] *= 2.0
-            weights[BrawlerAction.ATTACK] *= 1.25
+            # Fallback if no phase configuration
+            if is_mid:
+                weights[BrawlerAction.ATTACK] *= 1.3
+            elif is_late:
+                weights[BrawlerAction.ATTACK] *= 2.0
+                weights[BrawlerAction.LOOT] *= 0.1
+            else:
+                weights[BrawlerAction.LOOT] *= 2.0
+                weights[BrawlerAction.ATTACK] *= 1.25
 
         # ENCOUNTER CONTEXT MODIFIERS
         allies = set()
@@ -142,7 +153,7 @@ class MatchSimulator:
             weights[BrawlerAction.TEAMUP] = 0
             weights[BrawlerAction.BETRAY] = 0
             # Higher chance to heal if damaged and alone
-            if player.state.hp < player.max_hp:
+            if player.state.hp < player.state.current_max_hp:
                 weights[BrawlerAction.HEAL] *= 2.0
         else:
             # If no non-allies, cannot attack or teamup
@@ -154,7 +165,7 @@ class MatchSimulator:
                 weights[BrawlerAction.BETRAY] = 0
 
         # Prevent healing at full health
-        if player.state.hp >= player.max_hp:
+        if player.state.hp >= player.state.current_max_hp:
             weights[BrawlerAction.HEAL] = 0
 
         # Hardcore Rule: No healing after full poison coverage for non-support
@@ -300,7 +311,7 @@ class MatchSimulator:
                     context = "lazy"
             # Cornered Check
             elif (
-                player.state.hp / player.max_hp
+                player.state.hp / player.state.current_max_hp
                 < gas_config.cornered_hp_threshold
             ):
                 if random.random() < gas_config.cornered_hit_chance:
@@ -319,7 +330,7 @@ class MatchSimulator:
                 PoisonDamageEvent(player, damage, context, silent=silent)
             )
 
-    def _calculate_damage(self, attacker: Player, target: Player) -> int:
+    def _calculate_damage(self, attacker: Player, target: Player, is_ambush: bool = False) -> int:
         """Calculates damage with trait-based scaling and vulnerability."""
         gm_config = self.state.environment.config
         var = gm_config.damage_variance
@@ -330,8 +341,13 @@ class MatchSimulator:
 
         multiplier = 1.0
 
-        # 0. Power Cube Bonus (10% per cube)
-        multiplier += attacker.state.power_cubes * 0.1
+        # 0. Power Cube Bonus (Data-driven)
+        if gm_config.power_cubes:
+            multiplier += attacker.state.power_cubes * gm_config.power_cubes.damage_multiplier
+
+        # 0.1 Ambush Bonus (Data-driven)
+        if is_ambush and gm_config.ambush and attacker.state.last_action == BrawlerAction.CAMP:
+            multiplier *= gm_config.ambush.bonus_multiplier
 
         # 1. Aggressive Trait Bonus
         for trait, intensity in attacker.traits:
@@ -349,9 +365,7 @@ class MatchSimulator:
         target_traits = {t[0] for t in target.traits}
         attacker_traits = {t[0] for t in attacker.traits}
 
-        if (PlayerTrait.AGGRESSIVE in attacker_traits) and (
-            target_traits & passive_traits
-        ):
+        if (PlayerTrait.AGGRESSIVE in attacker_traits) and (target_traits & passive_traits):
             target_offensive_natures = {
                 BrawlerNature.DAMAGE_DEALER,
                 BrawlerNature.ASSASSIN,
@@ -432,15 +446,29 @@ class MatchSimulator:
                 elif action == BrawlerAction.HEAL:
                     heal_amt = random.randint(gm_config.heal_min, gm_config.heal_max)
                     player.state.hp = min(
-                        player.max_hp, player.state.hp + heal_amt
+                        player.state.current_max_hp, player.state.hp + heal_amt
                     )
                     self.observer.on_heal(HealEvent(player, None))
 
                 elif action == BrawlerAction.LOOT:
                     if random.random() < 0.5:  # 50% chance to find a cube
                         player.state.power_cubes += 1
-                        # Small healing bonus for picking up a cube
-                        player.state.hp = min(player.max_hp, player.state.hp + 400)
+                        # Balanced HP bonus from configuration
+                        if gm_config.power_cubes:
+                            # Increase Max HP relative to base stats
+                            player.state.current_max_hp += int(
+                                player.info.hitpoints * gm_config.power_cubes.hp_bonus_ratio
+                            )
+                            # Instant heal relative to base stats
+                            heal_amt = int(
+                                player.info.hitpoints * gm_config.power_cubes.instant_heal_ratio
+                            )
+                            player.state.hp = min(player.state.current_max_hp, player.state.hp + heal_amt)
+                        else:
+                            # Fallback if no config (minimal bonus)
+                            player.state.current_max_hp += 10
+                            player.state.hp = min(player.state.current_max_hp, player.state.hp + 10)
+                        
                         self.observer.on_loot(LootEvent(player))
 
                 elif action == BrawlerAction.CAMP:
@@ -460,7 +488,7 @@ class MatchSimulator:
                     ]
                     if potential_targets:
                         target = random.choice(potential_targets)
-                        damage = self._calculate_damage(player, target)
+                        damage = self._calculate_damage(player, target, is_ambush=True)
                         target.state.hp -= damage
                         if not target.state.alive:
                             self.state.eliminations.append((player, target))

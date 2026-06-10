@@ -62,6 +62,53 @@ class PoisonGasConfig:
 
 
 @dataclass(repr=False)
+class PowerCubeConfig:
+    """Configuration for power cube bonuses."""
+
+    damage_multiplier: float
+    """Damage boost percentage per power cube collected (e.g., 0.1 for 10%)."""
+
+    hp_bonus_ratio: float
+    """Max HP increase ratio per power cube (e.g., 0.25 for 25% of base HP)."""
+
+    instant_heal_ratio: float
+    """HP restored immediately upon picking up a cube (e.g., 0.25 for 25% of base HP)."""
+
+
+@dataclass(repr=False)
+class AmbushConfig:
+    """Configuration for ambush mechanics."""
+
+    bonus_multiplier: float
+    """Damage multiplier applied when attacking from a hidden (CAMP) state."""
+
+
+@dataclass(repr=False)
+class PhaseConfig:
+    """Configuration for action weight multipliers during a specific match phase."""
+
+    attack_multiplier: float = 1.0
+    """Multiplier applied to ATTACK action weight."""
+
+    loot_multiplier: float = 1.0
+    """Multiplier applied to LOOT action weight."""
+
+
+@dataclass(repr=False)
+class MatchPhasesConfig:
+    """Action weight adjustments for the three core match phases."""
+
+    early: PhaseConfig
+    """Multipliers for the initial phase of the match."""
+
+    mid: PhaseConfig
+    """Multipliers for the mid-game (once player count drops)."""
+
+    late: PhaseConfig
+    """Multipliers for the endgame showdown."""
+
+
+@dataclass(repr=False)
 class GameModeConfig:
     """Configuration for a game mode, loaded from data."""
 
@@ -82,6 +129,15 @@ class GameModeConfig:
 
     end_game_threshold: float
     """Percentage of players remaining to trigger end-game aggression levels."""
+
+    phases: MatchPhasesConfig | None = None
+    """Phase-based action weight modifiers."""
+
+    power_cubes: PowerCubeConfig | None = None
+    """Power cube configuration if the mode includes it."""
+
+    ambush: AmbushConfig | None = None
+    """Ambush configuration if the mode includes it."""
 
     gas: PoisonGasConfig | None = None
     """Poison gas configuration if the mode includes it."""

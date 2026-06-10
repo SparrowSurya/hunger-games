@@ -235,7 +235,7 @@ class TextNarrationEngine(NarrationEngine[str]):
 
         if not target.state.alive:
             magnitude = NarrationMagnitude.ELIMINATION
-        elif damage > (target.max_hp * 0.3):
+        elif damage > (target.state.current_max_hp * 0.3):
             magnitude = NarrationMagnitude.MAJOR
         else:
             magnitude = NarrationMagnitude.MINOR

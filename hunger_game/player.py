@@ -61,8 +61,4 @@ class Player:
 
     def __post_init__(self):
         self.state.hp = self.info.hitpoints
-
-    @property
-    def max_hp(self) -> int:
-        """Returns the current maximum health, including power cube bonuses."""
-        return self.info.hitpoints + (self.state.power_cubes * 400)
+        self.state.current_max_hp = self.info.hitpoints

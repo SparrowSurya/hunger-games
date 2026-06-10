@@ -14,6 +14,10 @@ from hunger_game.game_mode import (
     GameModeDynamic,
     GameModeConfig,
     PoisonGasConfig,
+    PowerCubeConfig,
+    AmbushConfig,
+    PhaseConfig,
+    MatchPhasesConfig,
 )
 from hunger_game.player import Player, PlayerTrait
 
@@ -69,15 +73,39 @@ def parse_mode_data(data: Dict[str, Any]) -> Dict[str, GameModeEnv]:
     modes: Dict[str, GameModeEnv] = {}
     for name, details in data.items():
         config_data = details["config"].copy()
+        
         gas_config = None
         if "gas" in config_data:
             gas_config = PoisonGasConfig(**config_data.pop("gas"))
+            
+        power_cube_config = None
+        if "power_cubes" in config_data:
+            power_cube_config = PowerCubeConfig(**config_data.pop("power_cubes"))
+            
+        ambush_config = None
+        if "ambush" in config_data:
+            ambush_config = AmbushConfig(**config_data.pop("ambush"))
+            
+        phases_config = None
+        if "phases" in config_data:
+            p_data = config_data.pop("phases")
+            phases_config = MatchPhasesConfig(
+                early=PhaseConfig(**p_data.get("early", {})),
+                mid=PhaseConfig(**p_data.get("mid", {})),
+                late=PhaseConfig(**p_data.get("late", {})),
+            )
 
         modes[name] = GameModeEnv(
             name=name,
             objective=GameModeObjective(details["objective"].lower()),
             dynamics=[GameModeDynamic(d.lower()) for d in details["dynamics"]],
-            config=GameModeConfig(gas=gas_config, **config_data),
+            config=GameModeConfig(
+                gas=gas_config, 
+                power_cubes=power_cube_config,
+                ambush=ambush_config,
+                phases=phases_config,
+                **config_data
+            ),
         )
     return modes
 

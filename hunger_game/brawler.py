@@ -95,6 +95,9 @@ class BrawlerState:
     hp: int = 0
     """Current health points."""
 
+    current_max_hp: int = 0
+    """Current maximum health points, including power cube bonuses."""
+
     power_cubes: int = 0
     """Number of power cubes collected, boosting health and damage."""
 
