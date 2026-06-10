@@ -3,183 +3,266 @@
 ================================================================================
 
 Participants:
-Poco (Alice johnson)
-  Traits: AGGRESSIVE(0.4), TEAMER(0.6)
-  Nature: CAMP:91, TEAMUP:19, AMBUSH:18, HEAL:17, BETRAY:15, ATTACK:14, LOOT:12
+Sandy (Alice johnson)
+  Traits: CAMPER(0.3), BACKSTABBER(0.4), TEAMER(0.3)
+  Nature: TEAMUP:76, ATTACK:63, BETRAY:20, CAMP:19, LOOT:17, AMBUSH:11, HEAL:9
 
-Emz (Benjamin carter)
-  Traits: COLLECTOR(0.4), AMBUSER(0.6)
-  Nature: AMBUSH:71, CAMP:20, BETRAY:19, ATTACK:17, TEAMUP:14, LOOT:8, HEAL:5
-
-Leon (Charlotte davis)
-  Traits: AMBUSER(0.4), CAMPER(0.3), CAUTIOUS(0.3)
-  Nature: ATTACK:97, BETRAY:61, LOOT:20, TEAMUP:18, AMBUSH:13, CAMP:8, HEAL:8
-
-Nita (Daniel martinez)
-  Traits: BACKSTABBER(0.5), CAUTIOUS(0.5)
-  Nature: ATTACK:66, CAMP:15, HEAL:15, LOOT:13, TEAMUP:10, BETRAY:8, AMBUSH:6
-
-Jessie (Emma wilson)
-  Traits: BACKSTABBER(0.4), CAUTIOUS(0.3), CAMPER(0.3)
-  Nature: TEAMUP:65, BETRAY:14, AMBUSH:11, ATTACK:10, HEAL:8, CAMP:7, LOOT:7
-
-Mortis (Felix anderson)
-  Traits: BACKSTABBER(0.4), COLLECTOR(0.6)
-  Nature: LOOT:91, CAMP:70, AMBUSH:18, TEAMUP:14, BETRAY:13, HEAL:12, ATTACK:7
-
-Dynamike (Grace thompson)
-  Traits: COLLECTOR(0.5), AGGRESSIVE(0.5)
-  Nature: CAMP:83, TEAMUP:20, HEAL:19, AMBUSH:18, BETRAY:15, ATTACK:13, LOOT:11
-
-Tick (Henry moore)
-  Traits: COLLECTOR(0.5), BACKSTABBER(0.5)
-  Nature: LOOT:86, ATTACK:73, TEAMUP:15, HEAL:13, CAMP:8, AMBUSH:8, BETRAY:5
-
-Bull (Isabella taylor)
+Piper (Benjamin carter)
   Traits: TEAMER(0.6), CAUTIOUS(0.4)
-  Nature: HEAL:89, BETRAY:16, ATTACK:14, TEAMUP:13, AMBUSH:13, CAMP:8, LOOT:7
+  Nature: CAMP:97, AMBUSH:83, TEAMUP:20, BETRAY:12, ATTACK:6, HEAL:6, LOOT:5
 
-Shelly (James harris)
-  Traits: TEAMER(0.4), COLLECTOR(0.3), BACKSTABBER(0.3)
-  Nature: HEAL:78, ATTACK:73, BETRAY:20, AMBUSH:12, CAMP:10, LOOT:10, TEAMUP:10
+Shelly (Charlotte davis)
+  Traits: CAMPER(0.4), AGGRESSIVE(0.6)
+  Nature: TEAMUP:66, ATTACK:16, CAMP:14, HEAL:12, AMBUSH:12, LOOT:10, BETRAY:7
+
+Spike (Daniel martinez)
+  Traits: CAMPER(0.4), CAUTIOUS(0.3), BACKSTABBER(0.3)
+  Nature: CAMP:90, TEAMUP:70, AMBUSH:16, ATTACK:14, LOOT:13, HEAL:6, BETRAY:5
+
+Brock (Emma wilson)
+  Traits: AGGRESSIVE(0.4), COLLECTOR(0.4), CAUTIOUS(0.2)
+  Nature: ATTACK:84, LOOT:72, AMBUSH:20, TEAMUP:13, HEAL:12, BETRAY:9, CAMP:8
+
+Rosa (Felix anderson)
+  Traits: CAMPER(0.6), CAUTIOUS(0.4)
+  Nature: LOOT:85, AMBUSH:67, HEAL:17, BETRAY:14, ATTACK:11, TEAMUP:9, CAMP:6
+
+Jessie (Grace thompson)
+  Traits: AGGRESSIVE(0.5), TEAMER(0.5)
+  Nature: ATTACK:90, AMBUSH:60, LOOT:20, BETRAY:16, TEAMUP:15, CAMP:12, HEAL:5
+
+Bo (Henry moore)
+  Traits: COLLECTOR(0.5), CAUTIOUS(0.5)
+  Nature: ATTACK:89, BETRAY:61, LOOT:19, HEAL:18, TEAMUP:12, CAMP:10, AMBUSH:10
+
+Emz (Isabella taylor)
+  Traits: BACKSTABBER(0.4), TEAMER(0.3), CAMPER(0.3)
+  Nature: LOOT:81, CAMP:65, AMBUSH:16, HEAL:15, ATTACK:13, TEAMUP:11, BETRAY:6
+
+Tick (James harris)
+  Traits: AGGRESSIVE(0.6), TEAMER(0.4)
+  Nature: TEAMUP:71, ATTACK:17, AMBUSH:16, CAMP:14, BETRAY:12, LOOT:6, HEAL:5
 
 
 --- MOMENT 1 ---
-* Breaking cover, Poco takes cover in the grass to avoid detection.
-* Tick picks up some gear to prepare for the next fight.
-* Jessie searches the area for cubes to gain an edge.
-* Staying focused, Nita commands her bear to strike Shelly but it's just a flesh wound.
-* Shelly finds a moment of respite.
-* Bull attacks Leon, forcing them to retreat!
-* Leon offers a friendly spin, and Bull accepts! They are now a team.
-* Without warning, Dynamike hides in the foliage to avoid detection.
-* Mortis was surprised by Emz, gaining the upper hand!
+* Breaking cover, Spike hides in the foliage to avoid detection.
+* With a surprise strike, Tick vanishes from sight to avoid detection.
+* Sandy traps Brock, nearly knocking them out!
+* Rosa augments their power feeling stronger already.
 
 [Status: 10 players remain alive]
 
-The creeping death has arrived. Poison gas is now entering the map!
+Warning: Poison gas detected! The perimeter is no longer safe.
 
 --- MOMENT 2 ---
-* From the bushes, Emz hides in the foliage to set up an ambush.
-* Mortis gathers resources to gain an edge.
-* Tick scavenges for supplies while no one is looking.
-* Treachery! Leon strikes their former partner Bull!
-* Bull finds a moment of respite as the battle continues.
-* Nita ambushes Shelly, rattling them completely!
-* Shelly breathes for a second.
-* With a surprise strike, Poco vanishes from sight.
-* Jessie spins in circles and Dynamike joins the dance! It's a truce!
+* With total aggression, Shelly picks up some gear every bit counts.
+* With a surprise strike, Bo crouches in the shadows hoping no one noticed.
+* Rosa secures a power cube every bit counts.
+* Without warning, Spike vanishes from sight.
+* Brock bombards with a volley of missiles at Sandy, shredding their defenses!
+* Sandy offers a friendly spin to Brock agreeing to work together.
 
 [Status: 10 players remain alive]
 
 --- MOMENT 3 ---
-* Leon throws a spread of fidget spinners towards Bull failing to do much damage.
-* Bull confronts Leon, ending their match!
-* Emz surprises Mortis, rattling them completely!
-* Breaking cover, Poco hides in the foliage patiently waiting for a victim.
-  >> Tick is caught in the toxic mist! They struggle to breathe but push on.
-* Nita summons a shockwave towards Shelly failing to do much damage.
-* Shelly unleashes a buckshot on Nita, dealing significant damage!
+* With a surprise strike, Sandy remains perfectly still.
+  >> Sandy is caught in the toxic mist! They are severely weakened.
+* Carefully, Bo picks up some gear.
+* From the bushes, Emz was flattened by a surprise charge from Rosa, catching them totally unprepared!
+* From the bushes, Spike crouches in the shadows to avoid detection.
+* Without warning, Piper waits in silence.
+  >> Piper is caught in the toxic mist! They struggle to breathe but push on.
+* Tick scavenges for supplies feeling stronger already.
 
-[Eliminations: Leon bit the dust.]
-[Status: 9 players remain alive]
+[Status: 10 players remain alive]
 
 --- MOMENT 4 ---
-* Staying focused, Bull stabilizes their condition to regain composure.
-* Without warning, Dynamike crouches in the shadows hoping no one noticed.
-  >> Poco is caught in the toxic mist! They struggle to breathe but push on.
-* A focused Tick patches themselves up as the battle continues.
-* Mortis fell into a trap set by Emz, rattling them completely!
-* Nita ambushes Shelly, gaining the upper hand!
-* Shelly finds a moment of respite refusing to go down easily.
+* Surveying the field, Emz gathers resources to prepare for the next fight.
+* Out of nowhere, Spike blends into the environment to set up an ambush.
+* Bo searches the area for cubes every bit counts.
+* Out of nowhere, Shelly vanishes from sight hoping no one noticed.
+* Striking from the dark, Piper remains perfectly still patiently waiting for a victim.
+* Sandy unleashes a surprise attack on Brock leaving them in the dust!
 
+[Eliminations: Brock is out of the game! Next!]
 [Status: 9 players remain alive]
 
 --- MOMENT 5 ---
-* Breaking cover, Jessie hides in the foliage patiently waiting for a victim.
-* Leaping from the shadows, Dynamike slips into a bush patiently waiting for a victim.
-* Emz strikes from concealment at Mortis, making short work of them!
-* Nita strikes from concealment at Shelly, catching them totally unprepared!
-* Shelly clobbers Nita, landing a devastating hit!
-* Staying focused, Bull breathes for a second to regain composure.
+* A patient Rosa augments their power.
+* Shelly proposes a temporary truce to Piper and they join the dance! It's a truce!
+* Watching the perimeter, Spike proposes a temporary truce to Bo but they aren't having it.
+* Surveying the field, Sandy spins in circles for Jessie agreeing to work together.
 
-[Eliminations: Mortis is heading back to the lobby.]
-[Status: 8 players remain alive]
+[Status: 9 players remain alive]
 
 --- MOMENT 6 ---
-* Bull stabilizes their condition preparing for the next round.
-  >> Bull is caught in the toxic mist! They are severely weakened.
-* The alliance is broken! Dynamike unleashes a surprise attack on Jessie! It's a total betrayal!
-* Emz unveils a deadly trap for Poco, dealing massive surprise damage!
-* Nita mends their wounds preparing for the next round.
-* Shelly offers a friendly spin, and Nita accepts! They are now a team.
+* Shelly augments their power every bit counts.
+* Bo unleashes on Spike, leaving them reeling!
+* Moving with precision, Spike pelted with spikes Bo causing minor annoyance.
+* Emz was pummeled by Rosa as they shrug it off.
+* Hidden from sight, Emz blends into the environment patiently waiting for a victim.
+* Sandy secures a power cube while no one is looking.
+* Jessie strikes their former partner Sandy Treachery!
 
-[Eliminations: Jessie is heading back to the lobby.]
-[Status: 7 players remain alive]
+[Status: 9 players remain alive]
 
 --- MOMENT 7 ---
-* A temporary alliance! Emz and Poco agree to work together.
-* Poco unleashes a musical wave of recovery, feeling refreshed.
-* Nita collects a trophy to prepare for the next fight.
-* Shelly stabilizes their condition while they have the chance.
-* Without warning, Dynamike slips into a bush to set up an ambush.
-  >> Dynamike is caught in the toxic mist! They struggle to breathe but push on.
-* A focused Tick shells Dynamike, nearly knocking them out!
-* Bull stabilizes their condition to regain composure.
+* Breaking cover, Emz slips into a bush and holds their breath.
+  >> Emz is caught in the toxic mist! They struggle to breathe but push on.
+* Rosa augments their power while no one is looking.
+  >> Rosa chokes on the green gas! They struggle to breathe but push on.
+* Sandy zones out Jessie, leaving them reeling!
+* From the bushes, Jessie springs a trap on Sandy, dealing massive surprise damage!
+* Leaping from the shadows, Shelly takes cover in the grass to set up an ambush.
+* Out of nowhere, Piper remains perfectly still.
+* Bo tries to form an alliance with Spike and they accept! They are now a team.
+* Out of nowhere, Spike takes cover in the grass and holds their breath.
 
-[Status: 7 players remain alive]
+[Status: 9 players remain alive]
 
 --- MOMENT 8 ---
-* Moving forward, Tick ambushes Dynamike, they never saw it coming!
-* Out of nowhere, Poco crouches in the shadows.
-* Staying focused, Bull patches themselves up preparing for the next round.
-* Shelly regenerates some health preparing for the next round.
-* Leaping from the shadows, Nita vanishes from sight hoping no one noticed.
+* Driven by fury, Jessie spins in circles for Sandy agreeing to work together.
+* Without warning, Sandy hides in the foliage patiently waiting for a victim.
+* Striking from the dark, Emz slips into a bush hoping no one noticed.
+* Rosa scavenges for supplies to gain an edge.
+* Leaping from the shadows, Tick crouches in the shadows patiently waiting for a victim.
+* Watching the perimeter, Spike suddenly backstabs Bo Treachery!
+* Bo traps Spike, Rank 10!
+* With a surprise strike, Piper waits in silence patiently waiting for a victim.
 
-[Eliminations: Dynamike is heading back to the lobby.]
-[Status: 6 players remain alive]
+[Eliminations: Spike is out of the game! Next!]
+[Status: 8 players remain alive]
 
-NO MORE SAFE ZONES! The gas has covered every inch of the battlefield!
+THE MAP IS FULLY CHOKED BY GAS! The end is near for everyone!
 
 --- MOMENT 9 ---
-* A patient Nita collects a trophy to prepare for the next fight.
-* Tick secures a power cube to prepare for the next fight.
-* Without warning, Emz vanishes from sight patiently waiting for a victim.
-* From the bushes, Poco crouches in the shadows to set up an ambush.
+* Piper augments their power every bit counts.
+* With a surprise strike, Emz takes cover in the grass patiently waiting for a victim.
+* Hidden from sight, Rosa crouches in the shadows and holds their breath.
 
-[Status: 6 players remain alive]
+[Status: 8 players remain alive]
 
 --- MOMENT 10 ---
-* Striking from the dark, Poco takes cover in the grass patiently waiting for a victim.
-* Without warning, Bull crouches in the shadows to avoid detection.
-* Cornered and hurt, Nita finds some loot to gain an edge.
-* Hidden from sight, Shelly slips into a bush to avoid detection.
+* Tick offers a friendly spin to Rosa but they just hate teamers! They attack!
+* Bo collects a trophy while no one is looking.
+* Without warning, Piper crouches in the shadows hoping no one noticed.
+* Breaking cover, Sandy takes cover in the grass to avoid detection.
+* Pressing the advantage, Jessie augments their power to gain an edge.
 
-[Eliminations: A double elimination! Nita and Shelly couldn't hang on.]
-[Status: 4 players remain alive]
+[Status: 8 players remain alive]
 
 --- MOMENT 11 ---
-* The alliance is broken! Emz unleashes a surprise attack on Poco! It's a total betrayal!
+* Emz gathers resources to prepare for the next fight.
+* Rosa scavenges for supplies feeling stronger already.
+* Tick offers a friendly spin to Emz and they join the dance! It's a truce!
+* Pressing the advantage, Shelly searches the area for cubes every bit counts.
+* In a flash, Sandy turns on their ally Jessie The alliance is broken!
+* The relentless Jessie zaps with her energy rifle at Sandy but it's just a flesh wound.
 
-[Eliminations: Poco and Tick have both left the chat.]
-[Status: 2 players remain alive]
+[Status: 8 players remain alive]
 
 --- MOMENT 12 ---
-* Emz catches Bull off-guard, catching them totally unprepared!
+* Sandy picks up some gear while no one is looking.
+* Sandy fell victim to Jessie grazing them.
+* Tick tries to form an alliance with Rosa but they stay focused on the fight.
+* Breaking cover, Rosa unveils a deadly trap for Tick, dealing massive surprise damage!
+* Out of nowhere, Emz hides in the foliage patiently waiting for a victim.
 
-[Eliminations: Emz and Bull have both left the chat.]
-[Status: 0 players remain alive]
+[Status: 8 players remain alive]
+
+--- MOMENT 13 ---
+* Striking from the dark, Shelly vanishes from sight to set up an ambush.
+* Without warning, Emz springs a trap on Rosa, dealing massive surprise damage!
+* Without warning, Rosa was caught off-guard by Tick, gaining the upper hand!
+* Bo finds some loot to gain an edge.
+* Sandy proposes a temporary truce to Jessie and they accept! They are now a team.
+
+[Status: 8 players remain alive]
+
+--- MOMENT 14 ---
+* Tick unleashes a surprise attack on Emz It's the ultimate betrayal!
+* Emz targets Tick, and they are out!
+* A patient Bo scavenges for supplies while no one is looking.
+* With a surprise strike, Shelly remains perfectly still.
+* Breaking cover, Piper takes cover in the grass to avoid detection.
+* Sandy turns on their ally Jessie It's the ultimate betrayal!
+* Leaping from the shadows, Jessie strikes from concealment at Sandy, catching them totally unprepared!
+
+[Eliminations: Tick is heading back to the lobby.]
+[Status: 7 players remain alive]
+
+--- MOMENT 15 ---
+* Jessie deploys her turret Scrappy to fire at Sandy barely leaving a scratch.
+* Rosa offers a friendly spin to Emz and they join the dance! It's a truce!
+
+[Eliminations: Sandy and Jessie have been eliminated. Double trouble!]
+[Status: 5 players remain alive]
+
+--- MOMENT 16 ---
+* Without warning, Emz waits in silence to avoid detection.
+* Rosa searches the area for cubes while no one is looking.
+
+[Status: 5 players remain alive]
+
+--- MOMENT 17 ---
+* Out of nowhere, Emz slips into a bush to avoid detection.
+* Rosa turns on their ally Emz It's the ultimate betrayal!
+* Striking from the dark, Shelly hides in the foliage patiently waiting for a victim.
+* Leaping from the shadows, Piper slips into a bush.
+
+[Eliminations: Piper has been knocked out! Rank 10.]
+[Status: 4 players remain alive]
+
+--- MOMENT 18 ---
+* Carefully, Bo picks up some gear.
+
+[Eliminations: Emz has been knocked out! Rank 10.]
+[Status: 3 players remain alive]
+
+--- MOMENT 19 ---
+* Striking from the dark, Rosa slips into a bush to avoid detection.
+* Out of nowhere, Shelly remains perfectly still to avoid detection.
+* A patient Bo secures a power cube while no one is looking.
+
+[Status: 3 players remain alive]
+
+--- MOMENT 20 ---
+* Bo gathers resources to prepare for the next fight.
+* Hidden from sight, Shelly hides in the foliage and holds their breath.
+
+[Status: 3 players remain alive]
+
+--- MOMENT 21 ---
+* Breaking cover, Rosa ambushes Bo, rattling them completely!
+* Methodically, Bo proposes a temporary truce to Rosa forming an unlikely bond.
+* Striking from the dark, Shelly vanishes from sight.
+
+[Eliminations: Shelly has been eliminated. Ouch!]
+[Status: 2 players remain alive]
+
+--- MOMENT 22 ---
+* Calculated and calm, Bo strikes their former partner Rosa It's the ultimate betrayal!
+* Watching the perimeter, Rosa spins in circles for Bo but they stay focused on the fight.
+
+[Status: 2 players remain alive]
+
+--- MOMENT 23 ---
+* Bo fires a trio of explosive arrows at Rosa failing to do much damage.
+* Rosa engages Bo for a tiny bit of health.
+
+[Eliminations: Rosa is out of the game! Next!]
+[Status: 1 players remain alive]
 ================================================================================
                                   MATCH ENDED                                   
 ================================================================================
 
-#1  Emz
-#2  Bull
-#3  Tick
-#4  Poco
-#5  Shelly
-#6  Nita
-#7  Dynamike
-#8  Jessie
-#9  Mortis
-#10 Leon
+#1  Bo
+#2  Rosa
+#3  Shelly
+#4  Emz
+#5  Piper
+#6  Sandy
+#7  Jessie
+#8  Tick
+#9  Spike
+#10 Brock
