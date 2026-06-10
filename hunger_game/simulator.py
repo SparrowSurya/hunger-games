@@ -124,7 +124,11 @@ class MatchSimulator:
                 allies = alliance - {player.id}
                 break
 
-        non_allies = [p for p in encounter.participants if p.id != player.id and p.id not in allies]
+        non_allies = [
+            p
+            for p in encounter.participants
+            if p.id != player.id and p.id not in allies
+        ]
 
         if encounter.state == EncounterState.ISOLATED:
             # Cannot attack or teamup/betray if alone
@@ -409,7 +413,10 @@ class MatchSimulator:
 
                         # Decide response
                         target_traits = [t[0] for t in target.traits]
-                        if PlayerTrait.TEAMER in target_traits or PlayerTrait.BACKSTABBER in target_traits:
+                        if (
+                            PlayerTrait.TEAMER in target_traits
+                            or PlayerTrait.BACKSTABBER in target_traits
+                        ):
                             outcome = "ACCEPT"
                         else:
                             # 40% Accept, 40% Reject, 20% Attack
@@ -443,7 +450,9 @@ class MatchSimulator:
                             if not player.state.alive:
                                 self.state.eliminations.append((target, player))
 
-                        self.observer.on_teamup(TeamupEvent(player, target, outcome, damage))
+                        self.observer.on_teamup(
+                            TeamupEvent(player, target, outcome, damage)
+                        )
 
                 elif action == BrawlerAction.BETRAY:
                     alliance_index = -1
@@ -451,16 +460,23 @@ class MatchSimulator:
                     for i, alliance in enumerate(encounter.alliances):
                         if player.id in alliance:
                             alliance_index = i
-                            allies_list = [p for p in encounter.participants if p.id in alliance and p.id != player.id]
+                            allies_list = [
+                                p
+                                for p in encounter.participants
+                                if p.id in alliance and p.id != player.id
+                            ]
                             break
 
                     if allies_list:
                         target = random.choice(allies_list)
                         # Backstab damage (2x)
                         var = gm_config.damage_variance
-                        damage = int(2.0 * random.randint(
-                            player.info.damage - var, player.info.damage + var
-                        ))
+                        damage = int(
+                            2.0
+                            * random.randint(
+                                player.info.damage - var, player.info.damage + var
+                            )
+                        )
                         target.state.hp -= damage
                         if not target.state.alive:
                             self.state.eliminations.append((player, target))

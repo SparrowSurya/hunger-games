@@ -215,7 +215,9 @@ class TeamupEventTextNarrator(TextNarrator[TeamupEvent]):
 
     @override
     def narrate(self, event: TeamupEvent) -> str:
-        return self.engine.narrate_teamup(event.initiator, event.target, event.outcome, event.damage)
+        return self.engine.narrate_teamup(
+            event.initiator, event.target, event.outcome, event.damage
+        )
 
 
 class BetrayalEventTextNarrator(TextNarrator[BetrayalEvent]):

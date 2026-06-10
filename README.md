@@ -8,6 +8,7 @@ The Hunger Games project simulates a high-stakes match among various Brawlers. E
 
 ### Key Features
 
+-   **Brawl Stars Themed Narration**: The engine uses a dynamic narration system that captures the atmosphere of Brawl Stars, with specific attack and ambush lines for all 21 brawlers, terminology like "Showdown", "Super", and "Poison Clouds", and a strictly descriptive approach to damage.
 -   **Observer-Based Architecture**: The core simulation logic is completely decoupled from the output. A `MatchObserver` monitors the simulator, allowing different types of narrators (text-based, data logs, etc.) to be plugged in seamlessly.
 -   **Data-Driven Brawlers**: All Brawler statistics, action weights, and mechanism definitions are loaded from external configuration files, making it easy to balance and expand the roster.
 -   **Dynamic AI Weighting**: Players don't act randomly. Their actions are driven by a weighted decision engine that adapts based on their individual traits (Aggressive, Cautious) and the current phase of the match.

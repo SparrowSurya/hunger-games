@@ -81,7 +81,9 @@ class NarrationEngine[T](abc.ABC):
         """Narrates an ambush."""
 
     @abc.abstractmethod
-    def narrate_teamup(self, initiator: Player, target: Player, outcome: str, damage: int) -> T:
+    def narrate_teamup(
+        self, initiator: Player, target: Player, outcome: str, damage: int
+    ) -> T:
         """Narrates a teamup attempt."""
 
     @abc.abstractmethod
@@ -241,62 +243,67 @@ class TextNarrationEngine(NarrationEngine[str]):
         outro = self._get_outro(BrawlerAction.AMBUSH, magnitude)
         return self._assemble(intro, attacker.info.name, verb, target.info.name, outro)
 
-    def narrate_teamup(self, initiator: Player, target: Player, outcome: str, damage: int) -> str:
+    def narrate_teamup(
+        self, initiator: Player, target: Player, outcome: str, damage: int
+    ) -> str:
         """Narrates a teamup attempt and its result."""
         initiator_name = initiator.info.name
         target_name = target.info.name
 
         if outcome == "ACCEPT":
-            templates = self.data.get("teamup_accept", ["{0} spins and {1} joins them!"])
+            templates = self.data.get(
+                "teamup_accept", ["{0} spins and {1} joins them!"]
+            )
             return random.choice(templates).format(initiator_name, target_name)
         elif outcome == "REJECT":
-            templates = self.data.get("teamup_reject", ["{0} tries to team up, but {1} ignores them."])
+            templates = self.data.get(
+                "teamup_reject", ["{0} tries to team up, but {1} ignores them."]
+            )
             return random.choice(templates).format(initiator_name, target_name)
         else:  # ATTACK
-            templates = self.data.get("teamup_attack", ["{0} spins, but {1} retaliates with a strike!"])
+            templates = self.data.get(
+                "teamup_attack", ["{0} spins, but {1} retaliates with a strike!"]
+            )
             return random.choice(templates).format(initiator_name, target_name)
 
     def narrate_betrayal(self, betrayer: Player, victim: Player, damage: int) -> str:
         """Narrates a backstab."""
         templates = self.data.get("betrayal", ["{0} suddenly backstabs {1}!"])
         template = random.choice(templates)
-        
+
         # Check for elimination
         if not victim.state.alive:
             outro = " It's a total betrayal!"
         else:
             outro = ""
-            
+
         return template.format(betrayer.info.name, victim.info.name) + outro
 
     def narrate_poison(self, player: Player, damage: int, context: str) -> str:
         """Narrates poison damage based on context without numeric values."""
         hp_ratio = player.state.hp / player.info.hitpoints
+        poison_data = self.data.get("poison", {})
+        messages = poison_data.get("messages", {})
+        intensities = poison_data.get("intensities", {})
 
-        if context == "coverage":
-            msg = "The map is fully engulfed! "
-        elif context == "lazy":
-            msg = f"{player.info.name} is caught in the creeping gas! "
-        elif context == "cornered":
-            msg = f"{player.info.name} is forced into the gas! "
-        else:
-            msg = f"{player.info.name} chokes on the gas! "
+        msg_template = messages.get(
+            context, messages.get("default", "{0} chokes on the gas! ")
+        )
+        msg = msg_template.format(player.info.name)
 
         if not player.state.alive:
-            intensity = random.choice(
-                [
-                    "It's too much—they collapse into the smog.",
-                    "The toxic fumes overwhelm them, ending their match.",
-                    "They vanish into the green haze, never to return.",
-                    "The gas delivers a final, lethal blow.",
-                ]
+            elimination_pool = intensities.get(
+                "elimination", ["The gas delivers a final, lethal blow."]
             )
+            intensity = random.choice(elimination_pool)
         elif hp_ratio < 0.2:
-            intensity = "They are barely clinging to life!"
+            intensity = intensities.get("critical", "They are barely clinging to life!")
         elif hp_ratio < 0.5:
-            intensity = "They are severely weakened."
+            intensity = intensities.get("moderate", "They are severely weakened.")
         else:
-            intensity = "They struggle to breathe but push on."
+            intensity = intensities.get(
+                "minor", "They struggle to breathe but push on."
+            )
 
         return f">> {msg}{intensity}"
 

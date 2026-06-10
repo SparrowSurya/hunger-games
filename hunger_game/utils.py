@@ -154,7 +154,7 @@ def normalise_weights[T](
 
 def json_file(name: str, base: str) -> pathlib.Path:
     """Provides valid json file if exists."""
-    fp =  pathlib.Path(base) / f"{name}.json"
+    fp = pathlib.Path(base) / f"{name}.json"
     if fp.exists():
         return fp
     raise FileNotFoundError(f"File '{fp!s}' does not exists")

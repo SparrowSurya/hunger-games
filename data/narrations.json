@@ -8,7 +8,9 @@
             "Unstoppable,",
             "Driven by fury,",
             "Without a hint of mercy,",
-            "Looking for a fight,"
+            "Looking for a fight,",
+            "With a charged Super,",
+            "Ready for the Showdown,"
         ],
         "CAUTIOUS": [
             "A patient",
@@ -124,13 +126,13 @@
                 "blasts with her shotgun at",
                 "unleashes a buckshot on",
                 "fires a wide spread at",
-                "shreds with her boomstick"
+                "shreds {target} with her boomstick"
             ],
             "Colt": [
                 "unloads his revolvers on",
                 "sprays a volley of bullets at",
                 "strikes a pose and fires at",
-                "pelted with lead"
+                "pelts {target} with lead"
             ],
             "El Primo": [
                 "unleashes a flurry of punches on",
@@ -158,6 +160,76 @@
                 "charges headfirst into",
                 "blasts his double-barrel shotgun at",
                 "steamrolls through"
+            ],
+            "Jessie": [
+                "fires a shock orb from Scrappy's prototype at",
+                "deploys her turret Scrappy to fire at",
+                "zaps with her energy rifle at"
+            ],
+            "Brock": [
+                "launches a rocket at",
+                "unleashes a 'Rockin' Rocket' on",
+                "bombards with a volley of missiles at"
+            ],
+            "Tick": [
+                "throws a cluster of mines at",
+                "detaches his head and sends it chasing",
+                "rains mines down on"
+            ],
+            "Emz": [
+                "sprays a cloud of toxic hairspray at",
+                "blasts {target} with her 'Caustic Charisma'",
+                "zones out {target} with a lingering cloud of spray"
+            ],
+            "Bo": [
+                "fires a trio of explosive arrows at",
+                "sets a hidden mine for",
+                "pings {target} with his hunting bow"
+            ],
+            "8-Bit": [
+                "blasts with a beam of laser fire at",
+                "unloads a stream of 8-bit projectiles on",
+                "pummels with digital blips at"
+            ],
+            "Poco": [
+                "blasts a musical wave of sound at",
+                "strums a discordant note towards",
+                "serenades {target} with a painful melody"
+            ],
+            "Barley": [
+                "tosses a bottle of flaming liquid at",
+                "serves up a cocktail of destruction to",
+                "puddles the area around {target} with toxic brew"
+            ],
+            "Rosa": [
+                "punches with her plant-covered fists at",
+                "shields up and pummels",
+                "unleashes a flurry of botanical jabs at"
+            ],
+            "Piper": [
+                "snipes from afar with her parasol gun at",
+                "pops a shot from her 'Gun-brella' at",
+                "lines up a high-damage shot on"
+            ],
+            "Crow": [
+                "throws a trio of poisoned daggers at",
+                "pecks at {target} with toxic blades",
+                "dives in and poisons"
+            ],
+            "Spike": [
+                "throws a cactus grenade at",
+                "unleashes a burst of needles on",
+                "pelted with spikes"
+            ],
+            "Leon": [
+                "flicks a handful of spinning blades at",
+                "strikes with rapid-fire shurikens at",
+                "throws a spread of fidget spinners towards"
+            ],
+            "Sandy": [
+                "tosses a handful of sharp sand at",
+                "summons a sandstorm to pummel",
+                "drifts {target} into a nightmare with sand"
             ]
         },
         "HEAL": {
@@ -211,8 +283,28 @@
                 "unveils a deadly trap for"
             ],
             "Bull": [
-                "bursts from the bushes and blasts",
+                "bursts from the bushes and blasts {target}",
                 "ambushes with a point-blank shotgun blast to"
+            ],
+            "Shelly": [
+                "blasts from a bush with her Super at",
+                "shreds from the grass with her shotgun at"
+            ],
+            "El Primo": [
+                "leaps from the foliage and slams into {target}",
+                "surprises with a flying elbow from the bushes"
+            ],
+            "Rosa": [
+                "punches out from the grass at",
+                "ambushes from the greenery with a flurry of jabs at"
+            ],
+            "Crow": [
+                "swoops from the shadows and poisons {target}",
+                "leaps from cover and throws daggers at"
+            ],
+            "Piper": [
+                "ambushes with a point-blank shot to",
+                "surprises with a high-damage blast from cover"
             ],
             "Leon": [
                 "de-cloaks and throws spinners at",
@@ -254,7 +346,9 @@
                 ", delivering the final blow!",
                 ", confirming the kill!",
                 ", terminating their run!",
-                ", and they are out!"
+                ", and they are out!",
+                ", Game Over!",
+                ", Rank 10!"
             ]
         },
         "AMBUSH": {
@@ -312,7 +406,9 @@
             "{0} didn't stand a chance.",
             "{0} is heading back to the lobby.",
             "{0} bit the dust.",
-            "{0} is out of the game! Next!"
+            "{0} is out of the game! Next!",
+            "{0} has been knocked out! Rank 10.",
+            "Game over for {0}! No trophies this time."
         ],
         "DOUBLE": [
             "{0} and {1} have been eliminated. Double trouble!",
@@ -335,7 +431,8 @@
         "THE GREEN MIST HAS ENGULFED THE ENTIRE ARENA! Every breath is a struggle!",
         "THE MAP IS FULLY CHOKED BY GAS! The end is near for everyone!",
         "THE POISON GAS HAS WON THE MAP CONTROL! Stay alive as long as you can!",
-        "NO MORE SAFE ZONES! The gas has covered every inch of the battlefield!"
+        "NO MORE SAFE ZONES! The gas has covered every inch of the battlefield!",
+        "THE POISON CLOUDS HAVE COMPLETELY TAKEN OVER! Stay alert!"
     ],
     "gas_start": [
         "A faint green mist begins to creep in from the edges of the arena...",
@@ -343,7 +440,8 @@
         "Warning: Poison gas detected! The perimeter is no longer safe.",
         "The arena is shrinking! The first clouds of poison gas are visible.",
         "The creeping death has arrived. Poison gas is now entering the map!",
-        "Watch the edges! The poison gas is beginning its slow advance."
+        "Watch the edges! The poison gas is beginning its slow advance.",
+        "Poison clouds are approaching from the boundaries!"
     ],
     "teamup_accept": [
         "{0} spins in circles and {1} joins the dance! It's a truce!",
@@ -368,6 +466,24 @@
         "{0} turns on their ally! {1} never saw it coming!",
         "The alliance is broken! {0} unleashes a surprise attack on {1}!",
         "Treachery! {0} strikes their former partner {1}!"
-    ]
+    ],
+    "poison": {
+        "messages": {
+            "coverage": "The poison clouds have completely taken over! ",
+            "lazy": "{0} is caught in the toxic mist! ",
+            "cornered": "{0} is forced into the poison clouds! ",
+            "default": "{0} chokes on the green gas! "
+        },
+        "intensities": {
+            "elimination": [
+                "The toxicity is too much—they collapse into the smog.",
+                "The poison clouds overwhelm them, ending their match.",
+                "They vanish into the green haze, never to return.",
+                "The gas delivers a final, lethal blow."
+            ],
+            "critical": "They are barely clinging to life!",
+            "moderate": "They are severely weakened.",
+            "minor": "They struggle to breathe but push on."
+        }
+    }
 }
-
