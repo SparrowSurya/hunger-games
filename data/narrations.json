@@ -1,4 +1,12 @@
 {
+    "structures": {
+        "ACTIVE": [
+            "{intro} {subject} {verb} {target}"
+        ],
+        "PASSIVE": [
+            "{intro} {target} {verb} {subject}"
+        ]
+    },
     "intros": {
         "AGGRESSIVE": [
             "The relentless",
@@ -232,6 +240,124 @@
                 "drifts {target} into a nightmare with sand"
             ]
         },
+        "PASSIVE_ATTACK": {
+            "DEFAULT": [
+                "was struck down by",
+                "fell victim to",
+                "couldn't escape the wrath of",
+                "was completely shut down by",
+                "was overwhelmed by"
+            ],
+            "SNIPER": [
+                "was sniped by",
+                "was picked off from afar by",
+                "was tagged by"
+            ],
+            "TANK": [
+                "was crushed by",
+                "was steamrolled by",
+                "was pummeled by"
+            ],
+            "ARTILLERY": [
+                "was bombarded by",
+                "was shelled by",
+                "was caught in the explosives of"
+            ],
+            "ASSASSIN": [
+                "was struck swiftly by",
+                "was backstabbed by",
+                "was pounced on by"
+            ],
+            "DAMAGE_DEALER": [
+                "was shredded by",
+                "was blasted away by",
+                "was clobbered by"
+            ],
+            "Shelly": [
+                "was shredded by the boomstick of",
+                "was blasted at close range by"
+            ],
+            "Nita": [
+                "was struck by the spirit shockwave of",
+                "was mauled by the bear of"
+            ],
+            "Colt": [
+                "was pelted with lead from",
+                "was outgunned by"
+            ],
+            "Bull": [
+                "was blasted at point-blank by",
+                "was caught in the double-barrel blast of"
+            ],
+            "Jessie": [
+                "was zapped by the energy of",
+                "was pinned down by Scrappy's fire from"
+            ],
+            "Brock": [
+                "was blown away by a rocket from",
+                "was caught in the missile rain of"
+            ],
+            "Dynamike": [
+                "was caught in the 'Big Barrel o' Boom' of",
+                "was blasted by the dynamite of"
+            ],
+            "Tick": [
+                "was caught in the minefield of",
+                "was chased down by the detached head of"
+            ],
+            "Emz": [
+                "was choked by the toxic hairspray of",
+                "was caught in the lingering spray of"
+            ],
+            "Bo": [
+                "was struck by the explosive arrows of",
+                "was caught in a hidden mine of"
+            ],
+            "8-Bit": [
+                "was blasted by the high-score lasers of",
+                "was pelted by digital blips from"
+            ],
+            "El Primo": [
+                "was pummeled by the flurry of punches from",
+                "was flattened by the elbow drop of"
+            ],
+            "Poco": [
+                "was overwhelmed by the discordant music of",
+                "was serenaded with pain by"
+            ],
+            "Barley": [
+                "was burned by the flaming cocktail of",
+                "was caught in the toxic puddles of"
+            ],
+            "Rosa": [
+                "was jabbed by the botanical fists of",
+                "was pummeled by the nature-shielded"
+            ],
+            "Piper": [
+                "was sniped with precision by",
+                "was caught in the sights of"
+            ],
+            "Mortis": [
+                "was harvested by",
+                "was dashed through by"
+            ],
+            "Crow": [
+                "was poisoned by the daggers of",
+                "was pecked at by the toxic blades of"
+            ],
+            "Spike": [
+                "was pricked by the needle burst of",
+                "was caught in the cactus explosion of"
+            ],
+            "Leon": [
+                "was struck by the hidden blades of",
+                "was pelted by the spinning shurikens of"
+            ],
+            "Sandy": [
+                "was pelted by the sharp sand of",
+                "was caught in the sandstorm of"
+            ]
+        },
         "HEAL": {
             "DEFAULT": [
                 "regenerates some health",
@@ -313,6 +439,25 @@
             "Mortis": [
                 "lunges from the dark with his shovel at",
                 "surprises {target} with a swift dash"
+            ]
+        },
+        "PASSIVE_AMBUSH": {
+            "DEFAULT": [
+                "was ambushed by",
+                "was caught off-guard by",
+                "was surprised by",
+                "fell into a trap set by"
+            ],
+            "ASSASSIN": [
+                "was lunged at from the dark by",
+                "was struck swiftly from concealment by"
+            ],
+            "TANK": [
+                "was steamrolled from the bushes by",
+                "was flattened by a surprise charge from"
+            ],
+            "Bull": [
+                "was blasted at point-blank range from the bushes by"
             ]
         }
     },

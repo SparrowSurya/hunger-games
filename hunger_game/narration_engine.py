@@ -137,9 +137,9 @@ class TextNarrationEngine(NarrationEngine[str]):
 
         return NarrationMood.NEUTRAL
 
-    def _get_verb(self, action: BrawlerAction, player: Player) -> str:
-        """Picks a random verb based on action, brawler name, and nature with 50-50 mix."""
-        action_verbs = self.data[NarrationComponent.VERBS].get(action.name, {})
+    def _get_verb(self, action_key: str, player: Player) -> str:
+        """Picks a random verb based on action key, brawler name, and nature with 50-50 mix."""
+        action_verbs = self.data[NarrationComponent.VERBS].get(action_key, {})
 
         default_pool = action_verbs.get(NarrationFallback.DEFAULT, ["acts"])
         nature_pool = action_verbs.get(player.info.nature, [])
@@ -174,10 +174,10 @@ class TextNarrationEngine(NarrationEngine[str]):
         return random.choice(chosen_pool)
 
     def _get_outro(
-        self, action: BrawlerAction, magnitude: NarrationMagnitude | NarrationFallback
+        self, action_name: str, magnitude: NarrationMagnitude | NarrationFallback
     ) -> str:
         """Picks a random outro based on action and result magnitude."""
-        action_outros = self.data[NarrationComponent.OUTROS].get(action.name, {})
+        action_outros = self.data[NarrationComponent.OUTROS].get(action_name, {})
         outro_pool = action_outros.get(
             magnitude, action_outros.get(NarrationFallback.DEFAULT, [""])
         )
@@ -200,7 +200,11 @@ class TextNarrationEngine(NarrationEngine[str]):
 
     def narrate_attack(self, attacker: Player, target: Player, damage: int) -> str:
         intro = self._get_intro(attacker)
-        verb = self._get_verb(BrawlerAction.ATTACK, attacker)
+
+        # Decide voice: 80% Active, 20% Passive
+        struct_type = random.choices(["ACTIVE", "PASSIVE"], weights=[80, 20], k=1)[0]
+        action_key = "ATTACK" if struct_type == "ACTIVE" else "PASSIVE_ATTACK"
+        verb = self._get_verb(action_key, attacker)
 
         if not target.state.alive:
             magnitude = NarrationMagnitude.ELIMINATION
@@ -209,61 +213,56 @@ class TextNarrationEngine(NarrationEngine[str]):
         else:
             magnitude = NarrationMagnitude.MINOR
 
-        outro = self._get_outro(BrawlerAction.ATTACK, magnitude)
-        return self._assemble(intro, attacker.info.name, verb, target.info.name, outro)
+        outro = self._get_outro(BrawlerAction.ATTACK.name, magnitude)
+        return self._assemble(struct_type, intro, attacker.info.name, verb, target.info.name, outro)
 
     def narrate_heal(self, player: Player) -> str:
         intro = self._get_intro(player)
-        verb = self._get_verb(BrawlerAction.HEAL, player)
-        outro = self._get_outro(BrawlerAction.HEAL, NarrationFallback.DEFAULT)
-        return self._assemble(intro, player.info.name, verb, None, outro)
+        verb = self._get_verb(BrawlerAction.HEAL.name, player)
+        outro = self._get_outro(BrawlerAction.HEAL.name, NarrationFallback.DEFAULT)
+        return self._assemble("ACTIVE", intro, player.info.name, verb, None, outro)
 
     def narrate_loot(self, player: Player) -> str:
         intro = self._get_intro(player)
-        verb = self._get_verb(BrawlerAction.LOOT, player)
-        outro = self._get_outro(BrawlerAction.LOOT, NarrationFallback.DEFAULT)
-        return self._assemble(intro, player.info.name, verb, None, outro)
+        verb = self._get_verb(BrawlerAction.LOOT.name, player)
+        outro = self._get_outro(BrawlerAction.LOOT.name, NarrationFallback.DEFAULT)
+        return self._assemble("ACTIVE", intro, player.info.name, verb, None, outro)
 
     def narrate_camp(self, player: Player) -> str:
         intro = self._get_intro(player)
-        verb = self._get_verb(BrawlerAction.CAMP, player)
-        outro = self._get_outro(BrawlerAction.CAMP, NarrationFallback.DEFAULT)
-        return self._assemble(intro, player.info.name, verb, None, outro)
+        verb = self._get_verb(BrawlerAction.CAMP.name, player)
+        outro = self._get_outro(BrawlerAction.CAMP.name, NarrationFallback.DEFAULT)
+        return self._assemble("ACTIVE", intro, player.info.name, verb, None, outro)
 
     def narrate_ambush(self, attacker: Player, target: Player, damage: int) -> str:
-        # Ambush logic: force sneaky mood via _get_intro check of last_action
         intro = self._get_intro(attacker)
-        verb = self._get_verb(BrawlerAction.AMBUSH, attacker)
+
+        # Decide voice: 80% Active, 20% Passive
+        struct_type = random.choices(["ACTIVE", "PASSIVE"], weights=[80, 20], k=1)[0]
+        action_key = "AMBUSH" if struct_type == "ACTIVE" else "PASSIVE_AMBUSH"
+        verb = self._get_verb(action_key, attacker)
 
         if not target.state.alive:
             magnitude = NarrationMagnitude.ELIMINATION
         else:
             magnitude = NarrationFallback.DEFAULT
 
-        outro = self._get_outro(BrawlerAction.AMBUSH, magnitude)
-        return self._assemble(intro, attacker.info.name, verb, target.info.name, outro)
+        outro = self._get_outro(BrawlerAction.AMBUSH.name, magnitude)
+        return self._assemble(struct_type, intro, attacker.info.name, verb, target.info.name, outro)
 
-    def narrate_teamup(
-        self, initiator: Player, target: Player, outcome: str, damage: int
-    ) -> str:
+    def narrate_teamup(self, initiator: Player, target: Player, outcome: str, damage: int) -> str:
         """Narrates a teamup attempt and its result."""
         initiator_name = initiator.info.name
         target_name = target.info.name
 
         if outcome == "ACCEPT":
-            templates = self.data.get(
-                "teamup_accept", ["{0} spins and {1} joins them!"]
-            )
+            templates = self.data.get("teamup_accept", ["{0} spins and {1} joins them!"])
             return random.choice(templates).format(initiator_name, target_name)
         elif outcome == "REJECT":
-            templates = self.data.get(
-                "teamup_reject", ["{0} tries to team up, but {1} ignores them."]
-            )
+            templates = self.data.get("teamup_reject", ["{0} tries to team up, but {1} ignores them."])
             return random.choice(templates).format(initiator_name, target_name)
         else:  # ATTACK
-            templates = self.data.get(
-                "teamup_attack", ["{0} spins, but {1} retaliates with a strike!"]
-            )
+            templates = self.data.get("teamup_attack", ["{0} spins, but {1} retaliates with a strike!"])
             return random.choice(templates).format(initiator_name, target_name)
 
     def narrate_betrayal(self, betrayer: Player, victim: Player, damage: int) -> str:
@@ -286,9 +285,7 @@ class TextNarrationEngine(NarrationEngine[str]):
         messages = poison_data.get("messages", {})
         intensities = poison_data.get("intensities", {})
 
-        msg_template = messages.get(
-            context, messages.get("default", "{0} chokes on the gas! ")
-        )
+        msg_template = messages.get(context, messages.get("default", "{0} chokes on the gas! "))
         msg = msg_template.format(player.info.name)
 
         if not player.state.alive:
@@ -301,9 +298,7 @@ class TextNarrationEngine(NarrationEngine[str]):
         elif hp_ratio < 0.5:
             intensity = intensities.get("moderate", "They are severely weakened.")
         else:
-            intensity = intensities.get(
-                "minor", "They struggle to breathe but push on."
-            )
+            intensity = intensities.get("minor", "They struggle to breathe but push on.")
 
         return f">> {msg}{intensity}"
 
@@ -338,21 +333,42 @@ class TextNarrationEngine(NarrationEngine[str]):
         return random.choice(templates)
 
     def _assemble(
-        self, intro: str, subject: str, verb: str, object: str | None, outro: str
+        self, struct_type: str, intro: str, subject: str, verb: str, object: str | None, outro: str
     ) -> str:
-        """Assembles the sentence parts with smart capitalization and spacing."""
-        if intro:
-            sentence = f"{intro} {subject} {verb}"
-        else:
-            sentence = f"{subject.capitalize()} {verb}"
+        """Assembles the sentence parts using structural templates from data."""
+        structures = self.data.get("structures", {})
+        templates = structures.get(struct_type, structures.get("ACTIVE", []))
+        template = random.choice(templates)
 
-        if object:
-            if "{target}" in verb:
-                # Support mid-verb object placement (e.g., "catches {target} off-guard")
-                sentence = sentence.replace("{target}", object)
-            else:
-                sentence += f" {object}"
+        # Prepare components
+        fmt_target = object if object else ""
+        fmt_verb = verb
 
+        # If the verb contains {target}, we embed it and clear fmt_target
+        if "{target}" in verb:
+            fmt_verb = verb.replace("{target}", fmt_target)
+            fmt_target = ""
+
+        components = {
+            "intro": intro,
+            "subject": subject,
+            "verb": fmt_verb,
+            "target": fmt_target,
+        }
+
+        # Populate template
+        sentence = template
+        for key, val in components.items():
+            sentence = sentence.replace(f"{{{key}}}", val)
+
+        # Cleanup spacing and handle capitalization
+        sentence = sentence.strip().replace("  ", " ")
+        if sentence:
+            # If no intro was used, ensure the first character is capitalized
+            if not intro or not sentence.startswith(intro):
+                sentence = sentence[0].upper() + sentence[1:]
+
+        # Re-apply outro logic (handling spacing and punctuation)
         if outro:
             spacer = "" if outro.startswith(",") or outro.startswith(".") else " "
             sentence += f"{spacer}{outro}"
