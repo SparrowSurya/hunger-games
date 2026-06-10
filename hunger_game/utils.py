@@ -7,7 +7,7 @@ import pathlib
 import random
 from typing import Dict, List, Tuple, Any, Callable, overload
 
-from hunger_game.brawler import BrawlerInfo, BrawlerAction, BrawlerState
+from hunger_game.brawler import BrawlerInfo, BrawlerAction, BrawlerState, BrawlerNature
 from hunger_game.game_mode import (
     GameModeEnv,
     GameModeObjective,
@@ -57,7 +57,7 @@ def parse_brawler_data(data: Dict[str, Any]) -> Dict[str, BrawlerInfo]:
         name = item["brawler"]
         brawlers[name] = BrawlerInfo(
             name=name,
-            nature=item["nature"],
+            nature=BrawlerNature(item["nature"].lower()),
             damage=item["damage"],
             hitpoints=item["hitpoints"],
         )
@@ -75,8 +75,8 @@ def parse_mode_data(data: Dict[str, Any]) -> Dict[str, GameModeEnv]:
 
         modes[name] = GameModeEnv(
             name=name,
-            objective=GameModeObjective[details["objective"]],
-            dynamics=[GameModeDynamic[d] for d in details["dynamics"]],
+            objective=GameModeObjective(details["objective"].lower()),
+            dynamics=[GameModeDynamic(d.lower()) for d in details["dynamics"]],
             config=GameModeConfig(gas=gas_config, **config_data),
         )
     return modes

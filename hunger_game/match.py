@@ -35,7 +35,6 @@ class EncounterState(StrEnum):
     MELEE = auto()
     """3+ player chaotic fight."""
 
-
 @dataclass
 class Encounter:
     """Represents a localized skirmish or situation in the match."""

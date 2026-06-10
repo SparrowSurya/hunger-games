@@ -13,6 +13,7 @@ from typing import Dict
 
 __all__ = (
     "BrawlerAction",
+    "BrawlerNature",
     "BrawlerInfo",
     "BrawlerState",
 )
@@ -22,13 +23,53 @@ class BrawlerAction(StrEnum):
     """Describes brawler actions in game."""
 
     ATTACK = auto()
-    HEAL = auto()
-    LOOT = auto()
-    CAMP = auto()
-    AMBUSH = auto()
-    TEAMUP = auto()
-    BETRAY = auto()
+    """Engaging an enemy to deal damage."""
 
+    HEAL = auto()
+    """Recovering health points over time."""
+
+    LOOT = auto()
+    """Searching for power cubes or equipment."""
+
+    CAMP = auto()
+    """Hiding in bushes to avoid detection or set up ambushes."""
+
+    AMBUSH = auto()
+    """Striking an unsuspecting enemy from concealment."""
+
+    TEAMUP = auto()
+    """Attempting to form a temporary alliance with another player."""
+
+    BETRAY = auto()
+    """Attacking an ally to break an alliance and deal massive damage."""
+
+
+class BrawlerNature(StrEnum):
+    """Describes the class/nature of a brawler, influencing logic and narrations."""
+
+    DAMAGE_DEALER = auto()
+    """High consistent damage output."""
+
+    SNIPER = auto()
+    """Long-range precision specialists."""
+
+    TANK = auto()
+    """High durability, designed to soak up damage."""
+
+    ASSASSIN = auto()
+    """High mobility and burst damage for quick eliminations."""
+
+    CONTROLLER = auto()
+    """Zoning specialists that restrict enemy movement."""
+
+    ARTILLERY = auto()
+    """Throwers that deal damage over obstacles."""
+
+    SUPPORT = auto()
+    """Provides utility, such as healing or buffs, to themselves or allies."""
+
+    ANTI_TANK = auto()
+    """Specialists designed to take down high-HP targets."""
 
 @dataclass(repr=False)
 class BrawlerInfo:
@@ -37,8 +78,8 @@ class BrawlerInfo:
     name: str
     """The type name of the brawler (e.g., Shelly, Colt)."""
 
-    nature: str
-    """The brawler's class/nature (e.g., SNIPER, TANK) used for verb selection."""
+    nature: BrawlerNature
+    """The brawler's class/nature used for verb selection and logic."""
 
     damage: int
     """Base attack damage value."""

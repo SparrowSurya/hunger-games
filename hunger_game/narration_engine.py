@@ -8,7 +8,7 @@ from __future__ import annotations
 
 import abc
 import random
-from enum import StrEnum
+from enum import StrEnum, auto
 from typing import Any, Dict, TYPE_CHECKING
 
 from hunger_game.brawler import BrawlerAction
@@ -26,36 +26,55 @@ __all__ = (
 
 
 class NarrationComponent(StrEnum):
-    """Internal keys for narration data structure."""
+    """Internal keys for navigation and access in the narration data structure."""
 
-    INTROS = "intros"
-    VERBS = "verbs"
-    OUTROS = "outros"
+    INTROS = auto()
+    """Key for the introductory phrase templates."""
+
+    VERBS = auto()
+    """Key for the action-specific verb templates."""
+
+    OUTROS = auto()
+    """Key for the concluding result templates."""
 
 
 class NarrationMood(StrEnum):
-    """Moods used to select intros."""
+    """Moods used to select brawler-specific intros based on state or traits."""
 
-    AGGRESSIVE = "AGGRESSIVE"
-    CAUTIOUS = "CAUTIOUS"
-    DESPERATE = "DESPERATE"
-    NEUTRAL = "NEUTRAL"
-    SNEAKY = "SNEAKY"
+    AGGRESSIVE = auto()
+    """For aggressive brawlers or high-pressure situations."""
+
+    CAUTIOUS = auto()
+    """For defensive play or methodical movement."""
+
+    DESPERATE = auto()
+    """For brawlers with critically low health."""
+
+    NEUTRAL = auto()
+    """The default mood for standard actions."""
+
+    SNEAKY = auto()
+    """For actions involving stealth or concealment."""
 
 
 class NarrationMagnitude(StrEnum):
-    """Magnitude of an action's result."""
+    """Describes the magnitude of an action's result for outro selection."""
 
-    MINOR = "MINOR"
-    MAJOR = "MAJOR"
-    ELIMINATION = "ELIMINATION"
+    MINOR = auto()
+    """Grazing hits or low-impact results."""
+
+    MAJOR = auto()
+    """Devastating strikes or high-impact results."""
+
+    ELIMINATION = auto()
+    """Results that conclude a brawler's participation."""
 
 
 class NarrationFallback(StrEnum):
-    """Fallback keys for narration lookups."""
+    """Standard fallback keys for narration data lookups when specific keys aren't found."""
 
-    DEFAULT = "DEFAULT"
-
+    DEFAULT = auto()
+    """The generic template used when no nature or name-specific entry exists."""
 
 class NarrationEngine[T](abc.ABC):
     """Base narration engine class."""
@@ -141,8 +160,8 @@ class TextNarrationEngine(NarrationEngine[str]):
         """Picks a random verb based on action key, brawler name, and nature with 50-50 mix."""
         action_verbs = self.data[NarrationComponent.VERBS].get(action_key, {})
 
-        default_pool = action_verbs.get(NarrationFallback.DEFAULT, ["acts"])
-        nature_pool = action_verbs.get(player.info.nature, [])
+        default_pool = action_verbs.get(NarrationFallback.DEFAULT.name, ["acts"])
+        nature_pool = action_verbs.get(player.info.nature.name, [])
         specific_pool = action_verbs.get(player.info.name, [])
 
         pools = []
@@ -178,8 +197,11 @@ class TextNarrationEngine(NarrationEngine[str]):
     ) -> str:
         """Picks a random outro based on action and result magnitude."""
         action_outros = self.data[NarrationComponent.OUTROS].get(action_name, {})
+        # Note: magnitude might be NarrationMagnitude or NarrationFallback, both are enums.
+        # We use .name to match uppercase JSON keys.
+        lookup_key = magnitude.name
         outro_pool = action_outros.get(
-            magnitude, action_outros.get(NarrationFallback.DEFAULT, [""])
+            lookup_key, action_outros.get(NarrationFallback.DEFAULT.name, [""])
         )
         return random.choice(outro_pool)
 
@@ -194,7 +216,7 @@ class TextNarrationEngine(NarrationEngine[str]):
             mood = self._get_mood(player)
 
         intro_pool = self.data[NarrationComponent.INTROS].get(
-            mood, self.data[NarrationComponent.INTROS][NarrationMood.NEUTRAL]
+            mood.name, self.data[NarrationComponent.INTROS][NarrationMood.NEUTRAL.name]
         )
         return random.choice(intro_pool)
 
@@ -248,21 +270,31 @@ class TextNarrationEngine(NarrationEngine[str]):
             magnitude = NarrationFallback.DEFAULT
 
         outro = self._get_outro(BrawlerAction.AMBUSH.name, magnitude)
-        return self._assemble(struct_type, intro, attacker.info.name, verb, target.info.name, outro)
+        return self._assemble(
+            struct_type, intro, attacker.info.name, verb, target.info.name, outro
+        )
 
-    def narrate_teamup(self, initiator: Player, target: Player, outcome: str, damage: int) -> str:
+    def narrate_teamup(
+        self, initiator: Player, target: Player, outcome: str, damage: int
+    ) -> str:
         """Narrates a teamup attempt and its result."""
         initiator_name = initiator.info.name
         target_name = target.info.name
 
         if outcome == "ACCEPT":
-            templates = self.data.get("teamup_accept", ["{0} spins and {1} joins them!"])
+            templates = self.data.get(
+                "teamup_accept", ["{0} spins and {1} joins them!"]
+            )
             return random.choice(templates).format(initiator_name, target_name)
         elif outcome == "REJECT":
-            templates = self.data.get("teamup_reject", ["{0} tries to team up, but {1} ignores them."])
+            templates = self.data.get(
+                "teamup_reject", ["{0} tries to team up, but {1} ignores them."]
+            )
             return random.choice(templates).format(initiator_name, target_name)
         else:  # ATTACK
-            templates = self.data.get("teamup_attack", ["{0} spins, but {1} retaliates with a strike!"])
+            templates = self.data.get(
+                "teamup_attack", ["{0} spins, but {1} retaliates with a strike!"]
+            )
             return random.choice(templates).format(initiator_name, target_name)
 
     def narrate_betrayal(self, betrayer: Player, victim: Player, damage: int) -> str:
@@ -285,7 +317,9 @@ class TextNarrationEngine(NarrationEngine[str]):
         messages = poison_data.get("messages", {})
         intensities = poison_data.get("intensities", {})
 
-        msg_template = messages.get(context, messages.get("default", "{0} chokes on the gas! "))
+        msg_template = messages.get(
+            context, messages.get("default", "{0} chokes on the gas! ")
+        )
         msg = msg_template.format(player.info.name)
 
         if not player.state.alive:
@@ -298,7 +332,9 @@ class TextNarrationEngine(NarrationEngine[str]):
         elif hp_ratio < 0.5:
             intensity = intensities.get("moderate", "They are severely weakened.")
         else:
-            intensity = intensities.get("minor", "They struggle to breathe but push on.")
+            intensity = intensities.get(
+                "minor", "They struggle to breathe but push on."
+            )
 
         return f">> {msg}{intensity}"
 
@@ -333,7 +369,13 @@ class TextNarrationEngine(NarrationEngine[str]):
         return random.choice(templates)
 
     def _assemble(
-        self, struct_type: str, intro: str, subject: str, verb: str, object: str | None, outro: str
+        self,
+        struct_type: str,
+        intro: str,
+        subject: str,
+        verb: str,
+        object: str | None,
+        outro: str,
     ) -> str:
         """Assembles the sentence parts using structural templates from data."""
         structures = self.data.get("structures", {})

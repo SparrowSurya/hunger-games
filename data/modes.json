@@ -10,8 +10,8 @@
             "mid_game_threshold": 0.7,
             "end_game_threshold": 0.3,
             "gas": {
-                "safe_until": 2,
-                "full_coverage_at": 12,
+                "safe_until": 1,
+                "full_coverage_at": 9,
                 "base_damage": 20,
                 "scaling_factor": 0.25,
                 "random_hit_chance": 0.01,

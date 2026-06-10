@@ -20,16 +20,17 @@ __all__ = (
 
 
 class GameModeObjective(StrEnum):
-    """Represents the objective of a game mode."""
+    """Defines the primary goal of the match, influencing win conditions."""
 
     LAST_PLAYER_STANDING = auto()
+    """A standard Battle Royale format where only the final survivor wins."""
 
 
 class GameModeDynamic(StrEnum):
-    """Represents a dynamic event in a game mode."""
+    """Environmental hazards or match-wide modifiers."""
 
     POISON_GAS = auto()
-
+    """An encroaching hazard that deals damage over time and forces players together."""
 
 @dataclass(repr=False)
 class PoisonGasConfig:

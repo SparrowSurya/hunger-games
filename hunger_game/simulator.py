@@ -9,7 +9,7 @@ import asyncio
 import random
 from typing import List, Callable, Dict, TYPE_CHECKING
 
-from hunger_game.brawler import BrawlerAction
+from hunger_game.brawler import BrawlerAction, BrawlerNature
 from hunger_game.game_mode import GameModeDynamic
 from hunger_game.events import (
     MatchBeginEvent,
@@ -114,8 +114,9 @@ class MatchSimulator:
             weights[BrawlerAction.ATTACK] *= 2.0
             weights[BrawlerAction.LOOT] *= 0.1
         else:
-            # Early game: Boost looting
+            # Early game: Boost looting and slight boost to aggression
             weights[BrawlerAction.LOOT] *= 2.0
+            weights[BrawlerAction.ATTACK] *= 1.25
 
         # ENCOUNTER CONTEXT MODIFIERS
         allies = set()
@@ -150,6 +151,11 @@ class MatchSimulator:
         # Prevent healing at full health
         if player.state.hp >= player.info.hitpoints:
             weights[BrawlerAction.HEAL] = 0
+
+        # Hardcore Rule: No healing after full poison coverage for non-support
+        if gm_config.gas and self.moment >= gm_config.gas.full_coverage_at:
+            if player.info.nature != BrawlerNature.SUPPORT:
+                weights[BrawlerAction.HEAL] = 0
 
         # Final normalization
         items = list(weights.items())
@@ -265,7 +271,26 @@ class MatchSimulator:
                 action in [BrawlerAction.CAMP]
                 or encounter.state == EncounterState.ISOLATED
             ):
-                if random.random() < gas_config.lazy_hit_chance:
+                chance = gas_config.lazy_hit_chance
+
+                # Passive trait penalty: Campers and Collectors are more likely to be hit by gas
+                # if they don't have an offensive nature.
+                passive_traits = {PlayerTrait.CAMPER, PlayerTrait.COLLECTOR}
+                player_traits = {t[0] for t in player.traits}
+                offensive_natures = {
+                    BrawlerNature.DAMAGE_DEALER,
+                    BrawlerNature.ASSASSIN,
+                    BrawlerNature.TANK,
+                    BrawlerNature.SNIPER,
+                    BrawlerNature.ANTI_TANK,
+                }
+
+                if (
+                    player_traits & passive_traits
+                ) and player.info.nature not in offensive_natures:
+                    chance *= 2.0
+
+                if random.random() < chance:
                     hit = True
                     context = "lazy"
             # Cornered Check
@@ -288,6 +313,48 @@ class MatchSimulator:
             self.observer.on_poison_damage(
                 PoisonDamageEvent(player, damage, context, silent=silent)
             )
+
+    def _calculate_damage(self, attacker: Player, target: Player) -> int:
+        """Calculates damage with trait-based scaling and vulnerability."""
+        gm_config = self.state.environment.config
+        var = gm_config.damage_variance
+
+        base_damage = random.randint(
+            attacker.info.damage - var, attacker.info.damage + var
+        )
+
+        multiplier = 1.0
+
+        # 1. Aggressive Trait Bonus
+        for trait, intensity in attacker.traits:
+            if trait == PlayerTrait.AGGRESSIVE:
+                multiplier *= 1.0 + (intensity * 0.5)
+
+        # 2. Offensive Nature Bonus
+        offensive_natures = {BrawlerNature.DAMAGE_DEALER, BrawlerNature.ASSASSIN}
+        if attacker.info.nature in offensive_natures:
+            multiplier *= 1.15
+
+        # 3. Passive Vulnerability
+        # Campers and Collectors take more damage from aggressive attackers if they lack offensive backup
+        passive_traits = {PlayerTrait.CAMPER, PlayerTrait.COLLECTOR}
+        target_traits = {t[0] for t in target.traits}
+        attacker_traits = {t[0] for t in attacker.traits}
+
+        if (PlayerTrait.AGGRESSIVE in attacker_traits) and (
+            target_traits & passive_traits
+        ):
+            target_offensive_natures = {
+                BrawlerNature.DAMAGE_DEALER,
+                BrawlerNature.ASSASSIN,
+                BrawlerNature.TANK,
+                BrawlerNature.SNIPER,
+                BrawlerNature.ANTI_TANK,
+            }
+            if target.info.nature not in target_offensive_natures:
+                multiplier *= 1.2
+
+        return int(base_damage * multiplier)
 
     async def run_moment(self):
         """Executes a single moment by processing localized encounters."""
@@ -345,10 +412,7 @@ class MatchSimulator:
                     ]
                     if potential_targets:
                         target = random.choice(potential_targets)
-                        var = gm_config.damage_variance
-                        damage = random.randint(
-                            player.info.damage - var, player.info.damage + var
-                        )
+                        damage = self._calculate_damage(player, target)
                         target.state.hp -= damage
                         if not target.state.alive:
                             self.state.eliminations.append((player, target))
@@ -385,10 +449,7 @@ class MatchSimulator:
                     ]
                     if potential_targets:
                         target = random.choice(potential_targets)
-                        var = gm_config.damage_variance
-                        damage = random.randint(
-                            player.info.damage - var, player.info.damage + var
-                        )
+                        damage = self._calculate_damage(player, target)
                         target.state.hp -= damage
                         if not target.state.alive:
                             self.state.eliminations.append((player, target))
@@ -442,10 +503,7 @@ class MatchSimulator:
                                 encounter.alliances.append({player.id, target.id})
 
                         elif outcome == "ATTACK":
-                            var = gm_config.damage_variance
-                            damage = random.randint(
-                                target.info.damage - var, target.info.damage + var
-                            )
+                            damage = self._calculate_damage(target, player)
                             player.state.hp -= damage
                             if not player.state.alive:
                                 self.state.eliminations.append((target, player))
@@ -453,6 +511,10 @@ class MatchSimulator:
                         self.observer.on_teamup(
                             TeamupEvent(player, target, outcome, damage)
                         )
+                        if damage > 0:
+                            self._apply_poison_gas(
+                                player, BrawlerAction.ATTACK, encounter
+                            )
 
                 elif action == BrawlerAction.BETRAY:
                     alliance_index = -1
@@ -469,14 +531,8 @@ class MatchSimulator:
 
                     if allies_list:
                         target = random.choice(allies_list)
-                        # Backstab damage (2x)
-                        var = gm_config.damage_variance
-                        damage = int(
-                            2.0
-                            * random.randint(
-                                player.info.damage - var, player.info.damage + var
-                            )
-                        )
+                        # Backstab damage (2x base)
+                        damage = self._calculate_damage(player, target) * 2
                         target.state.hp -= damage
                         if not target.state.alive:
                             self.state.eliminations.append((player, target))

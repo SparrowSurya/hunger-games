@@ -17,29 +17,28 @@ __all__ = (
 
 
 class PlayerTrait(StrEnum):
-    """Describes the behavioral traits of a player."""
+    """Behavioral traits that influence brawler decision-making and performance."""
 
     AGGRESSIVE = auto()
-    """High risk-taker. Prioritizes attacking even when at a health disadvantage."""
+    """Higher attack frequency and damage output."""
 
     CAUTIOUS = auto()
-    """Survival-focused. Prioritizes healing when damaged."""
+    """Prioritizes healing and defensive positioning."""
 
     COLLECTOR = auto()
-    """Loot-focused. Prioritizes finding and collecting cubes."""
+    """Prioritizes looting and resource gathering."""
 
     CAMPER = auto()
-    """Passive survivalist. Prefers to stay hidden to avoid conflict."""
+    """Prefers hiding and setting up ambushes."""
 
     AMBUSER = auto()
-    """Tactical hunter. Prefers hiding specifically to launch surprise attacks."""
+    """Specializes in high-damage surprise strikes."""
 
     TEAMER = auto()
-    """Social brawler. Prefers teaming with others and always accepts offers."""
+    """More likely to attempt alliances."""
 
     BACKSTABBER = auto()
-    """Deceptive ally. Always accepts teamups to lure victims for a betrayal."""
-
+    """Higher tendency to betray allies for massive damage."""
 
 @dataclass(repr=False)
 class Player:
