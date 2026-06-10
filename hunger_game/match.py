@@ -75,7 +75,7 @@ class MatchState:
 class MatchConfig:
     """Describes the general match engine parameters."""
 
-    intro_frequency: float = 0.15
+    intro_frequency: float = 0.35
     """Probability (0-1) that a brawler action will include a mood-based intro."""
 
     encounter_merge_chance: float = 0.3

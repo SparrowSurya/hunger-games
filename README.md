@@ -1,62 +1,51 @@
 # Hunger Games Simulation
 
-A zero-player simulation engine inspired by Battle Royale mechanics, where AI-controlled Brawlers battle in a narratively driven match. The project focuses on a decoupled architecture where the game simulation and event narration are handled independently through an observer-based system.
+A zero-player simulation engine inspired by Battle Royale mechanics, where AI-controlled Brawlers battle in a narratively driven match. The project focuses on a decoupled architecture where the game simulation is completely independent of the narration.
 
-## Project Overview
+## 🚀 Key Features
 
-The Hunger Games project simulates a high-stakes match among various Brawlers. Each Brawler is defined by its unique nature (e.g., Tank, Sniper, Artillery) and attack mechanism (e.g., Spread, Projectile, Throwable). Players aren't just names; they are AI entities with specific behavioral traits that influence their decision-making process during the match.
+-   **Brawl Stars Themed Narration**: A dynamic narration system with specific attack, ambush, and betrayal lines for all characters, utilizing terminology like "Showdown" and "Super".
+-   **Power Cube Mechanic**: Functional looting system where brawlers gain damage (+10%) and HP (+400) by collecting power cubes during the match.
+-   **Multiplicative Trait System**: Brawler behavior is driven by randomized traits (Aggressive, Camper, Ambuser, etc.) that apply significant multipliers to action weights, ensuring distinct character personalities.
+-   **Advanced Encounter System**: Simulates spatial dynamics through ISOLATED, DUEL, and MELEE states, managing who can interact with whom without a coordinate grid.
+-   **Hardcore Survival Loop**: Environmental poison gas that escalates damage and disables healing for non-support brawlers in the endgame to force a decisive finish.
+-   **Observer-Based Architecture**: Core simulation is decoupled from output, allowing for various narrators (text, data logs, etc.) to be plugged in seamlessly.
+-   **Strictly Typed Engine**: Built with Python 3.14 features, ensuring 100% type safety via Pyright.
 
-### Key Features
+## 🛠️ Tech Stack
 
--   **Brawl Stars Themed Narration**: The engine uses a dynamic narration system that captures the atmosphere of Brawl Stars, with specific attack and ambush lines for all 21 brawlers, terminology like "Showdown", "Super", and "Poison Clouds", and a strictly descriptive approach to damage.
--   **Observer-Based Architecture**: The core simulation logic is completely decoupled from the output. A `MatchObserver` monitors the simulator, allowing different types of narrators (text-based, data logs, etc.) to be plugged in seamlessly.
--   **Data-Driven Brawlers**: All Brawler statistics, action weights, and mechanism definitions are loaded from external configuration files, making it easy to balance and expand the roster.
--   **Dynamic AI Weighting**: Players don't act randomly. Their actions are driven by a weighted decision engine that adapts based on their individual traits (Aggressive, Cautious) and the current phase of the match.
--   **Integrated Poison Gas**: Environmental pacing is handled through an integrated poison gas system. Brawlers who are hiding ("lazy") or trapped in combat ("cornered") are contextually damaged as the match progresses, eventually escalating to full map coverage and exponential damage to force a climax.
--   **Strictly Typed Engine**: Built with modern Python features, including generics and deferred type evaluation, ensured by static analysis tools like Pyright.
+-   **Python 3.14+** (using generics and deferred annotations)
+-   **uv** (package management)
+-   **Ruff** (linting and formatting)
+-   **Pyright** (static type checking)
 
-## Getting Started
+## 📂 Core Structure
 
-This project uses `uv` for dependency management and project execution.
+-   **`hunger_game/simulator.py`**: Core loop, encounter management, and result calculation.
+-   **`hunger_game/narration_engine.py`**: Unified pipeline for transforming events into structured sentences.
+-   **`hunger_game/brawler.py`**: Brawler state tracking, including HP, damage multipliers, and power cubes.
+-   **`hunger_game/match.py`**: Global configuration and state models.
+-   **`hunger_game/events.py`**: Unified match event model definitions.
+-   **`hunger_game/game_mode.py`**: Objective and environmental hazard models.
+-   **`hunger_game/player.py`**: Player instance models and behavioral trait definitions.
+-   **`hunger_game/observer.py`**: Base interface for match monitoring (Observer Pattern).
+-   **`hunger_game/text_narrator.py`**: Text-based implementation of event narrators.
+-   **`hunger_game/constants.py`**: Engine-wide constants and path configurations.
+-   **`hunger_game/utils.py`**: Helpers for JSON loading and weight normalization.
+-   **`data/`**: JSON definitions for brawlers, modes, and narration templates.
 
-### Prerequisites
-
--   Python 3.14 or higher
--   [uv](https://github.com/astral-sh/uv) installed on your system
-
-### Installation
-
-Clone the repository and sync the dependencies:
-
-```bash
-uv sync
-```
-
-### Running the Simulation
-
-To start a new match simulation:
+## 🏃 Running the Simulation
 
 ```bash
 uv run start
 ```
 
-### Development Tools
+## 🧪 Development & Quality
 
-The project includes built-in scripts for maintaining code quality:
+Ensure code quality before committing:
 
--   **Linting (Ruff)**:
-    ```bash
-    uv run scripts/lint.py
-    ```
--   **Type Checking (Pyright)**:
-    ```bash
-    uv run scripts/type_check.py
-    ```
-
-## Architecture
-
--   **`hunger_game/simulator.py`**: The "brain" of the project. It handles match moments, player turns, and environment dynamics.
--   **`hunger_game/narrator.py`**: Defines the narration system and the `Narration` dataclass which ensures type-safe event reporting.
--   **`hunger_game/match.py`**: Contains the state models and configurations that drive match pacing and rules.
--   **`hunger_game/player.py`**: Manages player entities and their behavioral trait definitions.
--   **`data/`**: Directory containing the JSON definitions for brawlers and match configurations.
+```bash
+uv run python scripts/lint.py
+uv run python scripts/type_check.py
+uv run python scripts/format.py
+```

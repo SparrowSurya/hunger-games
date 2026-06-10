@@ -205,10 +205,15 @@ class TextNarrationEngine(NarrationEngine[str]):
         )
         return random.choice(outro_pool)
 
-    def _get_intro(self, player: Player) -> str:
+    def _get_intro(self, player: Player, action: BrawlerAction | None = None) -> str:
         """Randomly picks an intro based on configuration frequency."""
-        # Ambush always uses a sneaky intro
-        if player.state.last_action == BrawlerAction.CAMP:
+        # Sneaky mood triggers if currently ambushing OR if they camped last turn
+        is_sneaky = (
+            action == BrawlerAction.AMBUSH
+            or player.state.last_action == BrawlerAction.CAMP
+        )
+
+        if is_sneaky:
             mood = NarrationMood.SNEAKY
         elif random.random() > self.config.intro_frequency:
             return ""
@@ -221,7 +226,7 @@ class TextNarrationEngine(NarrationEngine[str]):
         return random.choice(intro_pool)
 
     def narrate_attack(self, attacker: Player, target: Player, damage: int) -> str:
-        intro = self._get_intro(attacker)
+        intro = self._get_intro(attacker, BrawlerAction.ATTACK)
 
         # Decide voice: 80% Active, 20% Passive
         struct_type = random.choices(["ACTIVE", "PASSIVE"], weights=[80, 20], k=1)[0]
@@ -230,7 +235,7 @@ class TextNarrationEngine(NarrationEngine[str]):
 
         if not target.state.alive:
             magnitude = NarrationMagnitude.ELIMINATION
-        elif damage > (target.info.hitpoints * 0.3):
+        elif damage > (target.max_hp * 0.3):
             magnitude = NarrationMagnitude.MAJOR
         else:
             magnitude = NarrationMagnitude.MINOR
@@ -239,25 +244,25 @@ class TextNarrationEngine(NarrationEngine[str]):
         return self._assemble(struct_type, intro, attacker.info.name, verb, target.info.name, outro)
 
     def narrate_heal(self, player: Player) -> str:
-        intro = self._get_intro(player)
+        intro = self._get_intro(player, BrawlerAction.HEAL)
         verb = self._get_verb(BrawlerAction.HEAL.name, player)
         outro = self._get_outro(BrawlerAction.HEAL.name, NarrationFallback.DEFAULT)
         return self._assemble("ACTIVE", intro, player.info.name, verb, None, outro)
 
     def narrate_loot(self, player: Player) -> str:
-        intro = self._get_intro(player)
+        intro = self._get_intro(player, BrawlerAction.LOOT)
         verb = self._get_verb(BrawlerAction.LOOT.name, player)
         outro = self._get_outro(BrawlerAction.LOOT.name, NarrationFallback.DEFAULT)
         return self._assemble("ACTIVE", intro, player.info.name, verb, None, outro)
 
     def narrate_camp(self, player: Player) -> str:
-        intro = self._get_intro(player)
+        intro = self._get_intro(player, BrawlerAction.CAMP)
         verb = self._get_verb(BrawlerAction.CAMP.name, player)
         outro = self._get_outro(BrawlerAction.CAMP.name, NarrationFallback.DEFAULT)
         return self._assemble("ACTIVE", intro, player.info.name, verb, None, outro)
 
     def narrate_ambush(self, attacker: Player, target: Player, damage: int) -> str:
-        intro = self._get_intro(attacker)
+        intro = self._get_intro(attacker, BrawlerAction.AMBUSH)
 
         # Decide voice: 80% Active, 20% Passive
         struct_type = random.choices(["ACTIVE", "PASSIVE"], weights=[80, 20], k=1)[0]
@@ -270,45 +275,32 @@ class TextNarrationEngine(NarrationEngine[str]):
             magnitude = NarrationFallback.DEFAULT
 
         outro = self._get_outro(BrawlerAction.AMBUSH.name, magnitude)
-        return self._assemble(
-            struct_type, intro, attacker.info.name, verb, target.info.name, outro
-        )
+        return self._assemble(struct_type, intro, attacker.info.name, verb, target.info.name, outro)
 
-    def narrate_teamup(
-        self, initiator: Player, target: Player, outcome: str, damage: int
-    ) -> str:
+    def narrate_teamup(self, initiator: Player, target: Player, outcome: str, damage: int) -> str:
         """Narrates a teamup attempt and its result."""
-        initiator_name = initiator.info.name
-        target_name = target.info.name
+        intro = self._get_intro(initiator, BrawlerAction.TEAMUP)
+        verb = self._get_verb(BrawlerAction.TEAMUP.name, initiator)
 
-        if outcome == "ACCEPT":
-            templates = self.data.get(
-                "teamup_accept", ["{0} spins and {1} joins them!"]
-            )
-            return random.choice(templates).format(initiator_name, target_name)
-        elif outcome == "REJECT":
-            templates = self.data.get(
-                "teamup_reject", ["{0} tries to team up, but {1} ignores them."]
-            )
-            return random.choice(templates).format(initiator_name, target_name)
-        else:  # ATTACK
-            templates = self.data.get(
-                "teamup_attack", ["{0} spins, but {1} retaliates with a strike!"]
-            )
-            return random.choice(templates).format(initiator_name, target_name)
+        # Special case: override the lookup to use the outcome name
+        action_outros = self.data[NarrationComponent.OUTROS].get(BrawlerAction.TEAMUP.name, {})
+        outro_pool = action_outros.get(outcome, [""])
+        outro = random.choice(outro_pool)
+
+        return self._assemble("ACTIVE", intro, initiator.info.name, verb, target.info.name, outro)
 
     def narrate_betrayal(self, betrayer: Player, victim: Player, damage: int) -> str:
         """Narrates a backstab."""
-        templates = self.data.get("betrayal", ["{0} suddenly backstabs {1}!"])
-        template = random.choice(templates)
+        intro = self._get_intro(betrayer, BrawlerAction.BETRAY)
+        verb = self._get_verb(BrawlerAction.BETRAY.name, betrayer)
 
-        # Check for elimination
         if not victim.state.alive:
-            outro = " It's a total betrayal!"
+            magnitude = NarrationMagnitude.ELIMINATION
         else:
-            outro = ""
+            magnitude = NarrationFallback.DEFAULT
 
-        return template.format(betrayer.info.name, victim.info.name) + outro
+        outro = self._get_outro(BrawlerAction.BETRAY.name, magnitude)
+        return self._assemble("ACTIVE", intro, betrayer.info.name, verb, victim.info.name, outro)
 
     def narrate_poison(self, player: Player, damage: int, context: str) -> str:
         """Narrates poison damage based on context without numeric values."""

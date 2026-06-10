@@ -459,6 +459,30 @@
             "Bull": [
                 "was blasted at point-blank range from the bushes by"
             ]
+        },
+        "TEAMUP": {
+            "DEFAULT": [
+                "spins in circles for",
+                "offers a friendly spin to",
+                "proposes a temporary truce to",
+                "tries to form an alliance with"
+            ]
+        },
+        "BETRAY": {
+            "DEFAULT": [
+                "suddenly backstabs",
+                "turns on their ally",
+                "unleashes a surprise attack on",
+                "strikes their former partner"
+            ],
+            "ASSASSIN": [
+                "swiftly backstabs",
+                "pounces on their unsuspecting partner"
+            ],
+            "Mortis": [
+                "harvests the soul of their ally",
+                "slashes through their partner with his shovel"
+            ]
         }
     },
     "outros": {
@@ -543,6 +567,40 @@
                 "hoping no one noticed.",
                 "."
             ]
+        },
+        "TEAMUP": {
+            "ACCEPT": [
+                "and they join the dance! It's a truce!",
+                "and they accept! They are now a team.",
+                "forming an unlikely bond.",
+                "agreeing to work together."
+            ],
+            "REJECT": [
+                "but they aren't having it.",
+                "but they ignore the offer.",
+                "but the offer was ignored.",
+                "but they stay focused on the fight."
+            ],
+            "ATTACK": [
+                "but they retaliate with an immediate strike!",
+                "but they just hate teamers! They attack!",
+                "but they answer with a punch!",
+                "but they punish the attempt!"
+            ]
+        },
+        "BETRAY": {
+            "DEFAULT": [
+                "It's the ultimate betrayal!",
+                "They never saw it coming!",
+                "The alliance is broken!",
+                "Treachery!"
+            ],
+            "ELIMINATION": [
+                "securing a heartless elimination!",
+                "ending their partner's run in cold blood!",
+                "leaving them in the dust!",
+                "it's a total betrayal!"
+            ]
         }
     },
     "eliminations": {
@@ -587,30 +645,6 @@
         "The creeping death has arrived. Poison gas is now entering the map!",
         "Watch the edges! The poison gas is beginning its slow advance.",
         "Poison clouds are approaching from the boundaries!"
-    ],
-    "teamup_accept": [
-        "{0} spins in circles and {1} joins the dance! It's a truce!",
-        "{0} offers a friendly spin, and {1} accepts! They are now a team.",
-        "A temporary alliance! {0} and {1} agree to work together.",
-        "{0} and {1} spin around each other, forming an unlikely bond."
-    ],
-    "teamup_reject": [
-        "{0} tries to spin for a teamup, but {1} isn't having it.",
-        "{0} offers a truce, but {1} ignores them and keeps their distance.",
-        "The spin was ignored. {1} refuses to team up with {0}.",
-        "{0} tries to be friendly, but {1} stays focused on the fight."
-    ],
-    "teamup_attack": [
-        "{0} spins to team up, but {1} retaliates with an immediate strike!",
-        "A fake spin? No, {1} just hates teamers! They attack {0}!",
-        "{0} tried to team up, but {1} answered with a punch!",
-        "The spin was a mistake! {1} punishes {0} for trying to team up."
-    ],
-    "betrayal": [
-        "The ultimate betrayal! {0} suddenly backstabs {1}!",
-        "{0} turns on their ally! {1} never saw it coming!",
-        "The alliance is broken! {0} unleashes a surprise attack on {1}!",
-        "Treachery! {0} strikes their former partner {1}!"
     ],
     "poison": {
         "messages": {

@@ -5,7 +5,6 @@ This module provides match simulator class:
 
 from __future__ import annotations
 
-import asyncio
 import random
 from typing import List, Callable, Dict, TYPE_CHECKING
 
@@ -96,16 +95,22 @@ class MatchSimulator:
         is_mid = gm_config.end_game_threshold < ratio <= gm_config.mid_game_threshold
         is_late = ratio <= gm_config.end_game_threshold
 
-        # Apply Trait Modifiers
+        # Apply Trait Modifiers (Multiplicative)
         for trait, intensity in player.traits:
             if trait == PlayerTrait.AGGRESSIVE:
-                weights[BrawlerAction.ATTACK] += intensity * 0.2
+                weights[BrawlerAction.ATTACK] *= 1.0 + (intensity * 4.0)
             elif trait == PlayerTrait.CAUTIOUS:
-                weights[BrawlerAction.HEAL] += intensity * 0.2
+                weights[BrawlerAction.HEAL] *= 1.0 + (intensity * 4.0)
             elif trait == PlayerTrait.TEAMER:
-                weights[BrawlerAction.TEAMUP] += intensity * 0.3
+                weights[BrawlerAction.TEAMUP] *= 1.0 + (intensity * 4.0)
             elif trait == PlayerTrait.BACKSTABBER:
-                weights[BrawlerAction.BETRAY] += intensity * 0.4
+                weights[BrawlerAction.BETRAY] *= 1.0 + (intensity * 4.0)
+            elif trait == PlayerTrait.COLLECTOR:
+                weights[BrawlerAction.LOOT] *= 1.0 + (intensity * 4.0)
+            elif trait == PlayerTrait.CAMPER:
+                weights[BrawlerAction.CAMP] *= 1.0 + (intensity * 4.0)
+            elif trait == PlayerTrait.AMBUSER:
+                weights[BrawlerAction.AMBUSH] *= 1.0 + (intensity * 4.0)
 
         # Apply Match Phase Bias
         if is_mid:
@@ -137,7 +142,7 @@ class MatchSimulator:
             weights[BrawlerAction.TEAMUP] = 0
             weights[BrawlerAction.BETRAY] = 0
             # Higher chance to heal if damaged and alone
-            if player.state.hp < player.info.hitpoints:
+            if player.state.hp < player.max_hp:
                 weights[BrawlerAction.HEAL] *= 2.0
         else:
             # If no non-allies, cannot attack or teamup
@@ -149,7 +154,7 @@ class MatchSimulator:
                 weights[BrawlerAction.BETRAY] = 0
 
         # Prevent healing at full health
-        if player.state.hp >= player.info.hitpoints:
+        if player.state.hp >= player.max_hp:
             weights[BrawlerAction.HEAL] = 0
 
         # Hardcore Rule: No healing after full poison coverage for non-support
@@ -295,7 +300,7 @@ class MatchSimulator:
                     context = "lazy"
             # Cornered Check
             elif (
-                player.state.hp / player.info.hitpoints
+                player.state.hp / player.max_hp
                 < gas_config.cornered_hp_threshold
             ):
                 if random.random() < gas_config.cornered_hit_chance:
@@ -324,6 +329,9 @@ class MatchSimulator:
         )
 
         multiplier = 1.0
+
+        # 0. Power Cube Bonus (10% per cube)
+        multiplier += attacker.state.power_cubes * 0.1
 
         # 1. Aggressive Trait Bonus
         for trait, intensity in attacker.traits:
@@ -424,12 +432,15 @@ class MatchSimulator:
                 elif action == BrawlerAction.HEAL:
                     heal_amt = random.randint(gm_config.heal_min, gm_config.heal_max)
                     player.state.hp = min(
-                        player.info.hitpoints, player.state.hp + heal_amt
+                        player.max_hp, player.state.hp + heal_amt
                     )
                     self.observer.on_heal(HealEvent(player, None))
 
                 elif action == BrawlerAction.LOOT:
                     if random.random() < 0.5:  # 50% chance to find a cube
+                        player.state.power_cubes += 1
+                        # Small healing bonus for picking up a cube
+                        player.state.hp = min(player.max_hp, player.state.hp + 400)
                         self.observer.on_loot(LootEvent(player))
 
                 elif action == BrawlerAction.CAMP:
@@ -546,8 +557,6 @@ class MatchSimulator:
 
                 # Actor might take gas damage regardless of action
                 self._apply_poison_gas(player, action, encounter)
-
-                await asyncio.sleep(0.05)
 
             encounter.age += 1
 
