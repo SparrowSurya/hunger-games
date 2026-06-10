@@ -26,6 +26,8 @@ class BrawlerAction(StrEnum):
     LOOT = auto()
     CAMP = auto()
     AMBUSH = auto()
+    TEAMUP = auto()
+    BETRAY = auto()
 
 
 @dataclass(repr=False)

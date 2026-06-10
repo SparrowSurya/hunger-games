@@ -18,6 +18,8 @@ from hunger_game.events import (
     CampEvent,
     AmbushEvent,
     PoisonDamageEvent,
+    TeamupEvent,
+    BetrayalEvent,
     PoisonGasStartEvent,
     PoisonGasCoverageEvent,
 )
@@ -80,6 +82,14 @@ class MatchObserver(abc.ABC):
     @abc.abstractmethod
     def on_poison_damage(self, event: PoisonDamageEvent):
         """Player takes damage from poison gas."""
+
+    @abc.abstractmethod
+    def on_teamup(self, event: TeamupEvent):
+        """Called when a brawler attempts to team up with another."""
+
+    @abc.abstractmethod
+    def on_betrayal(self, event: BetrayalEvent):
+        """Called when a brawler betrays their ally."""
 
     @abc.abstractmethod
     def on_poison_gas_start(self, event: PoisonGasStartEvent):

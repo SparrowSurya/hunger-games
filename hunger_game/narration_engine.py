@@ -81,6 +81,14 @@ class NarrationEngine[T](abc.ABC):
         """Narrates an ambush."""
 
     @abc.abstractmethod
+    def narrate_teamup(self, initiator: Player, target: Player, outcome: str, damage: int) -> T:
+        """Narrates a teamup attempt."""
+
+    @abc.abstractmethod
+    def narrate_betrayal(self, betrayer: Player, victim: Player, damage: int) -> T:
+        """Narrates a betrayal."""
+
+    @abc.abstractmethod
     def narrate_poison(self, player: Player, damage: int, context: str) -> T:
         """Narrates poison gas damage."""
 
@@ -232,6 +240,34 @@ class TextNarrationEngine(NarrationEngine[str]):
 
         outro = self._get_outro(BrawlerAction.AMBUSH, magnitude)
         return self._assemble(intro, attacker.info.name, verb, target.info.name, outro)
+
+    def narrate_teamup(self, initiator: Player, target: Player, outcome: str, damage: int) -> str:
+        """Narrates a teamup attempt and its result."""
+        initiator_name = initiator.info.name
+        target_name = target.info.name
+
+        if outcome == "ACCEPT":
+            templates = self.data.get("teamup_accept", ["{0} spins and {1} joins them!"])
+            return random.choice(templates).format(initiator_name, target_name)
+        elif outcome == "REJECT":
+            templates = self.data.get("teamup_reject", ["{0} tries to team up, but {1} ignores them."])
+            return random.choice(templates).format(initiator_name, target_name)
+        else:  # ATTACK
+            templates = self.data.get("teamup_attack", ["{0} spins, but {1} retaliates with a strike!"])
+            return random.choice(templates).format(initiator_name, target_name)
+
+    def narrate_betrayal(self, betrayer: Player, victim: Player, damage: int) -> str:
+        """Narrates a backstab."""
+        templates = self.data.get("betrayal", ["{0} suddenly backstabs {1}!"])
+        template = random.choice(templates)
+        
+        # Check for elimination
+        if not victim.state.alive:
+            outro = " It's a total betrayal!"
+        else:
+            outro = ""
+            
+        return template.format(betrayer.info.name, victim.info.name) + outro
 
     def narrate_poison(self, player: Player, damage: int, context: str) -> str:
         """Narrates poison damage based on context without numeric values."""

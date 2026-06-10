@@ -9,7 +9,7 @@ This module provide the match classes:
 
 from dataclasses import dataclass, field
 from enum import StrEnum, auto
-from typing import List, Tuple
+from typing import List, Tuple, Set
 
 from hunger_game.game_mode import GameModeEnv, GameModeDynamic
 from hunger_game.player import Player
@@ -43,6 +43,9 @@ class Encounter:
 
     age: int = 0
     """How many moments this encounter has persisted."""
+
+    alliances: List[Set[str]] = field(default_factory=list)
+    """Groups of allied player IDs within this encounter."""
 
 
 @dataclass(repr=False)

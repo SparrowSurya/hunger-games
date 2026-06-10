@@ -34,6 +34,12 @@ class PlayerTrait(StrEnum):
     AMBUSER = auto()
     """Tactical hunter. Prefers hiding specifically to launch surprise attacks."""
 
+    TEAMER = auto()
+    """Social brawler. Prefers teaming with others and always accepts offers."""
+
+    BACKSTABBER = auto()
+    """Deceptive ally. Always accepts teamups to lure victims for a betrayal."""
+
 
 @dataclass(repr=False)
 class Player:

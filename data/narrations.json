@@ -344,6 +344,30 @@
         "The arena is shrinking! The first clouds of poison gas are visible.",
         "The creeping death has arrived. Poison gas is now entering the map!",
         "Watch the edges! The poison gas is beginning its slow advance."
+    ],
+    "teamup_accept": [
+        "{0} spins in circles and {1} joins the dance! It's a truce!",
+        "{0} offers a friendly spin, and {1} accepts! They are now a team.",
+        "A temporary alliance! {0} and {1} agree to work together.",
+        "{0} and {1} spin around each other, forming an unlikely bond."
+    ],
+    "teamup_reject": [
+        "{0} tries to spin for a teamup, but {1} isn't having it.",
+        "{0} offers a truce, but {1} ignores them and keeps their distance.",
+        "The spin was ignored. {1} refuses to team up with {0}.",
+        "{0} tries to be friendly, but {1} stays focused on the fight."
+    ],
+    "teamup_attack": [
+        "{0} spins to team up, but {1} retaliates with an immediate strike!",
+        "A fake spin? No, {1} just hates teamers! They attack {0}!",
+        "{0} tried to team up, but {1} answered with a punch!",
+        "The spin was a mistake! {1} punishes {0} for trying to team up."
+    ],
+    "betrayal": [
+        "The ultimate betrayal! {0} suddenly backstabs {1}!",
+        "{0} turns on their ally! {1} never saw it coming!",
+        "The alliance is broken! {0} unleashes a surprise attack on {1}!",
+        "Treachery! {0} strikes their former partner {1}!"
     ]
 }
 

@@ -122,8 +122,7 @@ def random_traits() -> List[Tuple[PlayerTrait, float]]:
 
     output: List[Tuple[PlayerTrait, float]] = []
 
-    # Pick between 1 and the max number of traits available
-    for i in range(random.randint(1, len(traits))):
+    for i in range(random.randint(2, 3)):
         trait = traits[i]
         output.append((trait, random.randint(6, 10)))
 

@@ -22,6 +22,8 @@ from hunger_game.events import (
     CampEvent,
     AmbushEvent,
     PoisonDamageEvent,
+    TeamupEvent,
+    BetrayalEvent,
     PoisonGasStartEvent,
     PoisonGasCoverageEvent,
 )
@@ -51,6 +53,7 @@ class MatchSimulator:
     observer: MatchObserver
     state: MatchState
     config: MatchConfig
+    encounter: List[Encounter]
     moment: int
     gas_iterations: int
     _finished: bool
@@ -99,6 +102,10 @@ class MatchSimulator:
                 weights[BrawlerAction.ATTACK] += intensity * 0.2
             elif trait == PlayerTrait.CAUTIOUS:
                 weights[BrawlerAction.HEAL] += intensity * 0.2
+            elif trait == PlayerTrait.TEAMER:
+                weights[BrawlerAction.TEAMUP] += intensity * 0.3
+            elif trait == PlayerTrait.BACKSTABBER:
+                weights[BrawlerAction.BETRAY] += intensity * 0.4
 
         # Apply Match Phase Bias
         if is_mid:
@@ -111,12 +118,30 @@ class MatchSimulator:
             weights[BrawlerAction.LOOT] *= 2.0
 
         # ENCOUNTER CONTEXT MODIFIERS
+        allies = set()
+        for alliance in encounter.alliances:
+            if player.id in alliance:
+                allies = alliance - {player.id}
+                break
+
+        non_allies = [p for p in encounter.participants if p.id != player.id and p.id not in allies]
+
         if encounter.state == EncounterState.ISOLATED:
-            # Cannot attack if alone
+            # Cannot attack or teamup/betray if alone
             weights[BrawlerAction.ATTACK] = 0
+            weights[BrawlerAction.TEAMUP] = 0
+            weights[BrawlerAction.BETRAY] = 0
             # Higher chance to heal if damaged and alone
             if player.state.hp < player.info.hitpoints:
                 weights[BrawlerAction.HEAL] *= 2.0
+        else:
+            # If no non-allies, cannot attack or teamup
+            if not non_allies:
+                weights[BrawlerAction.ATTACK] = 0
+                weights[BrawlerAction.TEAMUP] = 0
+            # If no allies, cannot betray
+            if not allies:
+                weights[BrawlerAction.BETRAY] = 0
 
         # Prevent healing at full health
         if player.state.hp >= player.info.hitpoints:
@@ -131,6 +156,15 @@ class MatchSimulator:
         """Removes dead players and dissolves/morphs empty or thin encounters."""
         for enc in self.state.encounters:
             enc.participants = [p for p in enc.participants if p.state.alive]
+
+            # Clean up alliances
+            alive_ids = {p.id for p in enc.participants}
+            new_alliances = []
+            for alliance in enc.alliances:
+                cleaned_alliance = alliance & alive_ids
+                if len(cleaned_alliance) >= 2:
+                    new_alliances.append(cleaned_alliance)
+            enc.alliances = new_alliances
 
         # Filter out empty encounters
         self.state.encounters = [
@@ -294,10 +328,16 @@ class MatchSimulator:
                 player.state.last_action = action
 
                 if action == BrawlerAction.ATTACK:
+                    allies = set()
+                    for alliance in encounter.alliances:
+                        if player.id in alliance:
+                            allies = alliance
+                            break
+
                     potential_targets = [
                         p
                         for p in encounter.participants
-                        if p != player and p.state.alive
+                        if p != player and p.id not in allies and p.state.alive
                     ]
                     if potential_targets:
                         target = random.choice(potential_targets)
@@ -328,10 +368,16 @@ class MatchSimulator:
                     self.observer.on_camp(CampEvent(player))
 
                 elif action == BrawlerAction.AMBUSH:
+                    allies = set()
+                    for alliance in encounter.alliances:
+                        if player.id in alliance:
+                            allies = alliance
+                            break
+
                     potential_targets = [
                         p
                         for p in encounter.participants
-                        if p != player and p.state.alive
+                        if p != player and p.id not in allies and p.state.alive
                     ]
                     if potential_targets:
                         target = random.choice(potential_targets)
@@ -345,6 +391,86 @@ class MatchSimulator:
                         self.observer.on_ambush(AmbushEvent(player, target, damage))
 
                         self._apply_poison_gas(target, BrawlerAction.AMBUSH, encounter)
+
+                elif action == BrawlerAction.TEAMUP:
+                    allies = set()
+                    for alliance in encounter.alliances:
+                        if player.id in alliance:
+                            allies = alliance
+                            break
+
+                    potential_targets = [
+                        p
+                        for p in encounter.participants
+                        if p != player and p.id not in allies and p.state.alive
+                    ]
+                    if potential_targets:
+                        target = random.choice(potential_targets)
+
+                        # Decide response
+                        target_traits = [t[0] for t in target.traits]
+                        if PlayerTrait.TEAMER in target_traits or PlayerTrait.BACKSTABBER in target_traits:
+                            outcome = "ACCEPT"
+                        else:
+                            # 40% Accept, 40% Reject, 20% Attack
+                            rand = random.random()
+                            if rand < 0.4:
+                                outcome = "ACCEPT"
+                            elif rand < 0.8:
+                                outcome = "REJECT"
+                            else:
+                                outcome = "ATTACK"
+
+                        damage = 0
+                        if outcome == "ACCEPT":
+                            # Merge or create alliance
+                            found_alliance = False
+                            for alliance in encounter.alliances:
+                                if target.id in alliance:
+                                    alliance.add(player.id)
+                                    found_alliance = True
+                                    break
+
+                            if not found_alliance:
+                                encounter.alliances.append({player.id, target.id})
+
+                        elif outcome == "ATTACK":
+                            var = gm_config.damage_variance
+                            damage = random.randint(
+                                target.info.damage - var, target.info.damage + var
+                            )
+                            player.state.hp -= damage
+                            if not player.state.alive:
+                                self.state.eliminations.append((target, player))
+
+                        self.observer.on_teamup(TeamupEvent(player, target, outcome, damage))
+
+                elif action == BrawlerAction.BETRAY:
+                    alliance_index = -1
+                    allies_list = []
+                    for i, alliance in enumerate(encounter.alliances):
+                        if player.id in alliance:
+                            alliance_index = i
+                            allies_list = [p for p in encounter.participants if p.id in alliance and p.id != player.id]
+                            break
+
+                    if allies_list:
+                        target = random.choice(allies_list)
+                        # Backstab damage (2x)
+                        var = gm_config.damage_variance
+                        damage = int(2.0 * random.randint(
+                            player.info.damage - var, player.info.damage + var
+                        ))
+                        target.state.hp -= damage
+                        if not target.state.alive:
+                            self.state.eliminations.append((player, target))
+
+                        # Break alliance (remove player from set)
+                        encounter.alliances[alliance_index].remove(player.id)
+                        if len(encounter.alliances[alliance_index]) < 2:
+                            encounter.alliances.pop(alliance_index)
+
+                        self.observer.on_betrayal(BetrayalEvent(player, target, damage))
 
                 # Actor might take gas damage regardless of action
                 self._apply_poison_gas(player, action, encounter)

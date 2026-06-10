@@ -11,6 +11,9 @@ This module provides the match event models:
 * `CampEvent`
 * `AmbushEvent`
 * `PoisonDamageEvent`
+* `TeamupEvent`
+* `BetrayalEvent`
+* `PoisonGasStartEvent`
 * `PoisonGasCoverageEvent`
 """
 
@@ -35,6 +38,8 @@ __all__ = (
     "CampEvent",
     "AmbushEvent",
     "PoisonDamageEvent",
+    "TeamupEvent",
+    "BetrayalEvent",
     "PoisonGasStartEvent",
     "PoisonGasCoverageEvent",
 )
@@ -133,6 +138,33 @@ class PoisonDamageEvent(MatchEventModel):
 
     silent: bool = False
     """If True, no narration should be emitted for this specific damage instance."""
+
+
+@dataclass
+class TeamupEvent(MatchEventModel):
+    initiator: Player
+    """The brawler offering the teamup."""
+
+    target: Player
+    """The brawler receiving the offer."""
+
+    outcome: str
+    """The result of the offer ('ACCEPT', 'REJECT', 'ATTACK')."""
+
+    damage: int = 0
+    """Damage dealt if the outcome was 'ATTACK'."""
+
+
+@dataclass
+class BetrayalEvent(MatchEventModel):
+    betrayer: Player
+    """The brawler performing the backstab."""
+
+    victim: Player
+    """The unsuspecting ally."""
+
+    damage: int
+    """The amount of damage dealt (raw value)."""
 
 
 @dataclass

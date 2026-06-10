@@ -23,6 +23,8 @@ from hunger_game.events import (
     CampEvent,
     AmbushEvent,
     PoisonDamageEvent,
+    TeamupEvent,
+    BetrayalEvent,
     PoisonGasStartEvent,
     PoisonGasCoverageEvent,
 )
@@ -61,6 +63,8 @@ class Narration[T]:
     camp: EventNarrator[CampEvent, T]
     ambush: EventNarrator[AmbushEvent, T]
     poison_gas: EventNarrator[PoisonDamageEvent, T]
+    teamup: EventNarrator[TeamupEvent, T]
+    betrayal: EventNarrator[BetrayalEvent, T]
     gas_start: EventNarrator[PoisonGasStartEvent, T]
     gas_coverage: EventNarrator[PoisonGasCoverageEvent, T]
 
@@ -135,6 +139,16 @@ class MatchNarrator[T](MatchObserver):
             return
         result = self.narrations.poison_gas.narrate(event)
         self.write(f"  {result}")  # type: ignore
+
+    @override
+    def on_teamup(self, event: TeamupEvent):
+        result = self.narrations.teamup.narrate(event)
+        self.write(f"* {result}")  # type: ignore
+
+    @override
+    def on_betrayal(self, event: BetrayalEvent):
+        result = self.narrations.betrayal.narrate(event)
+        self.write(f"* {result}")  # type: ignore
 
     @override
     def on_poison_gas_start(self, event: PoisonGasStartEvent):

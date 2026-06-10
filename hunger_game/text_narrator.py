@@ -10,6 +10,8 @@ This module provide text based match event narrator classes:
 * `LootEventTextNarrator`
 * `CampEventTextNarrator`
 * `AmbushEventTextNarrator`
+* `TeamupEventTextNarrator`
+* `BetrayalEventTextNarrator`
 * `PoisonGasEventTextNarrator`
 * `PoisonGasCoverageEventTextNarrator`
 """
@@ -26,6 +28,8 @@ from hunger_game.events import (
     LootEvent,
     CampEvent,
     AmbushEvent,
+    TeamupEvent,
+    BetrayalEvent,
     PoisonDamageEvent,
     PoisonGasCoverageEvent,
     PoisonGasStartEvent,
@@ -46,6 +50,8 @@ __all__ = (
     "LootEventTextNarrator",
     "CampEventTextNarrator",
     "AmbushEventTextNarrator",
+    "TeamupEventTextNarrator",
+    "BetrayalEventTextNarrator",
     "PoisonGasEventTextNarrator",
     "PoisonGasStartEventTextNarrator",
     "PoisonGasCoverageEventTextNarrator",
@@ -66,7 +72,6 @@ class MatchBeginEventTextNarrator(TextNarrator[MatchBeginEvent]):
 
         participant_lines = []
         for p in event.state.players:
-            # Format Traits
             traits_str = ", ".join(f"{t[0].name}({t[1]:.1f})" for t in p.traits)
 
             # Format Weights (sorted by value descending for clarity)
@@ -200,6 +205,28 @@ class AmbushEventTextNarrator(TextNarrator[AmbushEvent]):
     @override
     def narrate(self, event: AmbushEvent) -> str:
         return self.engine.narrate_ambush(event.attacker, event.target, event.damage)
+
+
+class TeamupEventTextNarrator(TextNarrator[TeamupEvent]):
+    """Narrates a teamup event using the narration engine."""
+
+    def __init__(self, engine: NarrationEngine[str]):
+        self.engine = engine
+
+    @override
+    def narrate(self, event: TeamupEvent) -> str:
+        return self.engine.narrate_teamup(event.initiator, event.target, event.outcome, event.damage)
+
+
+class BetrayalEventTextNarrator(TextNarrator[BetrayalEvent]):
+    """Narrates a betrayal event using the narration engine."""
+
+    def __init__(self, engine: NarrationEngine[str]):
+        self.engine = engine
+
+    @override
+    def narrate(self, event: BetrayalEvent) -> str:
+        return self.engine.narrate_betrayal(event.betrayer, event.victim, event.damage)
 
 
 class PoisonGasEventTextNarrator(TextNarrator[PoisonDamageEvent]):

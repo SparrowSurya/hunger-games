@@ -28,6 +28,8 @@ def main():
         loot=LootEventTextNarrator(engine),
         camp=CampEventTextNarrator(engine),
         ambush=AmbushEventTextNarrator(engine),
+        teamup=TeamupEventTextNarrator(engine),
+        betrayal=BetrayalEventTextNarrator(engine),
         poison_gas=PoisonGasEventTextNarrator(engine),
         gas_start=PoisonGasStartEventTextNarrator(engine),
         gas_coverage=PoisonGasCoverageEventTextNarrator(engine),
