@@ -1,0 +1,185 @@
+================================================================================
+                                 SOLO SHOWDOWN                                  
+================================================================================
+
+Participants:
+Poco (Alice johnson)
+  Traits: AGGRESSIVE(0.4), TEAMER(0.6)
+  Nature: CAMP:91, TEAMUP:19, AMBUSH:18, HEAL:17, BETRAY:15, ATTACK:14, LOOT:12
+
+Emz (Benjamin carter)
+  Traits: COLLECTOR(0.4), AMBUSER(0.6)
+  Nature: AMBUSH:71, CAMP:20, BETRAY:19, ATTACK:17, TEAMUP:14, LOOT:8, HEAL:5
+
+Leon (Charlotte davis)
+  Traits: AMBUSER(0.4), CAMPER(0.3), CAUTIOUS(0.3)
+  Nature: ATTACK:97, BETRAY:61, LOOT:20, TEAMUP:18, AMBUSH:13, CAMP:8, HEAL:8
+
+Nita (Daniel martinez)
+  Traits: BACKSTABBER(0.5), CAUTIOUS(0.5)
+  Nature: ATTACK:66, CAMP:15, HEAL:15, LOOT:13, TEAMUP:10, BETRAY:8, AMBUSH:6
+
+Jessie (Emma wilson)
+  Traits: BACKSTABBER(0.4), CAUTIOUS(0.3), CAMPER(0.3)
+  Nature: TEAMUP:65, BETRAY:14, AMBUSH:11, ATTACK:10, HEAL:8, CAMP:7, LOOT:7
+
+Mortis (Felix anderson)
+  Traits: BACKSTABBER(0.4), COLLECTOR(0.6)
+  Nature: LOOT:91, CAMP:70, AMBUSH:18, TEAMUP:14, BETRAY:13, HEAL:12, ATTACK:7
+
+Dynamike (Grace thompson)
+  Traits: COLLECTOR(0.5), AGGRESSIVE(0.5)
+  Nature: CAMP:83, TEAMUP:20, HEAL:19, AMBUSH:18, BETRAY:15, ATTACK:13, LOOT:11
+
+Tick (Henry moore)
+  Traits: COLLECTOR(0.5), BACKSTABBER(0.5)
+  Nature: LOOT:86, ATTACK:73, TEAMUP:15, HEAL:13, CAMP:8, AMBUSH:8, BETRAY:5
+
+Bull (Isabella taylor)
+  Traits: TEAMER(0.6), CAUTIOUS(0.4)
+  Nature: HEAL:89, BETRAY:16, ATTACK:14, TEAMUP:13, AMBUSH:13, CAMP:8, LOOT:7
+
+Shelly (James harris)
+  Traits: TEAMER(0.4), COLLECTOR(0.3), BACKSTABBER(0.3)
+  Nature: HEAL:78, ATTACK:73, BETRAY:20, AMBUSH:12, CAMP:10, LOOT:10, TEAMUP:10
+
+
+--- MOMENT 1 ---
+* Breaking cover, Poco takes cover in the grass to avoid detection.
+* Tick picks up some gear to prepare for the next fight.
+* Jessie searches the area for cubes to gain an edge.
+* Staying focused, Nita commands her bear to strike Shelly but it's just a flesh wound.
+* Shelly finds a moment of respite.
+* Bull attacks Leon, forcing them to retreat!
+* Leon offers a friendly spin, and Bull accepts! They are now a team.
+* Without warning, Dynamike hides in the foliage to avoid detection.
+* Mortis was surprised by Emz, gaining the upper hand!
+
+[Status: 10 players remain alive]
+
+The creeping death has arrived. Poison gas is now entering the map!
+
+--- MOMENT 2 ---
+* From the bushes, Emz hides in the foliage to set up an ambush.
+* Mortis gathers resources to gain an edge.
+* Tick scavenges for supplies while no one is looking.
+* Treachery! Leon strikes their former partner Bull!
+* Bull finds a moment of respite as the battle continues.
+* Nita ambushes Shelly, rattling them completely!
+* Shelly breathes for a second.
+* With a surprise strike, Poco vanishes from sight.
+* Jessie spins in circles and Dynamike joins the dance! It's a truce!
+
+[Status: 10 players remain alive]
+
+--- MOMENT 3 ---
+* Leon throws a spread of fidget spinners towards Bull failing to do much damage.
+* Bull confronts Leon, ending their match!
+* Emz surprises Mortis, rattling them completely!
+* Breaking cover, Poco hides in the foliage patiently waiting for a victim.
+  >> Tick is caught in the toxic mist! They struggle to breathe but push on.
+* Nita summons a shockwave towards Shelly failing to do much damage.
+* Shelly unleashes a buckshot on Nita, dealing significant damage!
+
+[Eliminations: Leon bit the dust.]
+[Status: 9 players remain alive]
+
+--- MOMENT 4 ---
+* Staying focused, Bull stabilizes their condition to regain composure.
+* Without warning, Dynamike crouches in the shadows hoping no one noticed.
+  >> Poco is caught in the toxic mist! They struggle to breathe but push on.
+* A focused Tick patches themselves up as the battle continues.
+* Mortis fell into a trap set by Emz, rattling them completely!
+* Nita ambushes Shelly, gaining the upper hand!
+* Shelly finds a moment of respite refusing to go down easily.
+
+[Status: 9 players remain alive]
+
+--- MOMENT 5 ---
+* Breaking cover, Jessie hides in the foliage patiently waiting for a victim.
+* Leaping from the shadows, Dynamike slips into a bush patiently waiting for a victim.
+* Emz strikes from concealment at Mortis, making short work of them!
+* Nita strikes from concealment at Shelly, catching them totally unprepared!
+* Shelly clobbers Nita, landing a devastating hit!
+* Staying focused, Bull breathes for a second to regain composure.
+
+[Eliminations: Mortis is heading back to the lobby.]
+[Status: 8 players remain alive]
+
+--- MOMENT 6 ---
+* Bull stabilizes their condition preparing for the next round.
+  >> Bull is caught in the toxic mist! They are severely weakened.
+* The alliance is broken! Dynamike unleashes a surprise attack on Jessie! It's a total betrayal!
+* Emz unveils a deadly trap for Poco, dealing massive surprise damage!
+* Nita mends their wounds preparing for the next round.
+* Shelly offers a friendly spin, and Nita accepts! They are now a team.
+
+[Eliminations: Jessie is heading back to the lobby.]
+[Status: 7 players remain alive]
+
+--- MOMENT 7 ---
+* A temporary alliance! Emz and Poco agree to work together.
+* Poco unleashes a musical wave of recovery, feeling refreshed.
+* Nita collects a trophy to prepare for the next fight.
+* Shelly stabilizes their condition while they have the chance.
+* Without warning, Dynamike slips into a bush to set up an ambush.
+  >> Dynamike is caught in the toxic mist! They struggle to breathe but push on.
+* A focused Tick shells Dynamike, nearly knocking them out!
+* Bull stabilizes their condition to regain composure.
+
+[Status: 7 players remain alive]
+
+--- MOMENT 8 ---
+* Moving forward, Tick ambushes Dynamike, they never saw it coming!
+* Out of nowhere, Poco crouches in the shadows.
+* Staying focused, Bull patches themselves up preparing for the next round.
+* Shelly regenerates some health preparing for the next round.
+* Leaping from the shadows, Nita vanishes from sight hoping no one noticed.
+
+[Eliminations: Dynamike is heading back to the lobby.]
+[Status: 6 players remain alive]
+
+NO MORE SAFE ZONES! The gas has covered every inch of the battlefield!
+
+--- MOMENT 9 ---
+* A patient Nita collects a trophy to prepare for the next fight.
+* Tick secures a power cube to prepare for the next fight.
+* Without warning, Emz vanishes from sight patiently waiting for a victim.
+* From the bushes, Poco crouches in the shadows to set up an ambush.
+
+[Status: 6 players remain alive]
+
+--- MOMENT 10 ---
+* Striking from the dark, Poco takes cover in the grass patiently waiting for a victim.
+* Without warning, Bull crouches in the shadows to avoid detection.
+* Cornered and hurt, Nita finds some loot to gain an edge.
+* Hidden from sight, Shelly slips into a bush to avoid detection.
+
+[Eliminations: A double elimination! Nita and Shelly couldn't hang on.]
+[Status: 4 players remain alive]
+
+--- MOMENT 11 ---
+* The alliance is broken! Emz unleashes a surprise attack on Poco! It's a total betrayal!
+
+[Eliminations: Poco and Tick have both left the chat.]
+[Status: 2 players remain alive]
+
+--- MOMENT 12 ---
+* Emz catches Bull off-guard, catching them totally unprepared!
+
+[Eliminations: Emz and Bull have both left the chat.]
+[Status: 0 players remain alive]
+================================================================================
+                                  MATCH ENDED                                   
+================================================================================
+
+#1  Emz
+#2  Bull
+#3  Tick
+#4  Poco
+#5  Shelly
+#6  Nita
+#7  Dynamike
+#8  Jessie
+#9  Mortis
+#10 Leon
